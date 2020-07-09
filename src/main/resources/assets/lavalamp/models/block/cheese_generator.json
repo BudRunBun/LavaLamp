@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "lavalamp:block/cheese_generator_down",
+    "down": "lavalamp:block/cheese_generator_down",
+    "up": "lavalamp:block/cheese_generator_up",
+    "north": "lavalamp:block/cheese_generator_north",
+    "south": "lavalamp:block/cheese_generator_south",
+    "east": "lavalamp:block/cheese_generator_east",
+    "west": "lavalamp:block/cheese_generator_west"
+  }
+}

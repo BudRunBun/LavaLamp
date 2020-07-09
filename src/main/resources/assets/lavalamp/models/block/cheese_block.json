@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "particle": "lavalamp:block/cheese_block",
+    "all": "lavalamp:block/cheese_block"
+  }
+}

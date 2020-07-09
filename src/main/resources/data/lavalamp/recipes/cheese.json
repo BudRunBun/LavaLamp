@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lavalamp:cheese_block"
+    }
+  ],
+  "result":
+  {
+    "item": "lavalamp:cheese",
+    "count": 9
+  }
+}
