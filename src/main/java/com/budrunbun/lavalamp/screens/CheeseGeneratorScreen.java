@@ -6,10 +6,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class CheeseGeneratorScreen extends ContainerScreen<CheeseGeneratorContainer> {
 
     private static final ResourceLocation GUI = new ResourceLocation("lavalamp", "textures/gui/container/cheese_generator.png");
@@ -28,7 +25,7 @@ public class CheeseGeneratorScreen extends ContainerScreen<CheeseGeneratorContai
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 4210752);
+        this.font.drawString("Cheese Maker", 8.0F, 6.0F, 4210752);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 96 + 2), 4210752);
     }
 

@@ -1,10 +1,27 @@
 {
   "variants": {
-    "facing=down": { "model": "lavalamp:block/cheese_generator", "y": 180 },
-    "facing=up": { "model": "lavalamp:block/cheese_generator", "y": 180 },
-    "facing=north": { "model": "lavalamp:block/cheese_generator" , "x": 180 },
-    "facing=south": { "model": "lavalamp:block/cheese_generator" },
-    "facing=west": { "model": "lavalamp:block/cheese_generator", "y": 90 },
-    "facing=east": { "model": "lavalamp:block/cheese_generator", "y": -90 }
+    "facing=down": {
+      "model": "lavalamp:block/cheese_generator",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "lavalamp:block/cheese_generator",
+      "x": -90
+    },
+    "facing=north": {
+      "model": "lavalamp:block/cheese_generator"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/cheese_generator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lavalamp:block/cheese_generator",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/cheese_generator",
+      "y": 90
+    }
   }
 }

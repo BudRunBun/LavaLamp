@@ -3,42 +3,82 @@ package com.budrunbun.lavalamp.containers;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class CheeseGeneratorContainer extends Container {
 
-    private final IInventory inventory;
+    private final IItemHandler generatorInventory, playerInventory;
 
-    public CheeseGeneratorContainer(int windowId, PlayerInventory playerInventory, IInventory inventory) {
+    public CheeseGeneratorContainer(int windowId, PlayerInventory playerInventory, IItemHandler generatorInventory) {
         super(ModContainers.CHEESE_GENERATOR_CONTAINER, windowId);
 
-        this.inventory = inventory;
+        this.generatorInventory = generatorInventory;
+        this.playerInventory = new InvWrapper(playerInventory);
 
-        assertInventorySize(inventory, 1);
+        this.addSlot(new SlotItemHandler(generatorInventory, 0, 84, 44));
 
-        this.addSlot(new Slot(inventory, 0, 12 + 4 * 18, 8 + 2 * 18));
-
-        int leftCol = (184 - 162) / 2 + 1;
-
-        for (int playerInvRow = 0; playerInvRow < 3; playerInvRow++)
-        {
-            for (int playerInvCol = 0; playerInvCol < 9; playerInvCol++)
-            {
-                this.addSlot(new Slot(playerInventory, playerInvCol + playerInvRow * 9 + 9, leftCol + playerInvCol * 18, 184 - (4 - playerInvRow) * 18 - 10));
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                this.addSlot(new SlotItemHandler(this.playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
-
         }
 
-        for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)
-        {
-            this.addSlot(new Slot(playerInventory, hotbarSlot, leftCol + hotbarSlot * 18, 184 - 24));
+        for (int k = 0; k < 9; ++k) {
+            this.addSlot(new SlotItemHandler(this.playerInventory, k, 8 + k * 18, 142));
         }
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.inventory.isUsableByPlayer(playerIn);
+        return true;
     }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack = slot.getStack();
+            itemstack = stack.copy();
+            if (index == 0) {
+                if (!this.mergeItemStack(stack, 1, 37, true)) {
+                    return ItemStack.EMPTY;
+                }
+                slot.onSlotChange(stack, itemstack);
+            } else {
+                if (stack.getItem() == Items.MILK_BUCKET) {
+                    if (!this.mergeItemStack(stack, 0, 1, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index < 28) {
+                    if (!this.mergeItemStack(stack, 28, 37, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index < 37 && !this.mergeItemStack(stack, 1, 28, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (stack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (stack.getCount() == itemstack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerIn, stack);
+        }
+
+        return itemstack;
+    }
+
 }

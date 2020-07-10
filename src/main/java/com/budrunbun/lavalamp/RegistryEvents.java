@@ -17,6 +17,8 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
 // Event bus for receiving Registry Events)
@@ -47,7 +49,7 @@ public class RegistryEvents {
 
     @SubscribeEvent
     public static void onContainerEntityRegistry(RegistryEvent.Register<ContainerType<?>> event) {
-        // register a new tile entity here
-        event.getRegistry().register(IForgeContainerType.create((id, inv, data) -> new CheeseGeneratorContainer(id, inv, new Inventory(1))).setRegistryName("cheese_generator"));
+        // register a new container here
+        event.getRegistry().register(IForgeContainerType.create((id, inv, data) -> new CheeseGeneratorContainer(id, inv, new CheeseGeneratorTE().handler) ).setRegistryName("cheese_generator"));
     }
 }
