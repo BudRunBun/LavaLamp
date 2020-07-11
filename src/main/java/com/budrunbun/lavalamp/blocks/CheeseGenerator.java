@@ -1,5 +1,6 @@
 package com.budrunbun.lavalamp.blocks;
 
+import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
 import com.budrunbun.lavalamp.tileEntities.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
@@ -60,14 +63,32 @@ public class CheeseGenerator extends Block {
             }
             return true;
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return true;
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (placer != null) {
             worldIn.setBlockState(pos, state.with(BlockStateProperties.FACING, getFacingFromEntity(pos, placer)), 2);
         }
+    }
 
+    @Override
+    public void onReplaced(final BlockState state, final World world, final BlockPos pos, final BlockState newState, final boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            final CheeseGeneratorTileEntity tileEntity = (CheeseGeneratorTileEntity) world.getTileEntity(pos);
+            if (tileEntity != null) {
+                dropItemHandlerContents(world, pos, tileEntity.getHandler());
+                world.updateComparatorOutputLevel(pos, this);
+            }
+            super.onReplaced(state, world, pos, newState, isMoving);
+        }
+    }
+
+    public static void dropItemHandlerContents(final World world, final BlockPos pos, final IItemHandler itemHandler) {
+        for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+            final ItemStack stack = itemHandler.extractItem(slot, Integer.MAX_VALUE, false);
+            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+        }
     }
 }
 

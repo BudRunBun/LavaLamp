@@ -13,17 +13,16 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public class CheeseGeneratorTE extends TileEntity implements INamedContainerProvider {
+public class CheeseGeneratorTileEntity extends TileEntity implements INamedContainerProvider {
 
-    public final ItemStackHandler handler = new ItemStackHandler(1) {
+    private final ItemStackHandler handler = new ItemStackHandler(2) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
             markDirty();
         }
     };
-
-    public CheeseGeneratorTE() {
+    public CheeseGeneratorTileEntity() {
         super(ModTileEntities.CHEESE_GENERATOR_TE);
     }
 

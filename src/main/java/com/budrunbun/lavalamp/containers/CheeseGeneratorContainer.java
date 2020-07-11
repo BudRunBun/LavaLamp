@@ -1,6 +1,8 @@
 package com.budrunbun.lavalamp.containers;
 
 
+import com.budrunbun.lavalamp.containers.slots.CheeseGeneratorInputSlot;
+import com.budrunbun.lavalamp.containers.slots.CheeseGeneratorOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -21,7 +23,9 @@ public class CheeseGeneratorContainer extends Container {
         this.generatorInventory = generatorInventory;
         this.playerInventory = new InvWrapper(playerInventory);
 
-        this.addSlot(new SlotItemHandler(generatorInventory, 0, 84, 44));
+        this.addSlot(new CheeseGeneratorInputSlot(generatorInventory, 0, 30, 29));
+
+        this.addSlot(new CheeseGeneratorOutputSlot(generatorInventory, 1, 102, 29));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

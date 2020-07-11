@@ -5,5 +5,5 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class ModTileEntities {
     @ObjectHolder("lavalamp:cheese_generator")
-    public static TileEntityType<CheeseGeneratorTE> CHEESE_GENERATOR_TE;
+    public static TileEntityType<CheeseGeneratorTileEntity> CHEESE_GENERATOR_TE;
 }
