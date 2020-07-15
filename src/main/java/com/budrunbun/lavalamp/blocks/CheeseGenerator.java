@@ -61,7 +61,6 @@ public class CheeseGenerator extends Block {
             if (tileEntity instanceof INamedContainerProvider) {
                 NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, pos);
             }
-            return true;
         }
         return true;
     }
@@ -91,5 +90,3 @@ public class CheeseGenerator extends Block {
         }
     }
 }
-
-

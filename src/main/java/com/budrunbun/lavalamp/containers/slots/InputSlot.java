@@ -1,19 +1,23 @@
 package com.budrunbun.lavalamp.containers.slots;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class CheeseGeneratorOutputSlot extends SlotItemHandler {
-    public CheeseGeneratorOutputSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+public class InputSlot extends SlotItemHandler {
+    private Item validItem;
+
+    public InputSlot(Item validItem, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
+        this.validItem = validItem;
     }
 
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
-        return false;
+        return stack.getItem() == validItem;
     }
 }
-

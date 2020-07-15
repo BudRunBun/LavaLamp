@@ -52,7 +52,7 @@ public class RegistryEvents {
     @SubscribeEvent
     public static void onContainerEntityRegistry(RegistryEvent.Register<ContainerType<?>> event) {
         // register a new container here
-        event.getRegistry().register(IForgeContainerType.create((id, inv, data) -> new CheeseGeneratorContainer(id, inv, new CheeseGeneratorTileEntity().getHandler()) ).setRegistryName("cheese_generator"));
+        event.getRegistry().register(IForgeContainerType.create(CheeseGeneratorContainer::new).setRegistryName("cheese_generator"));
     }
 
     @SubscribeEvent

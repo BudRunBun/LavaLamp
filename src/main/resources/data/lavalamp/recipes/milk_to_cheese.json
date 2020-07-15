@@ -1,11 +1,10 @@
 {
   "type": "lavalamp:cheese_generator_recipe",
-  "blockId": "minecraft:stone",
   "input": {
-    "item": "minecraft:bone"
+    "item": "minecraft:milk_bucket"
   },
   "output": {
-    "item": "minecraft:bone_meal",
+    "item": "lavalamp:cheese",
     "count": 3
   }
 }

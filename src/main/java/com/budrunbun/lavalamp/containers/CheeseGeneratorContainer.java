@@ -1,14 +1,18 @@
 package com.budrunbun.lavalamp.containers;
 
 
-import com.budrunbun.lavalamp.containers.slots.CheeseGeneratorInputSlot;
-import com.budrunbun.lavalamp.containers.slots.CheeseGeneratorOutputSlot;
+import com.budrunbun.lavalamp.containers.slots.InputSlot;
+import com.budrunbun.lavalamp.containers.slots.OutputSlot;
+import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -16,31 +20,52 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 public class CheeseGeneratorContainer extends Container {
 
     private final IItemHandler generatorInventory, playerInventory;
+    private short milkCapacity;
 
-    public CheeseGeneratorContainer(int windowId, PlayerInventory playerInventory, IItemHandler generatorInventory) {
+    @OnlyIn(Dist.CLIENT)
+    public CheeseGeneratorContainer(int windowID, PlayerInventory playerInventory, PacketBuffer extraData) {
+        this(windowID, playerInventory, new CheeseGeneratorTileEntity().getHandler(), new CheeseGeneratorTileEntity().getMilkCapacity());
+    }
+
+    public CheeseGeneratorContainer(int windowId, PlayerInventory playerInventory, IItemHandler generatorInventory, short milkCapacity) {
         super(ModContainers.CHEESE_GENERATOR_CONTAINER, windowId);
 
         this.generatorInventory = generatorInventory;
         this.playerInventory = new InvWrapper(playerInventory);
+        this.milkCapacity = milkCapacity;
 
-        this.addSlot(new CheeseGeneratorInputSlot(generatorInventory, 0, 30, 29));
+        this.addSlot(new InputSlot(Items.MILK_BUCKET, generatorInventory, 0, 12, 58));
 
-        this.addSlot(new CheeseGeneratorOutputSlot(generatorInventory, 1, 102, 29));
+        this.addSlot(new InputSlot(Items.ACACIA_FENCE,generatorInventory, 1, 84, 75));
 
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new SlotItemHandler(this.playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+        this.addSlot(new InputSlot(Items.WATER_BUCKET,generatorInventory, 2, 156, 58));
+
+        this.addSlot(new OutputSlot(generatorInventory, 3, 84, 13, playerInventory.player));
+
+
+        int leftCol = (184 - 162) / 2 + 1;
+
+        for (int playerInvRow = 0; playerInvRow < 3; playerInvRow++) {
+            for (int playerInvCol = 0; playerInvCol < 9; playerInvCol++) {
+                this.addSlot(new SlotItemHandler(this.playerInventory, playerInvCol + playerInvRow * 9 + 9, leftCol + playerInvCol * 18, 184 - (4 - playerInvRow) * 18 - 10));
             }
+
         }
 
-        for (int k = 0; k < 9; ++k) {
-            this.addSlot(new SlotItemHandler(this.playerInventory, k, 8 + k * 18, 142));
+        for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++) {
+            this.addSlot(new SlotItemHandler(this.playerInventory, hotbarSlot, leftCol + hotbarSlot * 18, 184 - 24));
         }
+
+        System.out.println("Container " + milkCapacity + "/8");
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
+    }
+
+    public int getMilkCapacity() {
+        return this.milkCapacity;
     }
 
     @Override
@@ -85,4 +110,7 @@ public class CheeseGeneratorContainer extends Container {
         return itemstack;
     }
 
+    public int getMilkCapacityScaled() {
+        return this.milkCapacity * 49 / 8;
+    }
 }
