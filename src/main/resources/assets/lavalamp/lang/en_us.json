@@ -1,5 +1,7 @@
 {
   "block.lavalamp.cheese_block": "Cheese Block",
   "block.lavalamp.cheese_generator": "Cheese Maker",
-  "item.lavalamp.cheese": "Cheese"
+  "item.lavalamp.cheese": "Cheese",
+  "block.lavalamp.salty_water_block": "Salty Water",
+  "item.lavalamp.salty_water_bucket": "Salty Water Bucket"
 }

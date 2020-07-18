@@ -3,24 +3,30 @@ package com.budrunbun.lavalamp;
 import com.budrunbun.lavalamp.blocks.CheeseBlock;
 import com.budrunbun.lavalamp.blocks.CheeseGenerator;
 import com.budrunbun.lavalamp.blocks.ModBlocks;
+import com.budrunbun.lavalamp.blocks.SaltyWaterBlock;
 import com.budrunbun.lavalamp.containers.CheeseGeneratorContainer;
 import com.budrunbun.lavalamp.crafting.CheeseGeneratorRecipeSerializer;
 import com.budrunbun.lavalamp.crafting.ModRecipes;
+import com.budrunbun.lavalamp.fluids.SaltyWaterFluid;
 import com.budrunbun.lavalamp.items.Cheese;
+import com.budrunbun.lavalamp.items.SaltyWaterBucket;
 import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
 import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemStackHandler;
 
 // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
 // Event bus for receiving Registry Events)
@@ -32,6 +38,7 @@ public class RegistryEvents {
         // register a new block here
         event.getRegistry().register(new CheeseBlock());
         event.getRegistry().register(new CheeseGenerator());
+        event.getRegistry().register(new SaltyWaterBlock());
     }
 
     @SubscribeEvent
@@ -40,7 +47,9 @@ public class RegistryEvents {
         Item.Properties properties = new Item.Properties().group(ItemGroup.MISC);
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_BLOCK, properties).setRegistryName(ModBlocks.CHEESE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_GENERATOR, properties).setRegistryName(ModBlocks.CHEESE_GENERATOR.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.SALTY_WATER_BLOCK, properties).setRegistryName(ModBlocks.SALTY_WATER_BLOCK.getRegistryName()));
         event.getRegistry().register(new Cheese());
+        event.getRegistry().register(new SaltyWaterBucket());
     }
 
     @SubscribeEvent
@@ -50,9 +59,9 @@ public class RegistryEvents {
     }
 
     @SubscribeEvent
-    public static void onContainerEntityRegistry(RegistryEvent.Register<ContainerType<?>> event) {
+    public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event) {
         // register a new container here
-        event.getRegistry().register(IForgeContainerType.create(CheeseGeneratorContainer::new).setRegistryName("cheese_generator"));
+        event.getRegistry().register(IForgeContainerType.create((id, inv, data) -> new CheeseGeneratorContainer(id, inv, new ItemStackHandler(4), new IntArray(4))).setRegistryName("cheese_generator"));
     }
 
     @SubscribeEvent
@@ -61,5 +70,12 @@ public class RegistryEvents {
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ModRecipes.CHEESE_GENERATOR_RECIPE.toString()), ModRecipes.CHEESE_GENERATOR_RECIPE);
         // Register the recipe serializer. This handles from json, from packet, and to packet.
         event.getRegistry().register(new CheeseGeneratorRecipeSerializer().setRegistryName("cheese_generator_recipe"));
+    }
+
+    @SubscribeEvent
+    public static void onFluidRegistry(RegistryEvent.Register<Fluid> event) {
+        // register a new fluid here
+        event.getRegistry().register(new SaltyWaterFluid.Flowing().setRegistryName("salty_water_flowing"));
+        event.getRegistry().register(new SaltyWaterFluid.Source().setRegistryName("salty_water"));
     }
 }

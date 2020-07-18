@@ -1,6 +1,7 @@
 package com.budrunbun.lavalamp.tileEntities;
 
 import com.budrunbun.lavalamp.containers.CheeseGeneratorContainer;
+import com.budrunbun.lavalamp.items.ModItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -10,6 +11,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
@@ -18,7 +20,49 @@ import javax.annotation.Nullable;
 
 public class CheeseGeneratorTileEntity extends TileEntity implements INamedContainerProvider, ITickableTileEntity {
 
-    private short milkCapacity;
+    private int milkCapacity;
+    private int waterCapacity;
+    private int cookingTimeLeft = 0;
+    private int on = 0;
+
+    protected final IIntArray generatorData = new IIntArray() {
+        public int get(int index) {
+            switch (index) {
+                case 0:
+                    return CheeseGeneratorTileEntity.this.milkCapacity;
+                case 1:
+                    return CheeseGeneratorTileEntity.this.waterCapacity;
+                case 2:
+                    return CheeseGeneratorTileEntity.this.cookingTimeLeft;
+                case 3:
+                    return CheeseGeneratorTileEntity.this.on;
+                default:
+                    return 0;
+            }
+        }
+
+        public void set(int index, int value) {
+            switch (index) {
+                case 0:
+                    CheeseGeneratorTileEntity.this.milkCapacity = value;
+                    break;
+                case 1:
+                    CheeseGeneratorTileEntity.this.waterCapacity = value;
+                    break;
+                case 2:
+                    CheeseGeneratorTileEntity.this.cookingTimeLeft = value;
+                    break;
+                case 3:
+                    CheeseGeneratorTileEntity.this.on = value;
+                    break;
+            }
+
+        }
+
+        public int size() {
+            return 4;
+        }
+    };
 
     private final ItemStackHandler handler = new ItemStackHandler(4) {
         @Override
@@ -30,21 +74,26 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
 
     public CheeseGeneratorTileEntity() {
         super(ModTileEntities.CHEESE_GENERATOR_TE);
-        System.out.println("Tile entity " + milkCapacity + "/8");
     }
 
     @Override
     public void read(CompoundNBT compound) {
         super.read(compound);
-        handler.deserializeNBT(compound.getCompound("inv"));
-        milkCapacity = compound.getShort("milk");
+        this.handler.deserializeNBT(compound.getCompound("inv"));
+        this.milkCapacity = compound.getInt("milk");
+        this.waterCapacity = compound.getInt("water");
+        this.cookingTimeLeft = compound.getInt("time");
+        this.on = compound.getInt("on");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         compound.put("inv", handler.serializeNBT());
-        compound.putShort("milk", milkCapacity);
+        compound.putInt("milk", milkCapacity);
+        compound.putInt("water", milkCapacity);
+        compound.putInt("time", cookingTimeLeft);
+        compound.putInt("on", on);
         return compound;
     }
 
@@ -56,24 +105,41 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
     @Nullable
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-
-        return new CheeseGeneratorContainer(windowId, playerInventory, handler, milkCapacity);
+        return new CheeseGeneratorContainer(windowId, playerInventory, handler, this.generatorData);
     }
 
     public ItemStackHandler getHandler() {
         return handler;
     }
 
-    public short getMilkCapacity() {
-        return milkCapacity;
-    }
-
     @Override
     public void tick() {
         if (handler.getStackInSlot(0).getItem() == (Items.MILK_BUCKET) && milkCapacity < 8) {
             handler.setStackInSlot(0, new ItemStack(Items.BUCKET));
-            milkCapacity++;
-            this.markDirty();
+            this.milkCapacity++;
         }
+
+        if (handler.getStackInSlot(2).getItem() == (Items.WATER_BUCKET) && waterCapacity < 8) {
+            handler.setStackInSlot(2, new ItemStack(Items.BUCKET));
+            this.waterCapacity++;
+        }
+
+        if (this.milkCapacity > 0 && this.waterCapacity > 0 && handler.getStackInSlot(1).getItem() == Items.ACACIA_FENCE && on == 0) {
+            on = 1;
+            ItemStack items = handler.getStackInSlot(1);
+            this.waterCapacity--;
+            this.milkCapacity--;
+            items.shrink(1);
+        }
+
+        if (on == 1) {
+            this.cookingTimeLeft++;
+            if (this.cookingTimeLeft == 400) {
+                this.cookingTimeLeft = 0;
+                handler.insertItem(3, new ItemStack(ModItems.CHEESE), false);
+                on = 0;
+            }
+        }
+        this.markDirty();
     }
 }

@@ -13,7 +13,7 @@ public class CheeseGeneratorScreen extends ContainerScreen<CheeseGeneratorContai
 
     public CheeseGeneratorScreen(CheeseGeneratorContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
-        System.out.println("Screen " + this.container.getMilkCapacity() + "/8");
+
         this.xSize = 184;
         this.ySize = 184;
     }
@@ -42,6 +42,30 @@ public class CheeseGeneratorScreen extends ContainerScreen<CheeseGeneratorContai
         blit(i, j, 0, 0, this.xSize, this.ySize, 256, 256);
 
         int k = this.container.getMilkCapacityScaled();
-        this.blit(i + 9, j + 50 - k, 198, 48 - k, 20, k + 1);
+        this.blit(i + 10, j + 53 - k, 198, 53 - k, 20, k + 1);
+
+        int l = this.container.getWaterCapacityScaled();
+        this.blit(i + 154, j + 53 - l, 225, 53 - l, 20, l + 1);
+        if (this.container.isWorking()) {
+            int m = this.container.getLeftAndRightArrowProgressionScaled();
+            //left arrow
+            this.blit(i + 30, j + 25, 0, 217, m + 1, 38);
+            //right arrow
+            this.blit(i + 103, j + 25, 56, 217, 51, 38);
+            //right arrow overlay
+            this.blit(i + 103, j + 25, 113, 217, 50 - m - 1, 38);
+
+            int o = this.container.getDownArrowProgressionScaled();
+            //down arrow
+            this.blit(i + 84, j + 79 - o, 56, 213 - o, 15, o + 1);
+
+            int n = this.container.getUpArrowProgressionScaled();
+            //up arrow
+            this.blit(i + 85, j + 48 - n, 73, 213 - n, 13, n + 1);
+
+            int p = this.container.getFanXPosition();
+            //fan rotation
+            this.blit(i + 80, j + 49, p, 191, 22, 22);
+        }
     }
 }

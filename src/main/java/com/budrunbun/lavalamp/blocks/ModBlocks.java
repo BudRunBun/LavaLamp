@@ -8,4 +8,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:cheese_generator")
     public static final CheeseGenerator CHEESE_GENERATOR = null;
+
+    @ObjectHolder("lavalamp:salty_water_block")
+    public static final SaltyWaterBlock SALTY_WATER_BLOCK = null;
 }

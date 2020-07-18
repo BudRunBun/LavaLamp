@@ -3,16 +3,15 @@ package com.budrunbun.lavalamp.containers;
 
 import com.budrunbun.lavalamp.containers.slots.InputSlot;
 import com.budrunbun.lavalamp.containers.slots.OutputSlot;
-import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.util.IIntArray;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -20,25 +19,21 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 public class CheeseGeneratorContainer extends Container {
 
     private final IItemHandler generatorInventory, playerInventory;
-    private short milkCapacity;
+    private final IIntArray generatorData;
+    private boolean flag = true;
 
-    @OnlyIn(Dist.CLIENT)
-    public CheeseGeneratorContainer(int windowID, PlayerInventory playerInventory, PacketBuffer extraData) {
-        this(windowID, playerInventory, new CheeseGeneratorTileEntity().getHandler(), new CheeseGeneratorTileEntity().getMilkCapacity());
-    }
-
-    public CheeseGeneratorContainer(int windowId, PlayerInventory playerInventory, IItemHandler generatorInventory, short milkCapacity) {
+    public CheeseGeneratorContainer(int windowId, PlayerInventory playerInventory, IItemHandler generatorInventory, IIntArray data) {
         super(ModContainers.CHEESE_GENERATOR_CONTAINER, windowId);
-
+        assertIntArraySize(data, 2);
         this.generatorInventory = generatorInventory;
         this.playerInventory = new InvWrapper(playerInventory);
-        this.milkCapacity = milkCapacity;
+        this.generatorData = data;
 
         this.addSlot(new InputSlot(Items.MILK_BUCKET, generatorInventory, 0, 12, 58));
 
-        this.addSlot(new InputSlot(Items.ACACIA_FENCE,generatorInventory, 1, 84, 75));
+        this.addSlot(new InputSlot(Items.ACACIA_FENCE, generatorInventory, 1, 84, 81));
 
-        this.addSlot(new InputSlot(Items.WATER_BUCKET,generatorInventory, 2, 156, 58));
+        this.addSlot(new InputSlot(Items.WATER_BUCKET, generatorInventory, 2, 156, 58));
 
         this.addSlot(new OutputSlot(generatorInventory, 3, 84, 13, playerInventory.player));
 
@@ -56,16 +51,12 @@ public class CheeseGeneratorContainer extends Container {
             this.addSlot(new SlotItemHandler(this.playerInventory, hotbarSlot, leftCol + hotbarSlot * 18, 184 - 24));
         }
 
-        System.out.println("Container " + milkCapacity + "/8");
+        this.trackIntArray(data);
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
-    }
-
-    public int getMilkCapacity() {
-        return this.milkCapacity;
     }
 
     @Override
@@ -111,6 +102,50 @@ public class CheeseGeneratorContainer extends Container {
     }
 
     public int getMilkCapacityScaled() {
-        return this.milkCapacity * 49 / 8;
+        return this.generatorData.get(0) * 49 / 8;
     }
+
+    public int getWaterCapacityScaled() {
+        return this.generatorData.get(1) * 49 / 8;
+    }
+
+    public int getLeftAndRightArrowProgressionScaled() {
+        if (this.generatorData.get(2) <= 200) {
+            return this.generatorData.get(2) * 50 / 200;
+        } else
+            return 50;
+    }
+
+    public int getDownArrowProgressionScaled() {
+        if (this.generatorData.get(2) <= 200) {
+            return this.generatorData.get(2) * 7 / 200;
+        } else
+            return 7;
+    }
+
+    public int getUpArrowProgressionScaled() {
+        if (this.generatorData.get(2) >= 300) {
+            return (this.generatorData.get(2) - 300) * 18 / 100;
+        } else
+            return -1;
+    }
+
+    public boolean isWorking() {
+        return this.generatorData.get(2) > 0;
+    }
+
+    public int getFanXPosition() {
+        if (this.generatorData.get(2) >= 200) {
+            if (flag) {
+                flag = !flag;
+                return 0;
+            } else {
+                flag = !flag;
+                return 27;
+            }
+        } else {
+            return 0;
+        }
+    }
+
 }

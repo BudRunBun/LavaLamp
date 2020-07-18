@@ -5,7 +5,13 @@ import com.budrunbun.lavalamp.screens.CheeseGeneratorScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import java.lang.reflect.Method;
 
 public class ClientProxy implements IProxy {
 
