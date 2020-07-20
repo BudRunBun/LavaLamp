@@ -11,4 +11,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:salty_water_block")
     public static final SaltyWaterBlock SALTY_WATER_BLOCK = null;
+
+    @ObjectHolder("lavalamp:pillar_block")
+    public static final PillarBlock PILLAR_BLOCK = null;
 }

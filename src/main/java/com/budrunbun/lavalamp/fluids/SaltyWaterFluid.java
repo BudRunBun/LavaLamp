@@ -21,7 +21,7 @@ public abstract class SaltyWaterFluid extends ForgeFlowingFluid {
                     new net.minecraft.util.ResourceLocation("block/water_still"),
                     new net.minecraft.util.ResourceLocation("block/water_flow"))
                     //aRGB format
-                    .color(0xFFfc8803)
+                    .color(0xFFFC8803)
                     .translationKey("block.lavalamp.salty_water_block"))
             .bucket(() -> ModItems.SALTY_WATER_BUCKET)
             .block(() -> ModBlocks.SALTY_WATER_BLOCK)
@@ -40,13 +40,8 @@ public abstract class SaltyWaterFluid extends ForgeFlowingFluid {
             if (random.nextInt(64) == 0) {
                 worldIn.playSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F, false);
             }
-        }/* else if (random.nextInt(10) == 0) {
-            worldIn.addParticle(ParticleTypes.UNDERWATER, (float) pos.getX() + random.nextFloat(), (float) pos.getY() + random.nextFloat(), (float) pos.getZ() + random.nextFloat(), 0.0D, 0.0D, 0.0D);
-        }*/
-
+        }
     }
-
-
 
     public static class Flowing extends ForgeFlowingFluid.Flowing {
         public Flowing() {

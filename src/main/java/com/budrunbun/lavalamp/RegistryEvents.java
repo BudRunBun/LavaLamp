@@ -1,9 +1,6 @@
 package com.budrunbun.lavalamp;
 
-import com.budrunbun.lavalamp.blocks.CheeseBlock;
-import com.budrunbun.lavalamp.blocks.CheeseGenerator;
-import com.budrunbun.lavalamp.blocks.ModBlocks;
-import com.budrunbun.lavalamp.blocks.SaltyWaterBlock;
+import com.budrunbun.lavalamp.blocks.*;
 import com.budrunbun.lavalamp.containers.CheeseGeneratorContainer;
 import com.budrunbun.lavalamp.crafting.CheeseGeneratorRecipeSerializer;
 import com.budrunbun.lavalamp.crafting.ModRecipes;
@@ -39,6 +36,7 @@ public class RegistryEvents {
         event.getRegistry().register(new CheeseBlock());
         event.getRegistry().register(new CheeseGenerator());
         event.getRegistry().register(new SaltyWaterBlock());
+        event.getRegistry().register(new PillarBlock());
     }
 
     @SubscribeEvent
@@ -48,6 +46,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_BLOCK, properties).setRegistryName(ModBlocks.CHEESE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_GENERATOR, properties).setRegistryName(ModBlocks.CHEESE_GENERATOR.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.SALTY_WATER_BLOCK, properties).setRegistryName(ModBlocks.SALTY_WATER_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.PILLAR_BLOCK, properties).setRegistryName(ModBlocks.PILLAR_BLOCK.getRegistryName()));
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
     }
