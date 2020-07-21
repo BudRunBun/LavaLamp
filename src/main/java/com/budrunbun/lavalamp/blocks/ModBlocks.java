@@ -14,4 +14,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:pillar_block")
     public static final PillarBlock PILLAR_BLOCK = null;
+
+    @ObjectHolder("lavalamp:ramp_block")
+    public static final RampBlock RAMP_BLOCK = null;
 }

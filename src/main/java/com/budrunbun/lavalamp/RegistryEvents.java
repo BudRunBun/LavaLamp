@@ -37,6 +37,7 @@ public class RegistryEvents {
         event.getRegistry().register(new CheeseGenerator());
         event.getRegistry().register(new SaltyWaterBlock());
         event.getRegistry().register(new PillarBlock());
+        event.getRegistry().register(new RampBlock());
     }
 
     @SubscribeEvent
@@ -47,6 +48,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_GENERATOR, properties).setRegistryName(ModBlocks.CHEESE_GENERATOR.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.SALTY_WATER_BLOCK, properties).setRegistryName(ModBlocks.SALTY_WATER_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.PILLAR_BLOCK, properties).setRegistryName(ModBlocks.PILLAR_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.RAMP_BLOCK, properties).setRegistryName(ModBlocks.RAMP_BLOCK.getRegistryName()));
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
     }
@@ -65,7 +67,7 @@ public class RegistryEvents {
 
     @SubscribeEvent
     public static void onRecipesRegistry(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        // register a new container here
+        // register a new recipe type here
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ModRecipes.CHEESE_GENERATOR_RECIPE.toString()), ModRecipes.CHEESE_GENERATOR_RECIPE);
         // Register the recipe serializer. This handles from json, from packet, and to packet.
         event.getRegistry().register(new CheeseGeneratorRecipeSerializer().setRegistryName("cheese_generator_recipe"));
