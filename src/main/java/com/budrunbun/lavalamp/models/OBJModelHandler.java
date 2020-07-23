@@ -1,4 +1,4 @@
-package com.budrunbun.lavalamp.models;
+/*package com.budrunbun.lavalamp.models;
 
 import com.budrunbun.lavalamp.LavaLamp;
 import com.google.common.collect.ImmutableMap;
@@ -33,7 +33,7 @@ public class OBJModelHandler {
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event) {
         try {
-            IUnbakedModel model = ModelLoaderRegistry.getModelOrMissing(new ResourceLocation("lavalamp:block/ramp_block.obj"));
+            IUnbakedModel model = ModelLoaderRegistry.getModelOrMissing(new ResourceLocation("lavalamp:block/_ramp_block.obj"));
 
             if (model instanceof OBJModel) {
                 IBakedModel bakedModel = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), new BasicState(model.getDefaultState(), false), DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
@@ -58,4 +58,4 @@ public class OBJModelHandler {
         );
     }
 
-}
+}*/

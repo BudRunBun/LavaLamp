@@ -15,13 +15,13 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 import java.util.Random;
 
 public abstract class SaltyWaterFluid extends ForgeFlowingFluid {
-    private static final ForgeFlowingFluid.Properties properties = new ForgeFlowingFluid.Properties(() -> ModFluids.SALTY_WATER, () -> ModFluids.FLOWING_SALTY_WATER,
+    private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(() -> ModFluids.SALTY_WATER, () -> ModFluids.FLOWING_SALTY_WATER,
             net.minecraftforge.fluids.FluidAttributes.builder(
                     //using transparent water texture with custom color
-                    new net.minecraft.util.ResourceLocation("block/water_still"),
-                    new net.minecraft.util.ResourceLocation("block/water_flow"))
+                    new net.minecraft.util.ResourceLocation("lavalamp:fluid/salty_water_still"),
+                    new net.minecraft.util.ResourceLocation("lavalamp:fluid/salty_water_flow"))
                     //aRGB format
-                    .color(0xFFFC8803)
+                    //.color(0xFFFC8803)
                     .translationKey("block.lavalamp.salty_water_block"))
             .bucket(() -> ModItems.SALTY_WATER_BUCKET)
             .block(() -> ModBlocks.SALTY_WATER_BLOCK)
@@ -45,13 +45,13 @@ public abstract class SaltyWaterFluid extends ForgeFlowingFluid {
 
     public static class Flowing extends ForgeFlowingFluid.Flowing {
         public Flowing() {
-            super(properties);
+            super(PROPERTIES);
         }
     }
 
     public static class Source extends ForgeFlowingFluid.Source {
         public Source() {
-            super(properties);
+            super(PROPERTIES);
         }
     }
 }

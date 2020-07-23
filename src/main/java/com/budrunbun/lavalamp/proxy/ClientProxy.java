@@ -17,9 +17,9 @@ import java.lang.reflect.Method;
 
 public class ClientProxy implements IProxy {
 
-    static {
+    /*static {
         OBJLoader.INSTANCE.addDomain(LavaLamp.MOD_ID);
-    }
+    }*/
 
     @Override
     public void init() {

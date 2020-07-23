@@ -1,15 +1,25 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-  },
   "variants": {
-    "": [
-      {
-        "model": "lavalamp:block/ramp_block"
-      }
-    ]
-  },
-  "custom": {
-    "flip-v": true
+    "facing=down": {
+      "model": "lavalamp:block/ramp_block"
+    },
+    "facing=up": {
+      "model": "lavalamp:block/ramp_block"
+    },
+    "facing=north": {
+      "model": "lavalamp:block/ramp_block"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/ramp_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lavalamp:block/ramp_block",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/ramp_block",
+      "y": 90
+    }
   }
 }

@@ -26,22 +26,12 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class CheeseGenerator extends Block {
+public class CheeseGenerator extends FacingBlock {
 
     public CheeseGenerator() {
         super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(1.0f));
         setRegistryName("cheese_generator");
     }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING);
-    }
-
-    public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        return Direction.getFacingFromVector((float) (entity.posX - clickedBlock.getX()), (float) (entity.posY - clickedBlock.getY()), (float) (entity.posZ - clickedBlock.getZ()));
-    }
-
 
     @Override
     public boolean hasTileEntity(BlockState state) {
@@ -63,12 +53,6 @@ public class CheeseGenerator extends Block {
             }
         }
         return true;
-    }
-
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (placer != null) {
-            worldIn.setBlockState(pos, state.with(BlockStateProperties.FACING, getFacingFromEntity(pos, placer)), 2);
-        }
     }
 
     @Override
