@@ -34,10 +34,11 @@ public class RegistryEvents {
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
         // register a new block here
         event.getRegistry().register(new CheeseBlock());
-        event.getRegistry().register(new CheeseGenerator());
+        event.getRegistry().register(new CheeseGeneratorBlock());
         event.getRegistry().register(new SaltyWaterBlock());
         event.getRegistry().register(new PillarBlock());
         event.getRegistry().register(new RampBlock());
+        event.getRegistry().register(new AshGrayConcreteBlock());
     }
 
     @SubscribeEvent
@@ -46,9 +47,10 @@ public class RegistryEvents {
         Item.Properties properties = new Item.Properties().group(ItemGroup.MISC);
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_BLOCK, properties).setRegistryName(ModBlocks.CHEESE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_GENERATOR, properties).setRegistryName(ModBlocks.CHEESE_GENERATOR.getRegistryName()));
-        event.getRegistry().register(new BlockItem(ModBlocks.SALTY_WATER_BLOCK, properties).setRegistryName(ModBlocks.SALTY_WATER_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.SALTY_WATER_BLOCK, new Item.Properties()).setRegistryName(ModBlocks.SALTY_WATER_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.PILLAR_BLOCK, properties).setRegistryName(ModBlocks.PILLAR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.RAMP_BLOCK, properties).setRegistryName(ModBlocks.RAMP_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.ASH_GRAY_CONCRETE_BLOCK, properties).setRegistryName(ModBlocks.ASH_GRAY_CONCRETE_BLOCK.getRegistryName()));
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
     }

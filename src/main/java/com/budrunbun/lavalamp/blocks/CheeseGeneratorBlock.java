@@ -22,11 +22,11 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class CheeseGenerator extends FacingBlock {
+public class CheeseGeneratorBlock extends FacingBlock {
 
     //TODO: replace with multi-block structure and create animations
 
-    public CheeseGenerator() {
+    public CheeseGeneratorBlock() {
         super(Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(1.0f));
         setRegistryName("cheese_generator");
     }

@@ -136,13 +136,16 @@ public class RampBlock extends FacingBlock {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
+        BlockState blockstate = context.getWorld().getBlockState(blockpos);
+        BlockState blockState2;
         Direction direction = context.getFace();
-        BlockState blockstate = context.getWorld().getBlockState(context.getPos().offset(direction.getOpposite()));
-        BlockState blockState1 = blockstate.getBlock() == this && blockstate.get(FACING) == direction ? this.getDefaultState().with(FACING, direction) : this.getDefaultState().with(FACING, direction.getOpposite());
         if (blockstate.getBlock() == this) {
-            blockState1 = blockState1.with(TYPE, SlabType.DOUBLE);
+            blockState2 = blockstate.with(TYPE, SlabType.DOUBLE);
+        } else {
+            BlockState blockState1 = this.getDefaultState().with(TYPE, SlabType.BOTTOM);
+            blockState2 = direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double) blockpos.getY() > 0.5D)) ? blockState1 : blockState1.with(TYPE, SlabType.TOP);
         }
-        return direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double) blockpos.getY() > 0.5D)) && blockState1.get(TYPE) == SlabType.DOUBLE ? blockState1 : blockState1.with(TYPE, SlabType.TOP);
+        return blockstate.getBlock() == this && blockstate.get(FACING) == direction ? blockState2.with(FACING, direction) : blockState2.with(FACING, direction.getOpposite());
     }
 
     @Override

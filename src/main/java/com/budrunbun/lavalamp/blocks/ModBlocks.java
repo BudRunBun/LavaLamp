@@ -7,7 +7,7 @@ public class ModBlocks {
     public static final CheeseBlock CHEESE_BLOCK = null;
 
     @ObjectHolder("lavalamp:cheese_generator")
-    public static final CheeseGenerator CHEESE_GENERATOR = null;
+    public static final CheeseGeneratorBlock CHEESE_GENERATOR = null;
 
     @ObjectHolder("lavalamp:salty_water_block")
     public static final SaltyWaterBlock SALTY_WATER_BLOCK = null;
@@ -17,4 +17,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:ramp_block")
     public static final RampBlock RAMP_BLOCK = null;
+
+    @ObjectHolder("lavalamp:ash_gray_concrete_block")
+    public static final AshGrayConcreteBlock ASH_GRAY_CONCRETE_BLOCK = null;
 }
