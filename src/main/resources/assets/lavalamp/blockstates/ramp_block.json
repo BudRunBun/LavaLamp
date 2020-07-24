@@ -1,24 +1,66 @@
 {
   "variants": {
-    "facing=down": {
-      "model": "lavalamp:block/ramp_block"
+    "facing=down,type=bottom": {
+      "model": "lavalamp:block/ramp_block_down"
     },
-    "facing=up": {
-      "model": "lavalamp:block/ramp_block"
+    "facing=up,type=bottom": {
+      "model": "lavalamp:block/ramp_block_down"
     },
-    "facing=north": {
-      "model": "lavalamp:block/ramp_block"
+    "facing=north,type=bottom": {
+      "model": "lavalamp:block/ramp_block_down"
     },
-    "facing=south": {
-      "model": "lavalamp:block/ramp_block",
+    "facing=south,type=bottom": {
+      "model": "lavalamp:block/ramp_block_down",
       "y": 180
     },
-    "facing=west": {
-      "model": "lavalamp:block/ramp_block",
+    "facing=west,type=bottom": {
+      "model": "lavalamp:block/ramp_block_down",
       "y": 270
     },
-    "facing=east": {
-      "model": "lavalamp:block/ramp_block",
+    "facing=east,type=bottom": {
+      "model": "lavalamp:block/ramp_block_down",
+      "y": 90
+    },
+    "facing=down,type=top": {
+      "model": "lavalamp:block/ramp_block_up"
+    },
+    "facing=up,type=top": {
+      "model": "lavalamp:block/ramp_block_up"
+    },
+    "facing=north,type=top": {
+      "model": "lavalamp:block/ramp_block_up"
+    },
+    "facing=south,type=top": {
+      "model": "lavalamp:block/ramp_block_up",
+      "y": 180
+    },
+    "facing=west,type=top": {
+      "model": "lavalamp:block/ramp_block_up",
+      "y": 270
+    },
+    "facing=east,type=top": {
+      "model": "lavalamp:block/ramp_block_up",
+      "y": 90
+    },
+    "facing=down,type=double": {
+      "model": "lavalamp:block/ramp_block_double"
+    },
+    "facing=up,type=double": {
+      "model": "lavalamp:block/ramp_block_double"
+    },
+    "facing=north,type=double": {
+      "model": "lavalamp:block/ramp_block_double"
+    },
+    "facing=south,type=double": {
+      "model": "lavalamp:block/ramp_block_double",
+      "y": 180
+    },
+    "facing=west,type=double": {
+      "model": "lavalamp:block/ramp_block_double",
+      "y": 270
+    },
+    "facing=east,type=double": {
+      "model": "lavalamp:block/ramp_block_double",
       "y": 90
     }
   }
