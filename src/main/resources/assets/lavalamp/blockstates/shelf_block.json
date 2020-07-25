@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "lavalamp:block/shelf_block"
+    },
+    "facing=up": {
+      "model": "lavalamp:block/shelf_block"
+    },
+    "facing=north": {
+      "model": "lavalamp:block/shelf_block"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/shelf_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lavalamp:block/shelf_block",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/shelf_block",
+      "y": 90
+    }
+  }
+}

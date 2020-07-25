@@ -6,5 +6,6 @@
   "block.lavalamp.pillar_block": "Pillar",
   "block.lavalamp.ramp_block": "Ramp",
   "item.lavalamp.salty_water_bucket": "Salty Water Bucket",
-  "block.lavalamp.ash_gray_concrete_block": "Ash Gray Concrete"
+  "block.lavalamp.ash_gray_concrete_block": "Ash Gray Concrete",
+  "block.lavalamp.shelf_block": "Shelf"
 }

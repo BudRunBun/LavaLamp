@@ -3,8 +3,10 @@ package com.budrunbun.lavalamp;
 import com.budrunbun.lavalamp.proxy.ClientProxy;
 import com.budrunbun.lavalamp.proxy.IProxy;
 import com.budrunbun.lavalamp.proxy.ServerProxy;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -16,10 +18,11 @@ public class LavaLamp {
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 
     public LavaLamp() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupCommon);
+        MinecraftForge.EVENT_BUS.addListener(this::setupCommon);
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
+    private void setupCommon(final FMLCommonSetupEvent event) {
         proxy.init();
     }
 }

@@ -20,4 +20,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:ash_gray_concrete_block")
     public static final AshGrayConcreteBlock ASH_GRAY_CONCRETE_BLOCK = null;
+
+    @ObjectHolder("lavalamp:shelf_block")
+    public static final ShelfBlock SHELF_BLOCK = null;
 }
