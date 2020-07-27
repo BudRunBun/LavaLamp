@@ -23,4 +23,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:shelf_block")
     public static final ShelfBlock SHELF_BLOCK = null;
+
+    @ObjectHolder("lavalamp:floor_block")
+    public static final FloorBlock FLOOR_BLOCK = null;
 }

@@ -3,18 +3,24 @@ package com.budrunbun.lavalamp.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
-public class FacingBlock extends Block {
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+public class HorizontalFacingBlock extends Block {
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
-    protected FacingBlock(Block.Properties properties) {
+    //Prevents instantiation
+    @SuppressWarnings("all")
+    private HorizontalFacingBlock() {
+        super(null);
+    }
+
+    protected HorizontalFacingBlock(Block.Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
@@ -35,12 +41,10 @@ public class FacingBlock extends Block {
     }
 
     protected BlockState calculateFacing(BlockItemUseContext context, boolean invert) {
-        Direction direction = context.getFace();
-        BlockState blockstate = context.getWorld().getBlockState(context.getPos().offset(direction.getOpposite()));
         if (invert) {
-            return blockstate.getBlock() == this && blockstate.get(FACING) == direction ? this.getDefaultState().with(FACING, direction) : this.getDefaultState().with(FACING, direction.getOpposite());
+            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
         } else {
-            return blockstate.getBlock() == this && blockstate.get(FACING) == direction ? this.getDefaultState().with(FACING, direction.getOpposite()) : this.getDefaultState().with(FACING, direction);
+            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
         }
     }
 

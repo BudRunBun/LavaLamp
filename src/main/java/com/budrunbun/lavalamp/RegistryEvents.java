@@ -8,32 +8,36 @@ import com.budrunbun.lavalamp.crafting.ModRecipes;
 import com.budrunbun.lavalamp.fluids.SaltyWaterFluid;
 import com.budrunbun.lavalamp.items.Cheese;
 import com.budrunbun.lavalamp.items.SaltyWaterBucket;
-import com.budrunbun.lavalamp.renderer.ShelfBlockRenderer;
 import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
 import com.budrunbun.lavalamp.tileEntities.ShelfTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.items.ItemStackHandler;
 
 // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
 // Event bus for receiving Registry Events)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RegistryEvents {
+
+    public static final ItemGroup LAVALAMP = new ItemGroup(12, "lavalamp") {
+        @OnlyIn(Dist.CLIENT)
+        public ItemStack createIcon() {
+            return new ItemStack(ModBlocks.CHEESE_GENERATOR);
+        }
+    };
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
@@ -45,12 +49,13 @@ public class RegistryEvents {
         event.getRegistry().register(new RampBlock());
         event.getRegistry().register(new AshGrayConcreteBlock());
         event.getRegistry().register(new ShelfBlock());
+        event.getRegistry().register(new FloorBlock());
     }
 
     @SubscribeEvent
     public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
         // register a new item here
-        Item.Properties properties = new Item.Properties().group(ItemGroup.MISC);
+        Item.Properties properties = new Item.Properties().group(LAVALAMP);
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_BLOCK, properties).setRegistryName(ModBlocks.CHEESE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_GENERATOR, properties).setRegistryName(ModBlocks.CHEESE_GENERATOR.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.SALTY_WATER_BLOCK, new Item.Properties()).setRegistryName(ModBlocks.SALTY_WATER_BLOCK.getRegistryName()));
@@ -58,6 +63,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.RAMP_BLOCK, properties).setRegistryName(ModBlocks.RAMP_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.ASH_GRAY_CONCRETE_BLOCK, properties).setRegistryName(ModBlocks.ASH_GRAY_CONCRETE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.SHELF_BLOCK, properties).setRegistryName(ModBlocks.SHELF_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.FLOOR_BLOCK, properties).setRegistryName(ModBlocks.FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
     }
@@ -89,10 +95,5 @@ public class RegistryEvents {
         // register a new fluid here
         event.getRegistry().register(new SaltyWaterFluid.Flowing().setRegistryName("salty_water_flowing"));
         event.getRegistry().register(new SaltyWaterFluid.Source().setRegistryName("salty_water"));
-    }
-
-    @SubscribeEvent
-    public static void onFMLClientSetupEvent(FMLClientSetupEvent event) {
-        ClientRegistry.bindTileEntitySpecialRenderer(ShelfTileEntity.class, new ShelfBlockRenderer(itemRenderer));
     }
 }

@@ -17,7 +17,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
-public class RampBlock extends FacingBlock {
+public class RampBlock extends HorizontalFacingBlock {
 
     public static final EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
 
@@ -138,14 +138,13 @@ public class RampBlock extends FacingBlock {
         BlockPos blockpos = context.getPos();
         BlockState blockstate = context.getWorld().getBlockState(blockpos);
         BlockState blockState2;
-        Direction direction = context.getFace();
         if (blockstate.getBlock() == this) {
             blockState2 = blockstate.with(TYPE, SlabType.DOUBLE);
         } else {
             BlockState blockState1 = this.getDefaultState().with(TYPE, SlabType.BOTTOM);
-            blockState2 = direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double) blockpos.getY() > 0.5D)) ? blockState1 : blockState1.with(TYPE, SlabType.TOP);
+            blockState2 = !(context.getHitVec().y - (double) blockpos.getY() > 0.5D) ? blockState1 : blockState1.with(TYPE, SlabType.TOP);
         }
-        return blockstate.getBlock() == this && blockstate.get(FACING) == direction ? blockState2.with(FACING, direction) : blockState2.with(FACING, direction.getOpposite());
+        return blockState2.with(FACING, context.getPlacementHorizontalFacing());
     }
 
     @Override

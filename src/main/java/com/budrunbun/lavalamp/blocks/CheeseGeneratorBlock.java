@@ -2,7 +2,6 @@ package com.budrunbun.lavalamp.blocks;
 
 import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
 import com.budrunbun.lavalamp.tileEntities.ModTileEntities;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -23,7 +22,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class CheeseGeneratorBlock extends FacingBlock {
+public class CheeseGeneratorBlock extends HorizontalFacingBlock {
 
     //TODO: replace with multi-block structure and create animations
 

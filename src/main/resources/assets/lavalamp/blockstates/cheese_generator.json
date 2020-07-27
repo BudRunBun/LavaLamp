@@ -1,11 +1,5 @@
 {
   "variants": {
-    "facing=down": {
-      "model": "lavalamp:block/cheese_generator"
-    },
-    "facing=up": {
-      "model": "lavalamp:block/cheese_generator"
-    },
     "facing=north": {
       "model": "lavalamp:block/cheese_generator"
     },
