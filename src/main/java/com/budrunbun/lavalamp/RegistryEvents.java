@@ -13,7 +13,10 @@ import com.budrunbun.lavalamp.tileEntities.ShelfTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.IntArray;
@@ -27,8 +30,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemStackHandler;
 
-// You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-// Event bus for receiving Registry Events)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RegistryEvents {
 
@@ -50,6 +51,8 @@ public class RegistryEvents {
         event.getRegistry().register(new AshGrayConcreteBlock());
         event.getRegistry().register(new ShelfBlock());
         event.getRegistry().register(new FloorBlock());
+        event.getRegistry().register(new IronFloorBlock());
+        event.getRegistry().register(new GrillCeilingBlock());
     }
 
     @SubscribeEvent
@@ -64,6 +67,8 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.ASH_GRAY_CONCRETE_BLOCK, properties).setRegistryName(ModBlocks.ASH_GRAY_CONCRETE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.SHELF_BLOCK, properties).setRegistryName(ModBlocks.SHELF_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.FLOOR_BLOCK, properties).setRegistryName(ModBlocks.FLOOR_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.IRON_FLOOR_BLOCK, properties).setRegistryName(ModBlocks.IRON_FLOOR_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.GRILL_CEILING_BLOCK, properties).setRegistryName(ModBlocks.GRILL_CEILING_BLOCK.getRegistryName()));
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
     }

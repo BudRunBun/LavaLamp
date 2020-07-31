@@ -65,7 +65,7 @@ public class CheeseGeneratorBlock extends HorizontalFacingBlock {
         }
     }
 
-    public static void dropItemHandlerContents(final World world, final BlockPos pos, final IItemHandler itemHandler) {
+    private void dropItemHandlerContents(final World world, final BlockPos pos, final IItemHandler itemHandler) {
         for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
             final ItemStack stack = itemHandler.extractItem(slot, Integer.MAX_VALUE, false);
             InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);

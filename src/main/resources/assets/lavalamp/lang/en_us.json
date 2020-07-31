@@ -9,5 +9,7 @@
   "block.lavalamp.ash_gray_concrete_block": "Ash Gray Concrete",
   "block.lavalamp.shelf_block": "Shelf",
   "block.lavalamp.floor_block": "Ceramic Tile",
+  "block.lavalamp.iron_floor_block": "Iron Flooring",
+  "block.lavalamp.grill_ceiling_block": "Grill",
   "itemGroup.lavalamp": "Lava Lamp"
 }

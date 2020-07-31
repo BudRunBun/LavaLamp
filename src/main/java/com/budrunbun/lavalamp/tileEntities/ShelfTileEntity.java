@@ -1,6 +1,7 @@
 package com.budrunbun.lavalamp.tileEntities;
 
 import com.budrunbun.lavalamp.containers.ShelfContainer;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -12,6 +13,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class ShelfTileEntity extends TileEntity implements INamedContainerProvider {
 
@@ -37,6 +39,7 @@ public class ShelfTileEntity extends TileEntity implements INamedContainerProvid
         this.handler.deserializeNBT(compound.getCompound("inv"));
     }
 
+
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
@@ -54,4 +57,5 @@ public class ShelfTileEntity extends TileEntity implements INamedContainerProvid
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new ShelfContainer(windowId, handler, playerInventory);
     }
+
 }

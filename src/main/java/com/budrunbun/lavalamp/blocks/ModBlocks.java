@@ -26,4 +26,10 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:floor_block")
     public static final FloorBlock FLOOR_BLOCK = null;
+
+    @ObjectHolder("lavalamp:iron_floor_block")
+    public static final IronFloorBlock IRON_FLOOR_BLOCK = null;
+
+    @ObjectHolder("lavalamp:grill_ceiling_block")
+    public static final GrillCeilingBlock GRILL_CEILING_BLOCK = null;
 }

@@ -13,9 +13,12 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -25,6 +28,11 @@ import javax.annotation.Nullable;
 
 public class ShelfBlock extends HorizontalFacingBlock {
 
+    private static final VoxelShape SHAPE_NORTH = Block.makeCuboidShape(0, 0, 0, 16, 16, 8);
+    private static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
+    private static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
+    private static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
+
     public ShelfBlock() {
         super(Block.Properties.create(Material.IRON));
         setRegistryName("shelf_block");
@@ -33,6 +41,21 @@ public class ShelfBlock extends HorizontalFacingBlock {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch (state.get(HorizontalFacingBlock.FACING)) {
+            case NORTH:
+                return SHAPE_NORTH;
+            case SOUTH:
+                return SHAPE_SOUTH;
+            case EAST:
+                return SHAPE_EAST;
+            default:
+                return SHAPE_WEST;
+        }
     }
 
     @Override
@@ -87,7 +110,7 @@ public class ShelfBlock extends HorizontalFacingBlock {
 
     @Override
     public float func_220080_a(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        //Makes the ground stay bright
         return 1.0F;
     }
+
 }

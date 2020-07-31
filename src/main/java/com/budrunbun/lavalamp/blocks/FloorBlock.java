@@ -28,7 +28,6 @@ public class FloorBlock extends Block {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         n = rand.nextInt(2);
-        System.out.println("Value for floor block: " + n);
         return this.getDefaultState().with(VARIANT, n);
     }
 
