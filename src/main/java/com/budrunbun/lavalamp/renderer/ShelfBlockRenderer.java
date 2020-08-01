@@ -10,24 +10,39 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ShelfBlockRenderer extends TileEntityRenderer<ShelfTileEntity> {
+    /*
+    |1|3|
+    |0|2|
+*/
     private final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
     private Direction FACING;
 
     @Override
     public void render(ShelfTileEntity entity, double x, double y, double z, float partialTicks, int destroyStage) {
         FACING = entity.getBlockState().get(HorizontalFacingBlock.FACING);
-        ItemStack itemStack = new ItemStack(Items.WHEAT);
-        renderBottomLeftItem(x, y, z, itemStack);
-        itemStack = new ItemStack(Items.APPLE);
-        renderTopLeftItem(x, y, z, itemStack);
-        itemStack = new ItemStack(Items.FEATHER);
-        renderBottomRightItem(x, y, z, itemStack);
-        itemStack = new ItemStack(Items.LAVA_BUCKET);
-        renderTopRightItem(x, y, z, itemStack);
+
+        ItemStack slot0 = entity.getHandler().getStackInSlot(0);
+        ItemStack slot1 = entity.getHandler().getStackInSlot(1);
+        ItemStack slot2 = entity.getHandler().getStackInSlot(2);
+        ItemStack slot3 = entity.getHandler().getStackInSlot(3);
+
+        if (!slot0.isEmpty()) {
+            renderBottomLeftItem(x, y, z, slot0);
+        }
+        if (!slot1.isEmpty()) {
+            renderTopLeftItem(x, y, z, slot1);
+        }
+        if (!slot2.isEmpty()) {
+            renderBottomRightItem(x, y, z, slot2);
+        }
+        if (!slot3.isEmpty()) {
+            renderTopRightItem(x, y, z, slot3);
+        }
     }
 
     private void renderBottomLeftItem(double x, double y, double z, ItemStack stack) {

@@ -1,23 +1,20 @@
 package com.budrunbun.lavalamp.tileEntities;
 
-import com.budrunbun.lavalamp.containers.ShelfContainer;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 
-public class ShelfTileEntity extends TileEntity implements INamedContainerProvider {
-
-    private final ItemStackHandler handler = new ItemStackHandler(4) {
+public class ShelfTileEntity extends TileEntity {
+    /*
+        |1|3|
+        |0|2|
+    */
+    private ItemStackHandler handler = new ItemStackHandler(4) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -31,6 +28,10 @@ public class ShelfTileEntity extends TileEntity implements INamedContainerProvid
 
     public ItemStackHandler getHandler() {
         return handler;
+    }
+
+    public void setHandler(ItemStackHandler handlerIn) {
+        handler = handlerIn;
     }
 
     @Override
@@ -48,14 +49,27 @@ public class ShelfTileEntity extends TileEntity implements INamedContainerProvid
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("shelf_block");
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT tag = super.getUpdateTag();
+        write(tag);
+        return tag;
     }
 
-    @Nullable
     @Override
-    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new ShelfContainer(windowId, handler, playerInventory);
+    public void handleUpdateTag(CompoundNBT tag) {
+        read(tag);
     }
 
+    @Nonnull
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(pos, -1, getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        CompoundNBT tag = pkt.getNbtCompound();
+        handleUpdateTag(tag);
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+    }
 }

@@ -2,7 +2,6 @@ package com.budrunbun.lavalamp;
 
 import com.budrunbun.lavalamp.blocks.*;
 import com.budrunbun.lavalamp.containers.CheeseGeneratorContainer;
-import com.budrunbun.lavalamp.containers.ShelfContainer;
 import com.budrunbun.lavalamp.crafting.CheeseGeneratorRecipeSerializer;
 import com.budrunbun.lavalamp.crafting.ModRecipes;
 import com.budrunbun.lavalamp.fluids.SaltyWaterFluid;
@@ -84,7 +83,6 @@ public class RegistryEvents {
     public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event) {
         // register a new container here
         event.getRegistry().register(IForgeContainerType.create((id, inv, data) -> new CheeseGeneratorContainer(id, inv, new ItemStackHandler(4), new IntArray(4))).setRegistryName("cheese_generator"));
-        event.getRegistry().register(IForgeContainerType.create((id, inv, data) -> new ShelfContainer(id, new ItemStackHandler(4), inv)).setRegistryName("shelf_block"));
     }
 
     @SubscribeEvent
