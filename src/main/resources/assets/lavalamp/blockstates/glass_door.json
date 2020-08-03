@@ -1,124 +1,120 @@
 {
   "variants": {
     "facing=east,half=lower,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_bottom"
+      "model": "lavalamp:block/glass_door_bottom_closed"
     },
     "facing=south,half=lower,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_bottom",
+      "model": "lavalamp:block/glass_door_bottom_closed",
       "y": 90
     },
     "facing=west,half=lower,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 180
+      "model": "lavalamp:block/glass_door_bottom_closed"
     },
     "facing=north,half=lower,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 270
+      "model": "lavalamp:block/glass_door_bottom_closed",
+      "y": 90
     },
     "facing=east,half=lower,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_bottom"
+      "model": "lavalamp:block/glass_door_bottom_closed"
     },
     "facing=south,half=lower,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_bottom",
+      "model": "lavalamp:block/glass_door_bottom_closed",
       "y": 90
     },
     "facing=west,half=lower,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 180
+      "model": "lavalamp:block/glass_door_bottom_closed"
     },
     "facing=north,half=lower,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 270
+      "model": "lavalamp:block/glass_door_bottom_closed",
+      "y": 90
     },
     "facing=east,half=lower,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 90
+      "model": "lavalamp:block/glass_door_bottom_open_left"
     },
     "facing=south,half=lower,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 180
-    },
-    "facing=west,half=lower,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 270
-    },
-    "facing=north,half=lower,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_bottom"
-    },
-    "facing=east,half=lower,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_bottom",
-      "y": 270
-    },
-    "facing=south,half=lower,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_bottom"
-    },
-    "facing=west,half=lower,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_bottom",
+      "model": "lavalamp:block/glass_door_bottom_open_left",
       "y": 90
     },
-    "facing=north,half=lower,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_bottom",
+    "facing=west,half=lower,hinge=left,open=true": {
+      "model": "lavalamp:block/glass_door_bottom_open_left",
       "y": 180
     },
+    "facing=north,half=lower,hinge=left,open=true": {
+      "model": "lavalamp:block/glass_door_bottom_open_left",
+      "y": 270
+    },
+    "facing=east,half=lower,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_bottom_open_right"
+    },
+    "facing=south,half=lower,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_bottom_open_right",
+      "y": 90
+    },
+    "facing=west,half=lower,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_bottom_open_right",
+      "y": 180
+    },
+    "facing=north,half=lower,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_bottom_open_right",
+      "y": 270
+    },
     "facing=east,half=upper,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_top"
+      "model": "lavalamp:block/glass_door_top_closed"
     },
     "facing=south,half=upper,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_top",
+      "model": "lavalamp:block/glass_door_top_closed",
       "y": 90
     },
     "facing=west,half=upper,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 180
+      "model": "lavalamp:block/glass_door_top_closed"
     },
     "facing=north,half=upper,hinge=left,open=false": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 270
+      "model": "lavalamp:block/glass_door_top_closed",
+      "y": 90
     },
     "facing=east,half=upper,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_top"
+      "model": "lavalamp:block/glass_door_top_closed"
     },
     "facing=south,half=upper,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_top",
+      "model": "lavalamp:block/glass_door_top_closed",
       "y": 90
     },
     "facing=west,half=upper,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 180
+      "model": "lavalamp:block/glass_door_top_closed"
     },
     "facing=north,half=upper,hinge=right,open=false": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 270
+      "model": "lavalamp:block/glass_door_top_closed",
+      "y": 90
     },
     "facing=east,half=upper,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 90
+      "model": "lavalamp:block/glass_door_top_open_left"
     },
     "facing=south,half=upper,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 180
-    },
-    "facing=west,half=upper,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 270
-    },
-    "facing=north,half=upper,hinge=left,open=true": {
-      "model": "lavalamp:block/glass_door_top"
-    },
-    "facing=east,half=upper,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_top",
-      "y": 270
-    },
-    "facing=south,half=upper,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_top"
-    },
-    "facing=west,half=upper,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_top",
+      "model": "lavalamp:block/glass_door_top_open_left",
       "y": 90
     },
-    "facing=north,half=upper,hinge=right,open=true": {
-      "model": "lavalamp:block/glass_door_top",
+    "facing=west,half=upper,hinge=left,open=true": {
+      "model": "lavalamp:block/glass_door_top_open_left",
       "y": 180
+    },
+    "facing=north,half=upper,hinge=left,open=true": {
+      "model": "lavalamp:block/glass_door_top_open_left",
+      "y": 270
+    },
+    "facing=east,half=upper,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_top_open_right"
+    },
+    "facing=south,half=upper,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_top_open_right",
+      "y": 90
+    },
+    "facing=west,half=upper,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_top_open_right",
+      "y": 180
+    },
+    "facing=north,half=upper,hinge=right,open=true": {
+      "model": "lavalamp:block/glass_door_top_open_right",
+      "y": 270
     }
   }
 }
