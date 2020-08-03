@@ -1,13 +1,12 @@
 package com.budrunbun.lavalamp.blocks;
 
-import com.google.common.base.Supplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.BlockRenderLayer;
 
-public class GrillCeilingBlock extends Block {
+import javax.annotation.Nonnull;
 
-    Supplier s = GrillCeilingBlock::new;
+public class GrillCeilingBlock extends Block {
 
     public GrillCeilingBlock() {
         super(Block.Properties.create(Material.IRON));
@@ -15,7 +14,7 @@ public class GrillCeilingBlock extends Block {
     }
 
 
-
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;

@@ -32,4 +32,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:grill_ceiling_block")
     public static final GrillCeilingBlock GRILL_CEILING_BLOCK = null;
+
+    @ObjectHolder("lavalamp:glass_door")
+    public static final GlassDoorBlock GLASS_DOOR_BLOCK = null;
 }

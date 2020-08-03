@@ -17,6 +17,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
+import javax.annotation.Nonnull;
+
 public class RampBlock extends HorizontalFacingBlock {
 
     public static final EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
@@ -64,8 +66,10 @@ public class RampBlock extends HorizontalFacingBlock {
         this.setDefaultState(this.getDefaultState().with(TYPE, SlabType.BOTTOM));
     }
 
+    @SuppressWarnings("deprecation")
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         if (state.get(TYPE) == SlabType.BOTTOM) {
             switch (state.get(FACING)) {
                 case SOUTH:
@@ -102,16 +106,19 @@ public class RampBlock extends HorizontalFacingBlock {
         }
     }
 
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean func_220074_n(BlockState state) {
         return state.get(TYPE) != SlabType.DOUBLE;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
         ItemStack itemstack = useContext.getItem();

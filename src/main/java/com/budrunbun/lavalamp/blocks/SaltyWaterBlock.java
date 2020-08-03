@@ -9,6 +9,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class SaltyWaterBlock extends FlowingFluidBlock {
 
     public SaltyWaterBlock() {
@@ -17,7 +19,7 @@ public class SaltyWaterBlock extends FlowingFluidBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+    public void onEntityCollision(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Entity entityIn) {
         if (entityIn instanceof LivingEntity) {
             entityIn.onEnterBubbleColumn(false);
         }

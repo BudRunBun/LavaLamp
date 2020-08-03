@@ -12,9 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 import net.minecraft.util.IIntArray;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+
+import javax.annotation.Nonnull;
 
 public class CheeseGeneratorContainer extends Container {
 
@@ -55,12 +59,13 @@ public class CheeseGeneratorContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
         return true;
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    @Nonnull
+    public ItemStack transferStackInSlot(@Nonnull PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
@@ -101,14 +106,17 @@ public class CheeseGeneratorContainer extends Container {
         return itemstack;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public int getMilkCapacityScaled() {
         return this.generatorData.get(0) * 49 / 8;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public int getWaterCapacityScaled() {
         return this.generatorData.get(1) * 49 / 8;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public int getLeftAndRightArrowProgressionScaled() {
         if (this.generatorData.get(2) <= 200) {
             return this.generatorData.get(2) * 50 / 200;
@@ -116,6 +124,7 @@ public class CheeseGeneratorContainer extends Container {
             return 50;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public int getDownArrowProgressionScaled() {
         if (this.generatorData.get(2) <= 200) {
             return this.generatorData.get(2) * 7 / 200;
@@ -123,6 +132,7 @@ public class CheeseGeneratorContainer extends Container {
             return 7;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public int getUpArrowProgressionScaled() {
         if (this.generatorData.get(2) >= 300) {
             return (this.generatorData.get(2) - 300) * 18 / 100;
@@ -130,17 +140,19 @@ public class CheeseGeneratorContainer extends Container {
             return -1;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public boolean isWorking() {
         return this.generatorData.get(2) > 0;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public int getFanXPosition() {
         if (this.generatorData.get(2) >= 200) {
             if (flag) {
-                flag = !flag;
+                flag = false;
                 return 0;
             } else {
-                flag = !flag;
+                flag = true;
                 return 27;
             }
         } else {

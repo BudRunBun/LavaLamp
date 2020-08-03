@@ -5,7 +5,8 @@ import com.budrunbun.lavalamp.screens.CheeseGeneratorScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class ClientProxy implements IProxy {
 
@@ -16,15 +17,5 @@ public class ClientProxy implements IProxy {
     @Override
     public void init() {
         ScreenManager.registerFactory(ModContainers.CHEESE_GENERATOR_CONTAINER, CheeseGeneratorScreen::new);
-    }
-
-    @Override
-    public World getClientWorld() {
-        return Minecraft.getInstance().world;
-    }
-
-    @Override
-    public PlayerEntity getClientPlayer() {
-        return Minecraft.getInstance().player;
     }
 }

@@ -1,10 +1,11 @@
 {
   "variants": {
     "variant=0": {
-      "model": "lavalamp:block/floor_block_0"
+      "model": "lavalamp:block/floor_block"
     },
     "variant=1": {
-      "model": "lavalamp:block/floor_block_1"
+      "model": "lavalamp:block/floor_block",
+      "y": 270
     }
   }
 }

@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "particle": "lavalamp:block/floor_block_2",
-    "all": "lavalamp:block/floor_block_2"
-  }
-}

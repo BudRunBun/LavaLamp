@@ -9,7 +9,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 
 public class InputSlot extends SlotItemHandler {
-    private Item validItem;
+    private final Item validItem;
 
     public InputSlot(Item validItem, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);

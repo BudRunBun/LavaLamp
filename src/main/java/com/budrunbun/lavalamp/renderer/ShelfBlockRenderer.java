@@ -8,17 +8,16 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ShelfBlockRenderer extends TileEntityRenderer<ShelfTileEntity> {
     /*
     |1|3|
     |0|2|
-*/
+    */
     private final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
     private Direction FACING;
 

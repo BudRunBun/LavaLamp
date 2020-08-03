@@ -52,11 +52,13 @@ public class RegistryEvents {
         event.getRegistry().register(new FloorBlock());
         event.getRegistry().register(new IronFloorBlock());
         event.getRegistry().register(new GrillCeilingBlock());
+        event.getRegistry().register(new GlassDoorBlock());
     }
 
+    @SuppressWarnings("all")
     @SubscribeEvent
     public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
-        // register a new item here
+        // register a new block item here
         Item.Properties properties = new Item.Properties().group(LAVALAMP);
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_BLOCK, properties).setRegistryName(ModBlocks.CHEESE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_GENERATOR, properties).setRegistryName(ModBlocks.CHEESE_GENERATOR.getRegistryName()));
@@ -68,6 +70,9 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.FLOOR_BLOCK, properties).setRegistryName(ModBlocks.FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.IRON_FLOOR_BLOCK, properties).setRegistryName(ModBlocks.IRON_FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.GRILL_CEILING_BLOCK, properties).setRegistryName(ModBlocks.GRILL_CEILING_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.GLASS_DOOR_BLOCK,properties).setRegistryName(ModBlocks.GLASS_DOOR_BLOCK.getRegistryName()));
+
+        //register a new item here
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
     }

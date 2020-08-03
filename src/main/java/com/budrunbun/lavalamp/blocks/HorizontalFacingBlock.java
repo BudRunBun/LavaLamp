@@ -11,6 +11,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
+import javax.annotation.Nonnull;
+
 public class HorizontalFacingBlock extends Block {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
@@ -30,12 +32,16 @@ public class HorizontalFacingBlock extends Block {
         builder.add(FACING);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
+    @Nonnull
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.with(FACING, mirrorIn.mirror(state.get(FACING)));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
+    @Nonnull
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
@@ -49,7 +55,7 @@ public class HorizontalFacingBlock extends Block {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
         return calculateFacing(context, false);
     }
 }

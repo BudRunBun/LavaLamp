@@ -6,7 +6,10 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class CheeseGeneratorScreen extends ContainerScreen<CheeseGeneratorContainer> {
 
     private static final ResourceLocation GUI = new ResourceLocation("lavalamp", "textures/gui/container/cheese_generator.png");
@@ -24,14 +27,6 @@ public class CheeseGeneratorScreen extends ContainerScreen<CheeseGeneratorContai
         super.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }
-
-/*
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString("Cheese Maker", 8.0F, 6.0F, 1547968);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 96 + 2), 4210752);
-    }
-*/
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {

@@ -16,6 +16,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class CheeseGeneratorTileEntity extends TileEntity implements INamedContainerProvider, ITickableTileEntity {
@@ -77,7 +78,7 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
     }
 
     @Override
-    public void read(CompoundNBT compound) {
+    public void read(@Nonnull CompoundNBT compound) {
         super.read(compound);
         this.handler.deserializeNBT(compound.getCompound("inv"));
         this.milkCapacity = compound.getInt("milk");
@@ -87,7 +88,8 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    @Nonnull
+    public CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
         compound.put("inv", handler.serializeNBT());
         compound.putInt("milk", milkCapacity);
@@ -98,13 +100,14 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
     }
 
     @Override
+    @Nonnull
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent("cheese_generator");
     }
 
     @Nullable
     @Override
-    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
         return new CheeseGeneratorContainer(windowId, playerInventory, handler, this.generatorData);
     }
 

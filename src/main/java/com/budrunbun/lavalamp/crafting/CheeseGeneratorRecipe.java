@@ -10,44 +10,33 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class CheeseGeneratorRecipe implements IRecipe<IInventory> {
+import javax.annotation.Nonnull;
 
+public class CheeseGeneratorRecipe implements IRecipe<IInventory> {
 
     private final Ingredient input;
     private final ItemStack output;
     private final ResourceLocation id;
 
     public CheeseGeneratorRecipe(ResourceLocation id, Ingredient input, ItemStack output) {
-
         this.id = id;
         this.input = input;
         this.output = output;
-
-        // This output is not required, but it can be used to detect when a recipe has been
-        // loaded into the game.
-        System.out.println("Loaded " + this.toString());
     }
 
     @Override
     public String toString() {
-
-        // Overriding toString is not required, it's just useful for debugging.
-        return "CheeseGeneratorRecipe [input=" + this.input + ", output=" + this.output + ", id=" + this.id + "]";
+        return "CheeseGeneratorRecipe [input = " + this.input + ", output = " + this.output + ", id = " + this.id + "]";
     }
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
-
-        // This method is ignored by our custom recipe system, and only has partial
-        // functionality. isValid is used instead.
+    public boolean matches(IInventory inv, @Nonnull World worldIn) {
         return this.input.test(inv.getStackInSlot(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
-
-        // This method is ignored by our custom recipe system. getRecipeOutput().copy() is used
-        // instead.
+    @Nonnull
+    public ItemStack getCraftingResult( @Nonnull IInventory inv) {
         return this.output.copy();
     }
 
@@ -57,37 +46,36 @@ public class CheeseGeneratorRecipe implements IRecipe<IInventory> {
     }
 
     @Override
+    @Nonnull
     public ItemStack getRecipeOutput() {
-
         return this.output;
     }
 
     @Override
+    @Nonnull
     public ResourceLocation getId() {
-
         return this.id;
     }
 
     @Override
+    @Nonnull
     public IRecipeSerializer<?> getSerializer() {
-
         return new CheeseGeneratorRecipeSerializer();
     }
 
     @Override
+    @Nonnull
     public IRecipeType<?> getType() {
-
         return ModRecipes.CHEESE_GENERATOR_RECIPE;
     }
 
     @Override
+    @Nonnull
     public ItemStack getIcon() {
-
         return new ItemStack(Blocks.STONE);
     }
 
     public boolean isValid(ItemStack input) {
-
         return this.input.test(input);
     }
 

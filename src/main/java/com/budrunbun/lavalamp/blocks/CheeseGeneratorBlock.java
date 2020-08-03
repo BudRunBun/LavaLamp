@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class CheeseGeneratorBlock extends HorizontalFacingBlock {
@@ -42,8 +43,9 @@ public class CheeseGeneratorBlock extends HorizontalFacingBlock {
         return ModTileEntities.CHEESE_GENERATOR_TE.create();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public boolean onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         if (!worldIn.isRemote()) {
             TileEntity tileEntity = worldIn.getTileEntity(pos);
             if (tileEntity instanceof INamedContainerProvider) {
@@ -53,8 +55,9 @@ public class CheeseGeneratorBlock extends HorizontalFacingBlock {
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void onReplaced(final BlockState state, final World world, final BlockPos pos, final BlockState newState, final boolean isMoving) {
+    public void onReplaced(final BlockState state, @Nonnull final World world, @Nonnull final BlockPos pos, final BlockState newState, final boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             final CheeseGeneratorTileEntity tileEntity = (CheeseGeneratorTileEntity) world.getTileEntity(pos);
             if (tileEntity != null) {

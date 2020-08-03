@@ -11,5 +11,6 @@
   "block.lavalamp.floor_block": "Ceramic Tile",
   "block.lavalamp.iron_floor_block": "Iron Flooring",
   "block.lavalamp.grill_ceiling_block": "Grill",
+  "block.lavalamp.glass_door": "Glass Door",
   "itemGroup.lavalamp": "Lava Lamp"
 }

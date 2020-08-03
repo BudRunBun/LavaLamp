@@ -4,12 +4,12 @@ import com.budrunbun.lavalamp.tileEntities.ModTileEntities;
 import com.budrunbun.lavalamp.tileEntities.ShelfTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,10 +22,10 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -41,7 +41,8 @@ public class ShelfBlock extends HorizontalFacingBlock {
     private static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
     private static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
     private static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
-    private static final VoxelShape SHAPE = VoxelShapes.create(0.5625, 0.0625, 0.0625, 0.625, 0.4375, 0.5);
+
+    //TODO: Fix right-click in creative mode
 
     public ShelfBlock() {
         super(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F));
@@ -54,8 +55,9 @@ public class ShelfBlock extends HorizontalFacingBlock {
     }
 
     @SuppressWarnings("deprecation")
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         switch (state.get(HorizontalFacingBlock.FACING)) {
             case NORTH:
                 return SHAPE_NORTH;
@@ -66,21 +68,35 @@ public class ShelfBlock extends HorizontalFacingBlock {
             default:
                 return SHAPE_WEST;
         }
-        //return SHAPE;
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+        if (player.isCreative()) {
+            if (canBreakBlockInCreative(state, world, pos, player))
+                world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote() ? 11 : 3);
+            else
+                onBlockClicked(state, world, pos, player);
+            return false;
+        }
+        return super.removedByPlayer(state, world, pos, player, false, fluid);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         if (!worldIn.isRemote()) {
             if (!player.getHeldItemMainhand().isEmpty()) {
                 int slot = getSlot(hit, state, pos);
 
-                System.out.println("Slot: " + slot);
+                if (slot == -1) {
+                    return false;
+                }
 
                 ShelfTileEntity shelf = (ShelfTileEntity) worldIn.getTileEntity(pos);
                 ItemStackHandler handler = shelf.getHandler();
 
-                if (slot != -1 && handler.getStackInSlot(slot).isEmpty()) {
+                if (handler.getStackInSlot(slot).isEmpty()) {
                     Item item = player.getHeldItemMainhand().getItem();
                     if (!player.isCreative()) {
                         ItemStack stack = player.getHeldItemMainhand();
@@ -91,30 +107,40 @@ public class ShelfBlock extends HorizontalFacingBlock {
                     shelf.setHandler(handler);
                     worldIn.notifyBlockUpdate(pos, state, state, 3);
                 }
+                return true;
             }
+            return false;
         }
         return true;
     }
 
+    public boolean canBreakBlockInCreative(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+        double blockReachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
+
+        BlockRayTraceResult rayResult = rayTraceEyes(world, player, blockReachDistance + 1);
+        return getSlot(rayResult, state, pos) == -1;
+    }
+
+    @SuppressWarnings("deprecation")
     @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        if (!worldIn.isRemote()) {
-            BlockRayTraceResult hit = rayTraceEyes(worldIn, player, player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1);
-            int slot = getSlot(hit, state, pos);
-            ShelfTileEntity shelf = (ShelfTileEntity) worldIn.getTileEntity(pos);
-            ItemStackHandler handler = shelf.getHandler();
+    public void onBlockClicked(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player) {
+        BlockRayTraceResult hit = rayTraceEyes(worldIn, player, player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1);
+        int slot = getSlot(hit, state, pos);
+        ShelfTileEntity shelf = (ShelfTileEntity) worldIn.getTileEntity(pos);
+        ItemStackHandler handler = shelf.getHandler();
 
-            if (slot != -1 && !handler.getStackInSlot(slot).isEmpty()) {
-                ItemStack item = handler.getStackInSlot(slot);
+        if (slot != -1 && !handler.getStackInSlot(slot).isEmpty()) {
+            ItemStack item = handler.getStackInSlot(slot);
 
+            if (!player.isCreative()) {
                 if (!player.inventory.addItemStackToInventory(item)) {
                     dropItemStack(worldIn, pos, item);
-
-                    handler.setStackInSlot(slot, ItemStack.EMPTY);
-                    shelf.setHandler(handler);
                 }
             }
+
+            handler.setStackInSlot(slot, ItemStack.EMPTY);
             worldIn.notifyBlockUpdate(pos, state, state, 3);
+            shelf.setHandler(handler);
         }
     }
 
@@ -136,7 +162,6 @@ public class ShelfBlock extends HorizontalFacingBlock {
                     return 0;
                 } else if (hitX >= 0.0625 && hitY >= 0.0625 + 0.5 && hitZ >= 0.4375 && hitX <= 0.4375 && hitY <= 0.4375 + 0.5 && hitZ <= 0.5) {
                     return 1;
-
                 } else if (hitX >= 0.0625 + 0.5 && hitY >= 0.0625 && hitZ >= 0.4375 && hitX <= 0.4375 + 0.5 && hitY <= 0.4375 && hitZ <= 0.5) {
                     return 2;
                 } else if (hitX >= 0.0625 + 0.5 && hitY >= 0.0625 + 0.5 && hitZ >= 0.4375 && hitX <= 0.4375 + 0.5 && hitY <= 0.4375 + 0.5 && hitZ <= 0.5)
@@ -191,13 +216,14 @@ public class ShelfBlock extends HorizontalFacingBlock {
     }
 
     @Override
+    @Nonnull
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void onReplaced(final BlockState state, final World world, final BlockPos pos,
-                           final BlockState newState, final boolean isMoving) {
+    public void onReplaced(final BlockState state, @Nonnull final World world, @Nonnull final BlockPos pos, final BlockState newState, final boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             final ShelfTileEntity tileEntity = (ShelfTileEntity) world.getTileEntity(pos);
             if (tileEntity != null) {
@@ -208,8 +234,7 @@ public class ShelfBlock extends HorizontalFacingBlock {
         }
     }
 
-    public static void dropItemHandlerContents(final World world, final BlockPos pos,
-                                               final IItemHandler itemHandler) {
+    public static void dropItemHandlerContents(final World world, final BlockPos pos, final IItemHandler itemHandler) {
         for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
             final ItemStack stack = itemHandler.extractItem(slot, Integer.MAX_VALUE, false);
             InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
@@ -217,17 +242,20 @@ public class ShelfBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
         return calculateFacing(context, true);
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @SuppressWarnings("deprecation")
     @Override
-    public float func_220080_a(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float func_220080_a(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 1.0F;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public boolean isSolid(BlockState state) {
+    public boolean isSolid(@Nonnull BlockState state) {
         return false;
     }
 }

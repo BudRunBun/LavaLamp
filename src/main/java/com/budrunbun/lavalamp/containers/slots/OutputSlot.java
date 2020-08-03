@@ -1,9 +1,7 @@
 package com.budrunbun.lavalamp.containers.slots;
 
-import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -20,9 +18,9 @@ public class OutputSlot extends SlotItemHandler {
         this.player = player;
     }
 
+    @Nonnull
     @Override
-    public ItemStack decrStackSize(int amount)
-    {
+    public ItemStack decrStackSize(int amount) {
         if (this.getHasStack()) {
             this.removeCount += Math.min(amount, this.getStack().getCount());
         }
@@ -30,8 +28,7 @@ public class OutputSlot extends SlotItemHandler {
     }
 
     @Override
-    protected void onCrafting(ItemStack stack, int amount)
-    {
+    protected void onCrafting(@Nonnull ItemStack stack, int amount) {
         this.removeCount += amount;
         this.onCrafting(stack);
     }
@@ -42,19 +39,18 @@ public class OutputSlot extends SlotItemHandler {
     }
 
     @Override
-    public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack)
-    {
+    @Nonnull
+    public ItemStack onTake(@Nonnull PlayerEntity thePlayer, @Nonnull ItemStack stack) {
         this.onCrafting(stack);
         super.onTake(thePlayer, stack);
         return stack;
     }
 
     @Override
-    protected void onCrafting(ItemStack stack)
-    {
+    protected void onCrafting(ItemStack stack) {
         stack.onCrafting(this.player.world, this.player, this.removeCount);
         this.removeCount = 0;
         net.minecraftforge.fml.hooks.BasicEventHooks.firePlayerSmeltedEvent(this.player, stack);
-    } // end onCrafting
+    }
 }
 
