@@ -1,5 +1,6 @@
 {
     "textures": {
+        "particle": "lavalamp:block/green",
         "glass": "lavalamp:block/glass",
         "green": "lavalamp:block/green"
     },
