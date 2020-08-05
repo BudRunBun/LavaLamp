@@ -8,7 +8,9 @@ import com.budrunbun.lavalamp.fluids.SaltyWaterFluid;
 import com.budrunbun.lavalamp.items.Cheese;
 import com.budrunbun.lavalamp.items.SaltyWaterBucket;
 import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
+import com.budrunbun.lavalamp.tileEntities.PlayerSensorTileEntity;
 import com.budrunbun.lavalamp.tileEntities.ShelfTileEntity;
+import com.mojang.datafixers.DataFixer;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -53,6 +55,7 @@ public class RegistryEvents {
         event.getRegistry().register(new IronFloorBlock());
         event.getRegistry().register(new GrillCeilingBlock());
         event.getRegistry().register(new GlassDoorBlock());
+        event.getRegistry().register(new PlayerSensorBlock());
     }
 
     @SuppressWarnings("all")
@@ -71,6 +74,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.IRON_FLOOR_BLOCK, properties).setRegistryName(ModBlocks.IRON_FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.GRILL_CEILING_BLOCK, properties).setRegistryName(ModBlocks.GRILL_CEILING_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.GLASS_DOOR_BLOCK,properties).setRegistryName(ModBlocks.GLASS_DOOR_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.PLAYER_SENSOR_BLOCK, properties).setRegistryName(ModBlocks.PLAYER_SENSOR_BLOCK.getRegistryName()));
 
         //register a new item here
         event.getRegistry().register(new Cheese());
@@ -82,6 +86,7 @@ public class RegistryEvents {
         // register a new tile entity here
         event.getRegistry().register(TileEntityType.Builder.create(CheeseGeneratorTileEntity::new, ModBlocks.CHEESE_GENERATOR).build(null).setRegistryName(LavaLamp.MOD_ID, "cheese_generator"));
         event.getRegistry().register(TileEntityType.Builder.create(ShelfTileEntity::new, ModBlocks.SHELF_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "shelf_block"));
+        event.getRegistry().register(TileEntityType.Builder.create(PlayerSensorTileEntity::new, ModBlocks.PLAYER_SENSOR_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "player_sensor"));
     }
 
     @SubscribeEvent

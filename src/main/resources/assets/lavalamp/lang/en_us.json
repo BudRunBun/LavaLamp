@@ -12,5 +12,6 @@
   "block.lavalamp.iron_floor_block": "Iron Flooring",
   "block.lavalamp.grill_ceiling_block": "Grill",
   "block.lavalamp.glass_door": "Glass Door",
+  "block.lavalamp.player_sensor": "Player Sensor",
   "itemGroup.lavalamp": "Lava Lamp"
 }

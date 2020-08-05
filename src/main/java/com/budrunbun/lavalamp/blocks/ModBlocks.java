@@ -35,4 +35,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:glass_door")
     public static final GlassDoorBlock GLASS_DOOR_BLOCK = null;
+
+    @ObjectHolder("lavalamp:player_sensor")
+    public static final PlayerSensorBlock PLAYER_SENSOR_BLOCK = null;
 }
