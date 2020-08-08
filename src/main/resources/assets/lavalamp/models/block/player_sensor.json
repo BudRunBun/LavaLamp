@@ -1,9 +1,9 @@
 {
     "textures": {
-        "particle": "lavalamp:block/gray",
-        "red": "lavalamp:block/red",
-        "gray": "lavalamp:block/gray",
-        "white": "lavalamp:block/white"
+        "particle": "lavalamp:block/colors/gray",
+        "red": "lavalamp:block/colors/red",
+        "gray": "lavalamp:block/colors/gray",
+        "white": "lavalamp:block/colors/white"
     },
     "display": {
         "gui": {

@@ -12,4 +12,7 @@ public class ModTileEntities {
 
     @ObjectHolder("lavalamp:player_sensor")
     public static final TileEntityType<PlayerSensorTileEntity> PLAYER_SENSOR_TE = null;
+
+    @ObjectHolder("lavalamp:display_freezer")
+    public static final TileEntityType<DisplayFreezerTileEntity> DISPLAY_FREEZER_TE = null;
 }

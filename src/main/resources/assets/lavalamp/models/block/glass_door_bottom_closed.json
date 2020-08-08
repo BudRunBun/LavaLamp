@@ -1,8 +1,8 @@
 {
     "textures": {
-        "particle": "lavalamp:block/green",
+        "particle": "lavalamp:block/colors/green",
         "glass": "lavalamp:block/glass",
-        "green": "lavalamp:block/green"
+        "green": "lavalamp:block/colors/green"
     },
     "display": {
         "gui": {

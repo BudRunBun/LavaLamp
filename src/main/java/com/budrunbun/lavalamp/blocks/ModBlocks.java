@@ -38,4 +38,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:player_sensor")
     public static final PlayerSensorBlock PLAYER_SENSOR_BLOCK = null;
+
+    @ObjectHolder("lavalamp:display_freezer")
+    public static final DisplayFreezerBlock DISPLAY_FREEZER_BLOCK = null;
 }

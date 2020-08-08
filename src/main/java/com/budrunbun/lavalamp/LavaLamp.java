@@ -3,8 +3,12 @@ package com.budrunbun.lavalamp;
 import com.budrunbun.lavalamp.proxy.ClientProxy;
 import com.budrunbun.lavalamp.proxy.IProxy;
 import com.budrunbun.lavalamp.proxy.ServerProxy;
+import com.budrunbun.lavalamp.renderer.DisplayFreezerRenderer;
 import com.budrunbun.lavalamp.renderer.ShelfBlockRenderer;
+import com.budrunbun.lavalamp.tileEntities.DisplayFreezerTileEntity;
 import com.budrunbun.lavalamp.tileEntities.ShelfTileEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -30,5 +34,6 @@ public class LavaLamp {
 
     private void setupClient(final FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(ShelfTileEntity.class, new ShelfBlockRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(DisplayFreezerTileEntity.class, new DisplayFreezerRenderer());
     }
 }

@@ -16,12 +16,6 @@ import javax.annotation.Nonnull;
 public class HorizontalFacingBlock extends Block {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
-    //Prevents instantiation
-    @SuppressWarnings("all")
-    private HorizontalFacingBlock() {
-        super(null);
-    }
-
     protected HorizontalFacingBlock(Block.Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));

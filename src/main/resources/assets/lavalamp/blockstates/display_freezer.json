@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,bottom=true,open=false": {
+      "model": "lavalamp:block/display_freezer_bottom_closed",
+      "y": 90
+    },
+    "facing=south,bottom=true,open=false": {
+      "model": "lavalamp:block/display_freezer_bottom_closed",
+      "y": 180
+    },
+    "facing=west,bottom=true,open=false": {
+      "model": "lavalamp:block/display_freezer_bottom_closed",
+      "y": 270
+    },
+    "facing=north,bottom=true,open=false": {
+      "model": "lavalamp:block/display_freezer_bottom_closed"
+    },
+    "facing=east,bottom=true,open=true": {
+      "model": "lavalamp:block/display_freezer_bottom_open",
+      "y": 90
+    },
+    "facing=south,bottom=true,open=true": {
+      "model": "lavalamp:block/display_freezer_bottom_open",
+      "y": 180
+    },
+    "facing=west,bottom=true,open=true": {
+      "model": "lavalamp:block/display_freezer_bottom_open",
+      "y": 270
+    },
+    "facing=north,bottom=true,open=true": {
+      "model": "lavalamp:block/display_freezer_bottom_open"
+    },
+    "facing=east,bottom=false,open=false": {
+      "model": "lavalamp:block/display_freezer_top_closed",
+      "y": 90
+    },
+    "facing=south,bottom=false,open=false": {
+      "model": "lavalamp:block/display_freezer_top_closed",
+      "y": 180
+    },
+    "facing=west,bottom=false,open=false": {
+      "model": "lavalamp:block/display_freezer_top_closed",
+      "y": 270
+    },
+    "facing=north,bottom=false,open=false": {
+      "model": "lavalamp:block/display_freezer_top_closed"
+    },
+    "facing=east,bottom=false,open=true": {
+      "model": "lavalamp:block/display_freezer_top_open",
+      "y": 90
+    },
+    "facing=south,bottom=false,open=true": {
+      "model": "lavalamp:block/display_freezer_top_open",
+      "y": 180
+    },
+    "facing=west,bottom=false,open=true": {
+      "model": "lavalamp:block/display_freezer_top_open",
+      "y": 270
+    },
+    "facing=north,bottom=false,open=true": {
+      "model": "lavalamp:block/display_freezer_top_open"
+    }
+  }
+}

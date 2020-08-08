@@ -141,7 +141,7 @@ public class RampBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         BlockState blockstate = context.getWorld().getBlockState(blockpos);
         BlockState blockState2;

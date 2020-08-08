@@ -13,5 +13,6 @@
   "block.lavalamp.grill_ceiling_block": "Grill",
   "block.lavalamp.glass_door": "Glass Door",
   "block.lavalamp.player_sensor": "Player Sensor",
+  "block.lavalamp.display_freezer": "Display Freezer",
   "itemGroup.lavalamp": "Lava Lamp"
 }

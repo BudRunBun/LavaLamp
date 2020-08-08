@@ -1,28 +1,32 @@
 package com.budrunbun.lavalamp.tileEntities;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 
-public class ShelfTileEntity extends TileEntity {
-    /*
-        |1|3|
-        |0|2|
-    */
-    private ItemStackHandler handler = new ItemStackHandler(4) {
+public class DisplayFreezerTileEntity extends TileEntity{
+
+    private ItemStackHandler handler = new ItemStackHandler(8) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
             markDirty();
         }
+
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return stack.getItem().isFood();
+        }
     };
 
-    public ShelfTileEntity() {
-        super(ModTileEntities.SHELF_TE);
+    public DisplayFreezerTileEntity() {
+        super(ModTileEntities.DISPLAY_FREEZER_TE);
     }
 
     public ItemStackHandler getHandler() {
@@ -63,7 +67,7 @@ public class ShelfTileEntity extends TileEntity {
     @Nonnull
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, -1, getUpdateTag());
+        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
     }
 
     @Override
@@ -72,4 +76,5 @@ public class ShelfTileEntity extends TileEntity {
         handleUpdateTag(tag);
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
     }
+
 }
