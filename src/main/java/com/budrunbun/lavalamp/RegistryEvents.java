@@ -1,17 +1,16 @@
 package com.budrunbun.lavalamp;
 
-import com.budrunbun.lavalamp.blocks.*;
-import com.budrunbun.lavalamp.containers.CheeseGeneratorContainer;
+import com.budrunbun.lavalamp.block.*;
+import com.budrunbun.lavalamp.container.CheeseGeneratorContainer;
 import com.budrunbun.lavalamp.crafting.CheeseGeneratorRecipeSerializer;
 import com.budrunbun.lavalamp.crafting.ModRecipes;
-import com.budrunbun.lavalamp.fluids.SaltyWaterFluid;
-import com.budrunbun.lavalamp.items.Cheese;
-import com.budrunbun.lavalamp.items.SaltyWaterBucket;
-import com.budrunbun.lavalamp.tileEntities.CheeseGeneratorTileEntity;
-import com.budrunbun.lavalamp.tileEntities.DisplayFreezerTileEntity;
-import com.budrunbun.lavalamp.tileEntities.PlayerSensorTileEntity;
-import com.budrunbun.lavalamp.tileEntities.ShelfTileEntity;
-import com.mojang.datafixers.DataFixer;
+import com.budrunbun.lavalamp.fluid.SaltyWaterFluid;
+import com.budrunbun.lavalamp.item.Cheese;
+import com.budrunbun.lavalamp.item.SaltyWaterBucket;
+import com.budrunbun.lavalamp.tileentity.CheeseGeneratorTileEntity;
+import com.budrunbun.lavalamp.tileentity.DisplayFreezerTileEntity;
+import com.budrunbun.lavalamp.tileentity.PlayerSensorTileEntity;
+import com.budrunbun.lavalamp.tileentity.ShelfTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;

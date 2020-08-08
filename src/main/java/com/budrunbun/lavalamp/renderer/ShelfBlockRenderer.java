@@ -1,7 +1,7 @@
 package com.budrunbun.lavalamp.renderer;
 
-import com.budrunbun.lavalamp.blocks.HorizontalFacingBlock;
-import com.budrunbun.lavalamp.tileEntities.ShelfTileEntity;
+import com.budrunbun.lavalamp.block.HorizontalFacingBlock;
+import com.budrunbun.lavalamp.tileentity.ShelfTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;

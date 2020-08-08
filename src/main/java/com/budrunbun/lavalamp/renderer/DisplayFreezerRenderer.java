@@ -1,8 +1,8 @@
 package com.budrunbun.lavalamp.renderer;
 
-import com.budrunbun.lavalamp.blocks.DisplayFreezerBlock;
-import com.budrunbun.lavalamp.blocks.HorizontalFacingBlock;
-import com.budrunbun.lavalamp.tileEntities.DisplayFreezerTileEntity;
+import com.budrunbun.lavalamp.block.DisplayFreezerBlock;
+import com.budrunbun.lavalamp.block.HorizontalFacingBlock;
+import com.budrunbun.lavalamp.tileentity.DisplayFreezerTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
