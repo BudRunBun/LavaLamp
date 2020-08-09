@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "lavalamp:block/office_ceiling_lamp"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/office_ceiling_lamp"
+    },
+    "facing=west": {
+      "model": "lavalamp:block/office_ceiling_lamp",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/office_ceiling_lamp",
+      "y": 270
+    }
+  }
+}

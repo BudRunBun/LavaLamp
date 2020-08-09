@@ -33,6 +33,7 @@ public class PendantLampBlock extends Block {
     }
 
     @Override
+    @Nonnull
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         return Block.makeCuboidShape(5.5, 8, 11.5, 11.5, 16, 5.5);

@@ -47,4 +47,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:concrete_stairs")
     public static final ConcreteStairsBlock CONCRETE_STAIRS_BLOCK = null;
+
+    @ObjectHolder("lavalamp:office_ceiling_lamp")
+    public static final OfficeCeilingLampBlock OFFICE_CEILING_LAMP_BLOCK = null;
 }
