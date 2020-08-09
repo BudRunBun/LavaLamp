@@ -26,7 +26,7 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
     private int cookingTimeLeft = 0;
     private int on = 0;
 
-    protected final IIntArray generatorData = new IIntArray() {
+    private final IIntArray generatorData = new IIntArray() {
         public int get(int index) {
             switch (index) {
                 case 0:

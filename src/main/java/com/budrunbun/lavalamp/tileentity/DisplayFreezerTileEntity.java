@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 public class DisplayFreezerTileEntity extends TileEntity{
 
-    private ItemStackHandler handler = new ItemStackHandler(8) {
+    private ItemStackHandler handler = new ItemStackHandler(12) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

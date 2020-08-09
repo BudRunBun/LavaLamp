@@ -2,8 +2,6 @@ package com.budrunbun.lavalamp;
 
 import com.budrunbun.lavalamp.block.*;
 import com.budrunbun.lavalamp.container.CheeseGeneratorContainer;
-import com.budrunbun.lavalamp.crafting.CheeseGeneratorRecipeSerializer;
-import com.budrunbun.lavalamp.crafting.ModRecipes;
 import com.budrunbun.lavalamp.fluid.SaltyWaterFluid;
 import com.budrunbun.lavalamp.item.Cheese;
 import com.budrunbun.lavalamp.item.SaltyWaterBucket;
@@ -18,11 +16,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.IntArray;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -41,6 +36,7 @@ public class RegistryEvents {
         }
     };
 
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
         // register a new block here
@@ -57,6 +53,8 @@ public class RegistryEvents {
         event.getRegistry().register(new GlassDoorBlock());
         event.getRegistry().register(new PlayerSensorBlock());
         event.getRegistry().register(new DisplayFreezerBlock());
+        event.getRegistry().register(new PendantLampBlock());
+        event.getRegistry().register(new ConcreteStairsBlock());
     }
 
     @SuppressWarnings("all")
@@ -74,15 +72,18 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.FLOOR_BLOCK, properties).setRegistryName(ModBlocks.FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.IRON_FLOOR_BLOCK, properties).setRegistryName(ModBlocks.IRON_FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.GRILL_CEILING_BLOCK, properties).setRegistryName(ModBlocks.GRILL_CEILING_BLOCK.getRegistryName()));
-        event.getRegistry().register(new BlockItem(ModBlocks.GLASS_DOOR_BLOCK,properties).setRegistryName(ModBlocks.GLASS_DOOR_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.GLASS_DOOR_BLOCK, properties).setRegistryName(ModBlocks.GLASS_DOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.PLAYER_SENSOR_BLOCK, properties).setRegistryName(ModBlocks.PLAYER_SENSOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.DISPLAY_FREEZER_BLOCK, properties).setRegistryName(ModBlocks.DISPLAY_FREEZER_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.PENDANT_LAMP_BLOCK, properties).setRegistryName(ModBlocks.PENDANT_LAMP_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.CONCRETE_STAIRS_BLOCK, properties).setRegistryName(ModBlocks.CONCRETE_STAIRS_BLOCK.getRegistryName()));
 
         //register a new item here
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
     }
 
+    @SuppressWarnings("all")
     @SubscribeEvent
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
         // register a new tile entity here
@@ -92,20 +93,14 @@ public class RegistryEvents {
         event.getRegistry().register(TileEntityType.Builder.create(DisplayFreezerTileEntity::new, ModBlocks.DISPLAY_FREEZER_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "display_freezer"));
     }
 
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event) {
         // register a new container here
         event.getRegistry().register(IForgeContainerType.create((id, inv, data) -> new CheeseGeneratorContainer(id, inv, new ItemStackHandler(4), new IntArray(4))).setRegistryName("cheese_generator"));
     }
 
-    @SubscribeEvent
-    public static void onRecipesRegistry(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        // register a new recipe type here
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ModRecipes.CHEESE_GENERATOR_RECIPE.toString()), ModRecipes.CHEESE_GENERATOR_RECIPE);
-        // Register the recipe serializer. This handles from json, from packet, and to packet.
-        event.getRegistry().register(new CheeseGeneratorRecipeSerializer().setRegistryName("cheese_generator_recipe"));
-    }
-
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public static void onFluidRegistry(RegistryEvent.Register<Fluid> event) {
         // register a new fluid here

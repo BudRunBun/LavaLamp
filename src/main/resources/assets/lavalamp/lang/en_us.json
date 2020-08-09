@@ -1,18 +1,22 @@
 {
   "block.lavalamp.cheese_block": "Cheese Block",
   "block.lavalamp.cheese_generator": "Cheese Maker",
-  "item.lavalamp.cheese": "Cheese",
   "block.lavalamp.salty_water_block": "Salty Water",
   "block.lavalamp.pillar_block": "Pillar",
   "block.lavalamp.ramp_block": "Ramp",
-  "item.lavalamp.salty_water_bucket": "Salty Water Bucket",
   "block.lavalamp.ash_gray_concrete_block": "Ash Gray Concrete",
   "block.lavalamp.shelf_block": "Shelf",
   "block.lavalamp.floor_block": "Ceramic Tile",
-  "block.lavalamp.iron_floor_block": "Iron Flooring",
-  "block.lavalamp.grill_ceiling_block": "Grill",
+  "block.lavalamp.iron_floor_block": "Iron Floor",
+  "block.lavalamp.grill_ceiling_block": "Ceiling",
   "block.lavalamp.glass_door": "Glass Door",
   "block.lavalamp.player_sensor": "Player Sensor",
   "block.lavalamp.display_freezer": "Display Freezer",
+  "block.lavalamp.pendant_lamp": "Pendant Lamp",
+  "block.lavalamp.concrete_stairs": "Concrete Stairs",
+
+  "item.lavalamp.cheese": "Cheese",
+  "item.lavalamp.salty_water_bucket": "Salty Water Bucket",
+
   "itemGroup.lavalamp": "Lava Lamp"
 }

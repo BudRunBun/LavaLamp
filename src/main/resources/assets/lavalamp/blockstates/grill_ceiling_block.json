@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model":  "lavalamp:block/grill_ceiling_block"}
+    "facing=north": {
+      "model": "lavalamp:block/grill_ceiling_block"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/grill_ceiling_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lavalamp:block/grill_ceiling_block",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/grill_ceiling_block",
+      "y": 90
+    }
   }
 }

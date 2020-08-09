@@ -1,6 +1,7 @@
 package com.budrunbun.lavalamp.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.material.Material;
@@ -32,6 +33,10 @@ public class GlassDoorBlock extends DoorBlock {
     public GlassDoorBlock() {
         super(Block.Properties.create(Material.IRON));
         setRegistryName("glass_door");
+    }
+
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return false;
     }
 
     @Nonnull

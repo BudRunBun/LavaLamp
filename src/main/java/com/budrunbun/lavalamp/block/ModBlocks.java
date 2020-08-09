@@ -41,4 +41,10 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:display_freezer")
     public static final DisplayFreezerBlock DISPLAY_FREEZER_BLOCK = null;
+
+    @ObjectHolder("lavalamp:pendant_lamp")
+    public static final PendantLampBlock PENDANT_LAMP_BLOCK = null;
+
+    @ObjectHolder("lavalamp:concrete_stairs")
+    public static final ConcreteStairsBlock CONCRETE_STAIRS_BLOCK = null;
 }

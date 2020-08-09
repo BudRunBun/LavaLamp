@@ -30,18 +30,10 @@ public class ShelfBlockRenderer extends TileEntityRenderer<ShelfTileEntity> {
         ItemStack slot2 = entity.getHandler().getStackInSlot(2);
         ItemStack slot3 = entity.getHandler().getStackInSlot(3);
 
-        if (!slot0.isEmpty()) {
-            renderBottomLeftItem(x, y, z, slot0);
-        }
-        if (!slot1.isEmpty()) {
-            renderTopLeftItem(x, y, z, slot1);
-        }
-        if (!slot2.isEmpty()) {
-            renderBottomRightItem(x, y, z, slot2);
-        }
-        if (!slot3.isEmpty()) {
-            renderTopRightItem(x, y, z, slot3);
-        }
+        renderBottomLeftItem(x, y, z, slot0);
+        renderTopLeftItem(x, y, z, slot1);
+        renderBottomRightItem(x, y, z, slot2);
+        renderTopRightItem(x, y, z, slot3);
     }
 
     private void renderBottomLeftItem(double x, double y, double z, ItemStack stack) {

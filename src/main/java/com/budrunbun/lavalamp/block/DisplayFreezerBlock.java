@@ -1,14 +1,16 @@
 package com.budrunbun.lavalamp.block;
 
-import com.budrunbun.lavalamp.tileentity.ModTileEntities;
 import com.budrunbun.lavalamp.tileentity.DisplayFreezerTileEntity;
+import com.budrunbun.lavalamp.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,6 +26,9 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -54,6 +59,10 @@ public class DisplayFreezerBlock extends HorizontalFacingBlock {
         super.fillStateContainer(builder);
     }
 
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         worldIn.setBlockState(pos.up(), state.with(BOTTOM, false), 3);
@@ -67,7 +76,7 @@ public class DisplayFreezerBlock extends HorizontalFacingBlock {
         if (blockstate.getBlock() == this && blockstate.get(BOTTOM) != bottom) {
             worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 35);
             ItemStack itemstack = player.getHeldItemMainhand();
-            if (!worldIn.isRemote && !player.isCreative()) {
+            if (!worldIn.isRemote() && !player.isCreative()) {
                 Block.spawnDrops(state, worldIn, pos, null, player, itemstack);
                 Block.spawnDrops(blockstate, worldIn, blockpos, null, player, itemstack);
             }
@@ -120,7 +129,29 @@ public class DisplayFreezerBlock extends HorizontalFacingBlock {
                 DisplayFreezerTileEntity freezer = (DisplayFreezerTileEntity) worldIn.getTileEntity(pos);
                 ItemStackHandler handler = freezer.getHandler();
 
-                if (handler.getStackInSlot(slot).isEmpty()) {
+                if (handler.getStackInSlot(slot + 8).isEmpty()) {
+                    Item item = player.getHeldItemMainhand().getItem();
+                    if (!player.isCreative()) {
+                        ItemStack stack = player.getHeldItemMainhand();
+                        stack.shrink(1);
+                        player.setHeldItem(Hand.MAIN_HAND, stack);
+                    }
+                    handler.setStackInSlot(slot + 8, new ItemStack(item, 1));
+                    freezer.setHandler(handler);
+                    worldIn.notifyBlockUpdate(pos, state, state, 3);
+                    return true;
+                } else if (handler.getStackInSlot(slot + 4).isEmpty()) {
+                    Item item = player.getHeldItemMainhand().getItem();
+                    if (!player.isCreative()) {
+                        ItemStack stack = player.getHeldItemMainhand();
+                        stack.shrink(1);
+                        player.setHeldItem(Hand.MAIN_HAND, stack);
+                    }
+                    handler.setStackInSlot(slot + 4, new ItemStack(item, 1));
+                    freezer.setHandler(handler);
+                    worldIn.notifyBlockUpdate(pos, state, state, 3);
+                    return true;
+                } else if (handler.getStackInSlot(slot).isEmpty()) {
                     Item item = player.getHeldItemMainhand().getItem();
                     if (!player.isCreative()) {
                         ItemStack stack = player.getHeldItemMainhand();
@@ -156,6 +187,30 @@ public class DisplayFreezerBlock extends HorizontalFacingBlock {
             }
 
             handler.setStackInSlot(slot, ItemStack.EMPTY);
+            worldIn.notifyBlockUpdate(pos, state, state, 3);
+            freezer.setHandler(handler);
+        } else if (slot != -1 && !handler.getStackInSlot(slot + 4).isEmpty() && state.get(OPEN)) {
+            ItemStack item = handler.getStackInSlot(slot + 4);
+
+            if (!player.isCreative()) {
+                if (!player.inventory.addItemStackToInventory(item)) {
+                    dropItemStack(worldIn, pos, item);
+                }
+            }
+
+            handler.setStackInSlot(slot + 4, ItemStack.EMPTY);
+            worldIn.notifyBlockUpdate(pos, state, state, 3);
+            freezer.setHandler(handler);
+        } else if (slot != -1 && !handler.getStackInSlot(slot + 8).isEmpty() && state.get(OPEN)) {
+            ItemStack item = handler.getStackInSlot(slot + 8);
+
+            if (!player.isCreative()) {
+                if (!player.inventory.addItemStackToInventory(item)) {
+                    dropItemStack(worldIn, pos, item);
+                }
+            }
+
+            handler.setStackInSlot(slot + 8, ItemStack.EMPTY);
             worldIn.notifyBlockUpdate(pos, state, state, 3);
             freezer.setHandler(handler);
         }
@@ -270,5 +325,33 @@ public class DisplayFreezerBlock extends HorizontalFacingBlock {
         Vec3d motion = entity.getMotion();
         entity.addVelocity(-motion.x, -motion.y, -motion.z);
         world.addEntity(entity);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onReplaced(final BlockState state, @Nonnull final World world, @Nonnull final BlockPos pos, final BlockState newState, final boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            final DisplayFreezerTileEntity freezer = (DisplayFreezerTileEntity) world.getTileEntity(pos);
+            if (freezer != null) {
+                dropItemHandlerContents(world, pos, freezer.getHandler());
+                world.updateComparatorOutputLevel(pos, this);
+            }
+            super.onReplaced(state, world, pos, newState, isMoving);
+
+        }
+    }
+
+    private static void dropItemHandlerContents(final World world, final BlockPos pos, final IItemHandler itemHandler) {
+        for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+            final ItemStack stack = itemHandler.extractItem(slot, Integer.MAX_VALUE, false);
+            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SuppressWarnings("deprecation")
+    @Override
+    public float func_220080_a(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+        return 1.0F;
     }
 }

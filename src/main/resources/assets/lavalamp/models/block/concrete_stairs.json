@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "bottom": "lavalamp:block/colors/gray",
+    "top": "lavalamp:block/colors/gray",
+    "side": "lavalamp:block/colors/gray"
+  }
+}
