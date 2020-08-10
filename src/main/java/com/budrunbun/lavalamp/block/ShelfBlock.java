@@ -3,7 +3,6 @@ package com.budrunbun.lavalamp.block;
 import com.budrunbun.lavalamp.tileentity.ModTileEntities;
 import com.budrunbun.lavalamp.tileentity.ShelfTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -53,10 +52,6 @@ public class ShelfBlock extends HorizontalFacingBlock {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
-    }
-
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 
     @SuppressWarnings("deprecation")

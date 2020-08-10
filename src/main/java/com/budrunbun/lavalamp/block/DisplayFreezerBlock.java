@@ -87,7 +87,7 @@ public class DisplayFreezerBlock extends HorizontalFacingBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context)) {
             return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(OPEN, false).with(BOTTOM, true);

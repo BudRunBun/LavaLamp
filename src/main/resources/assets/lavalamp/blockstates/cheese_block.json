@@ -1,5 +1,31 @@
 {
   "variants": {
-    "": { "model":  "lavalamp:block/cheese_block"}
+    "bites=0": {
+      "model": "lavalamp:block/cheese_block"
+    },
+    "bites=1": {
+      "model": "lavalamp:block/cheese_block_slice1",
+      "y": 180
+    },
+    "bites=2": {
+      "model": "lavalamp:block/cheese_block_slice2",
+      "y": 180
+    },
+    "bites=3": {
+      "model": "lavalamp:block/cheese_block_slice3",
+      "y": 180
+    },
+    "bites=4": {
+      "model": "lavalamp:block/cheese_block_slice4",
+      "y": 180
+    },
+    "bites=5": {
+      "model": "lavalamp:block/cheese_block_slice5",
+      "y": 180
+    },
+    "bites=6": {
+      "model": "lavalamp:block/cheese_block_slice6",
+      "y": 180
+    }
   }
 }
