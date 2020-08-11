@@ -15,4 +15,7 @@ public class ModTileEntities {
 
     @ObjectHolder("lavalamp:display_freezer")
     public static final TileEntityType<DisplayFreezerTileEntity> DISPLAY_FREEZER_TE = null;
+
+    @ObjectHolder("lavalamp:conveyor_belt")
+    public static final TileEntityType<ConveyorBeltTileEntity> CONVEYOR_BELT_TE = null;
 }

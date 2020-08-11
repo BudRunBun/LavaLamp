@@ -13,7 +13,6 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nonnull;
 
 public class CheeseBlock extends CakeBlock {
-
     private static final VoxelShape[] SHAPES = new VoxelShape[]{Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 2.5D, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 5, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 7.5, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 10, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 12.5, 16.0D, 8.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 13.5D, 16.0D, 8.0D, 16.0D)};
 
     public CheeseBlock() {
@@ -28,6 +27,7 @@ public class CheeseBlock extends CakeBlock {
     }
 
     @Override
+    @Nonnull
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }

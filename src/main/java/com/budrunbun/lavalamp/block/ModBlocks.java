@@ -50,4 +50,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:office_ceiling_lamp")
     public static final OfficeCeilingLampBlock OFFICE_CEILING_LAMP_BLOCK = null;
+
+    @ObjectHolder("lavalamp:conveyor_belt")
+    public static final ConveyorBeltBlock CONVEYOR_BELT_BLOCK = null;
 }
