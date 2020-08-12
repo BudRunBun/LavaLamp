@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -69,5 +70,10 @@ public class ConveyorBeltBlock extends HorizontalFacingBlock {
             final ItemStack stack = itemHandler.extractItem(slot, Integer.MAX_VALUE, false);
             InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
+    }
+
+    @Override
+    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
+        return calculateFacing(context, true);
     }
 }
