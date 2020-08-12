@@ -32,6 +32,7 @@ public class ConveyorBeltRenderer extends TileEntityRenderer<ConveyorBeltTileEnt
 
     }
 
+    @SuppressWarnings("deprecation")
     private void renderItem(double x, double y, double z, ItemStack stack, float progress) {
         GlStateManager.pushMatrix();
         switch (FACING) {

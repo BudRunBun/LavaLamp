@@ -115,15 +115,15 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
         }
 
         if (!isWaiting[0]) {
-            progress[0] += 0.1F;
+            progress[0] += 0.2F;
         }
 
         if (!isWaiting[1]) {
-            progress[1] += 0.1F;
+            progress[1] += 0.2F;
         }
 
         if (!isWaiting[2]) {
-            progress[2] += 0.1F;
+            progress[2] += 0.2F;
         }
 
         //this.updateHopper();
