@@ -25,7 +25,7 @@ public class ConveyorBeltRenderer extends TileEntityRenderer<ConveyorBeltTileEnt
         boolean[] queue = entity.getQueue();
         ItemStackHandler handler = entity.getHandler();
         for (int i = 0; i < 3; i++) {
-            if (!queue[i]) {
+            if (!queue[i] && !handler.getStackInSlot(i).isEmpty()) {
                 renderItem(x, y, z, handler.getStackInSlot(i), progress[i]);
             }
         }

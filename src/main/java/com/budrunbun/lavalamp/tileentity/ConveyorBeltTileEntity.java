@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ISidedInventoryProvider;
@@ -14,10 +15,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -26,17 +25,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.stream.IntStream;
 
-public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileEntity {
+public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileEntity, IInventory {
 
-    private final float[] progress = new float[]{2, 2, 2};
+    private final float[] progress = new float[]{0, 0, 0};
 
     private final boolean[] isWaiting = new boolean[]{true, true, true};
 
-    private ItemStackHandler handler = new ItemStackHandler(3) {
+    private final ItemStackHandler handler = new ItemStackHandler(3) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -68,15 +65,22 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
         }
 
         for (int i = 0; i < 3; i++) {
-            if (progress[i] > 14F) {
-                progress[i] = 2F;
+            if (progress[i] >= 16F) {
+                progress[i] = 0F;
                 isWaiting[i] = true;
-                dropItemStack(world, pos, handler.getStackInSlot(i));
+                IInventory inv = getInventory();
+                if (inv == null) {
+                    dropItemStack(world, pos, handler.getStackInSlot(i));
+                } else {
+                    if (!handler.getStackInSlot(i).isEmpty()) {
+                        putItemStack(handler.getStackInSlot(i), inv, 0);
+                    }
+                }
                 handler.setStackInSlot(i, ItemStack.EMPTY);
             }
 
             if (handler.getStackInSlot(i).isEmpty()) {
-                progress[i] = 2F;
+                progress[i] = 0F;
                 isWaiting[i] = true;
             }
         }
@@ -115,218 +119,19 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
         }
 
         if (!isWaiting[0]) {
-            progress[0] += 0.2F;
+            progress[0] += 12 / 32.0;
         }
 
         if (!isWaiting[1]) {
-            progress[1] += 0.2F;
+            progress[1] += 12 / 32.0;
         }
 
         if (!isWaiting[2]) {
-            progress[2] += 0.2F;
+            progress[2] += 12 / 32.0;
         }
 
-        //this.updateHopper();
-
+        //update();
         this.markDirty();
-    }
-
-    private static ItemStack insertStack(@Nullable IInventory source, IInventory destination, ItemStack stack, int index, @Nullable Direction direction) {
-        ItemStack itemstack = destination.getStackInSlot(index);
-        if (canInsertItemInSlot(destination, stack, index, direction)) {
-            boolean flag = false;
-            boolean flag1 = destination.isEmpty();
-            if (itemstack.isEmpty()) {
-                destination.setInventorySlotContents(index, stack);
-                stack = ItemStack.EMPTY;
-                flag = true;
-            } else if (canCombine(itemstack, stack)) {
-                int i = stack.getMaxStackSize() - itemstack.getCount();
-                int j = Math.min(stack.getCount(), i);
-                stack.shrink(j);
-                itemstack.grow(j);
-                flag = j > 0;
-            }
-
-            if (flag) {
-                if (flag1 && destination instanceof HopperTileEntity) {
-                    HopperTileEntity hoppertileentity1 = (HopperTileEntity) destination;
-                    if (!hoppertileentity1.mayTransfer()) {
-                        int k = 0;
-                        if (source instanceof HopperTileEntity) {
-                            HopperTileEntity hoppertileentity = (HopperTileEntity) source;
-                            if (hoppertileentity1.getLastUpdateTime() >= hoppertileentity.getLastUpdateTime()) {
-                                k = 1;
-                            }
-                        }
-
-                        hoppertileentity1.setTransferCooldown(8 - k);
-                    }
-                }
-
-                destination.markDirty();
-            }
-        }
-
-        return stack;
-    }
-
-    private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, @Nullable Direction side) {
-        if (!inventoryIn.isItemValidForSlot(index, stack)) {
-            return false;
-        } else {
-            return !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory) inventoryIn).canInsertItem(index, stack, side);
-        }
-    }
-
-    private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-        if (stack1.getItem() != stack2.getItem()) {
-            return false;
-        } else if (stack1.getDamage() != stack2.getDamage()) {
-            return false;
-        } else if (stack1.getCount() > stack1.getMaxStackSize()) {
-            return false;
-        } else {
-            return ItemStack.areItemStackTagsEqual(stack1, stack2);
-        }
-    }
-
-    private boolean transferItemsOut() {
-        IInventory iinventory = this.getInventoryForHopperTransfer();
-        if (iinventory != null) {
-            Direction direction = this.getBlockState().get(HorizontalFacingBlock.FACING).getOpposite();
-            if (!this.isInventoryFull(iinventory, direction)) {
-                for (int i = 0; i < 3; ++i) {
-                    if (!this.handler.getStackInSlot(i).isEmpty()) {
-                        ItemStack itemstack = this.handler.getStackInSlot(i);
-                        ItemStack itemStack1 = itemstack;
-                        itemStack1.shrink(1);
-                        ItemStack itemStack2 = putStackInInventoryAllSlots(this.getInventoryForHopperTransfer(), iinventory, itemStack1, direction);
-                        if (itemStack2.isEmpty()) {
-                            iinventory.markDirty();
-                            return true;
-                        }
-                        this.setInventorySlotContents(i, itemstack);
-                    }
-                }
-
-            }
-        }
-        return false;
-    }
-
-    private boolean updateHopper() {
-        if (this.world != null && !this.world.isRemote) {
-            boolean flag = false;
-
-            flag = this.transferItemsOut();
-
-            /*if (!this.isFull()) {
-                flag |= p_200109_1_.get();
-            }*/
-
-            if (flag) {
-                this.markDirty();
-                return true;
-            }
-
-        }
-        return false;
-    }
-
-    private boolean isInventoryEmpty() {
-        for (int i = 0; i < 3; i++) {
-            if (!handler.getStackInSlot(i).isEmpty()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean isFull() {
-        for (int i = 0; i < 3; i++) {
-            if (handler.getStackInSlot(i).isEmpty() || handler.getStackInSlot(i).getCount() != handler.getStackInSlot(i).getMaxStackSize()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        this.getHandler().setStackInSlot(index, stack);
-        if (stack.getCount() > 1) {
-            stack.setCount(1);
-        }
-    }
-
-    private IInventory getInventoryForHopperTransfer() {
-        Direction direction = this.getBlockState().get(HorizontalFacingBlock.FACING);
-        return getInventoryAtPosition(this.getWorld(), this.pos.offset(direction));
-    }
-
-    private boolean isInventoryFull(IInventory inventoryIn, Direction side) {
-        return func_213972_a(inventoryIn, side).allMatch((p_213970_1_) -> {
-            ItemStack itemstack = inventoryIn.getStackInSlot(p_213970_1_);
-            return itemstack.getCount() >= itemstack.getMaxStackSize();
-        });
-    }
-
-    private static IntStream func_213972_a(IInventory p_213972_0_, Direction p_213972_1_) {
-        return p_213972_0_ instanceof ISidedInventory ? IntStream.of(((ISidedInventory) p_213972_0_).getSlotsForFace(p_213972_1_)) : IntStream.range(0, p_213972_0_.getSizeInventory());
-    }
-
-    @Nullable
-    public static IInventory getInventoryAtPosition(World p_195484_0_, BlockPos p_195484_1_) {
-        return getInventoryAtPosition(p_195484_0_, (double) p_195484_1_.getX() + 0.5D, (double) p_195484_1_.getY() + 0.5D, (double) p_195484_1_.getZ() + 0.5D);
-    }
-
-    @Nullable
-    public static IInventory getInventoryAtPosition(World worldIn, double x, double y, double z) {
-        IInventory iinventory = null;
-        BlockPos blockpos = new BlockPos(x, y, z);
-        BlockState blockstate = worldIn.getBlockState(blockpos);
-        Block block = blockstate.getBlock();
-        if (block instanceof ISidedInventoryProvider) {
-            iinventory = ((ISidedInventoryProvider) block).createInventory(blockstate, worldIn, blockpos);
-        } else if (blockstate.hasTileEntity()) {
-            TileEntity tileentity = worldIn.getTileEntity(blockpos);
-            if (tileentity instanceof IInventory) {
-                iinventory = (IInventory) tileentity;
-                if (iinventory instanceof ChestTileEntity && block instanceof ChestBlock) {
-                    iinventory = ChestBlock.getInventory(blockstate, worldIn, blockpos, true);
-                }
-            }
-        }
-
-        if (iinventory == null) {
-            List<Entity> list = worldIn.getEntitiesInAABBexcluding((Entity) null, new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D), EntityPredicates.HAS_INVENTORY);
-            if (!list.isEmpty()) {
-                iinventory = (IInventory) list.get(worldIn.rand.nextInt(list.size()));
-            }
-        }
-
-        return iinventory;
-    }
-
-    public static ItemStack putStackInInventoryAllSlots(@Nullable IInventory source, IInventory destination, ItemStack stack, @Nullable Direction direction) {
-        if (destination instanceof ISidedInventory && direction != null) {
-            ISidedInventory isidedinventory = (ISidedInventory) destination;
-            int[] aint = isidedinventory.getSlotsForFace(direction);
-
-            for (int k = 0; k < aint.length && !stack.isEmpty(); ++k) {
-                stack = insertStack(source, destination, stack, aint[k], direction);
-            }
-        } else {
-            int i = destination.getSizeInventory();
-
-            for (int j = 0; j < i && !stack.isEmpty(); ++j) {
-                stack = insertStack(source, destination, stack, j, direction);
-            }
-        }
-
-        return stack;
     }
 
     private void dropItemStack(World world, BlockPos pos, @Nonnull ItemStack stack) {
@@ -352,10 +157,6 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
 
     public ItemStackHandler getHandler() {
         return handler;
-    }
-
-    public void setHandler(ItemStackHandler handlerIn) {
-        handler = handlerIn;
     }
 
     public boolean[] getQueue() {
@@ -395,6 +196,87 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
         return compound;
     }
 
+    private IInventory getInventory() {
+        IInventory iinventory = null;
+        BlockPos blockpos = pos.offset(getBlockState().get(HorizontalFacingBlock.FACING)).add(0.5, 0.5, 0.5);
+        BlockState blockstate = world.getBlockState(blockpos);
+        Block block = blockstate.getBlock();
+        if (block instanceof ISidedInventoryProvider) {
+            iinventory = ((ISidedInventoryProvider) block).createInventory(blockstate, world, blockpos);
+        } else if (blockstate.hasTileEntity()) {
+            TileEntity tileentity = world.getTileEntity(blockpos);
+            if (tileentity instanceof IInventory) {
+                iinventory = (IInventory) tileentity;
+                if (iinventory instanceof ChestTileEntity && block instanceof ChestBlock) {
+                    iinventory = ChestBlock.getInventory(blockstate, world, blockpos, true);
+                }
+            }
+        }
+
+        if (iinventory == null) {
+            List<Entity> list = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(blockpos.getX() - 0.5D, blockpos.getY() - 0.5D, blockpos.getZ() - 0.5D, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D), EntityPredicates.HAS_INVENTORY);
+            if (!list.isEmpty()) {
+                iinventory = (IInventory) list.get(world.rand.nextInt(list.size()));
+            }
+        }
+
+        return iinventory;
+    }
+
+    private void putItemStack(ItemStack stack, IInventory inv, int slot) {
+        if (inv instanceof ISidedInventory) {
+            ISidedInventory isidedinventory = (ISidedInventory) inv;
+            int[] sideSlots = isidedinventory.getSlotsForFace(this.getBlockState().get(HorizontalFacingBlock.FACING));
+
+            if (slot == sideSlots.length) {
+                dropItemStack(world, pos, stack);
+                return;
+            }
+
+            ItemStack residue = canCombine(inv, stack, sideSlots[slot]);
+
+            if (residue != ItemStack.EMPTY) {
+                putItemStack(residue, inv, slot + 1);
+            }
+        } else {
+            if (slot == inv.getSizeInventory()) {
+                dropItemStack(world, pos, stack);
+                return;
+            }
+
+            ItemStack residue = canCombine(inv, stack, slot);
+
+            if (residue != ItemStack.EMPTY) {
+                putItemStack(residue, inv, slot + 1);
+            }
+        }
+    }
+
+    private ItemStack canCombine(IInventory inv, ItemStack comingStack, int slot) {
+        ItemStack invStack = inv.getStackInSlot(slot);
+
+        if (invStack.isEmpty()) {
+            inv.setInventorySlotContents(slot, comingStack);
+            return ItemStack.EMPTY;
+        }
+
+        if (invStack.getItem() == comingStack.getItem()) {
+            if (invStack.getCount() + comingStack.getCount() <= invStack.getMaxStackSize() && inv.isItemValidForSlot(slot, comingStack)) {
+                inv.setInventorySlotContents(slot, new ItemStack(invStack.getItem(), invStack.getCount() + comingStack.getCount()));
+                return ItemStack.EMPTY;
+            } else {
+                ItemStack residue = comingStack.copy();
+                for (int j = 1; j <= comingStack.getCount(); j++) {
+                    residue.shrink(j);
+                    if (invStack.getCount() + residue.getCount() <= invStack.getMaxStackSize()) {
+                        return new ItemStack(comingStack.getItem(), j);
+                    }
+                }
+            }
+        }
+        return comingStack;
+    }
+
     @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
@@ -418,7 +300,7 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT tag = pkt.getNbtCompound();
         handleUpdateTag(tag);
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+        update();
     }
 
     public ConveyorBeltTileEntity() {
@@ -427,6 +309,87 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
 
     public float[] getProgress() {
         return progress;
+    }
+
+    private void update() {
+        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 3;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (int i = 0; i < 3; i++) {
+            if (!handler.getStackInSlot(i).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        if (index >= 0 && index < 3) {
+            return handler.getStackInSlot(index);
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int index, int count) {
+        if (index < 3 && index >= 0) {
+            update();
+            return handler.getStackInSlot(index).split(count);
+        } else
+            return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        if (index >= 0 && index < 3) {
+            ItemStack itemstack = handler.getStackInSlot(index);
+            handler.setStackInSlot(index, ItemStack.EMPTY);
+            update();
+            return itemstack;
+        } else {
+            return ItemStack.EMPTY;
+        }
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        if (index >= 0 && index < 3) {
+            handler.setStackInSlot(index, stack);
+            if (stack.getCount() > this.getInventoryStackLimit()) {
+                stack.setCount(this.getInventoryStackLimit());
+            }
+        }
+        update();
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return index >= 0 && index < 3 && handler.getStackInSlot(index).isEmpty();
+    }
+
+    @Override
+    public boolean isUsableByPlayer(PlayerEntity player) {
+        if (this.world.getTileEntity(this.pos) != this) {
+            return false;
+        } else {
+            return !(player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) > 64.0D);
+        }
+    }
+
+    @Override
+    public void clear() {
+        for (int i = 0; i < 3; i++) {
+            handler.setStackInSlot(i, ItemStack.EMPTY);
+        }
+        update();
     }
 
 
