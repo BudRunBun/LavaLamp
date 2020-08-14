@@ -13,6 +13,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
@@ -98,12 +99,16 @@ public class ShelfBlock extends HorizontalFacingBlock {
 
                 if (handler.getStackInSlot(slot).isEmpty()) {
                     Item item = player.getHeldItemMainhand().getItem();
+                    ItemStack stack = player.getHeldItemMainhand();
+                    CompoundNBT nbt = stack.serializeNBT();
                     if (!player.isCreative()) {
-                        ItemStack stack = player.getHeldItemMainhand();
+
                         stack.shrink(1);
                         player.setHeldItem(Hand.MAIN_HAND, stack);
                     }
-                    handler.setStackInSlot(slot, new ItemStack(item, 1));
+                    stack.shrink(stack.getCount() - 1);
+
+                    handler.setStackInSlot(slot, stack);
                     shelf.setHandler(handler);
                     worldIn.notifyBlockUpdate(pos, state, state, 3);
                 }

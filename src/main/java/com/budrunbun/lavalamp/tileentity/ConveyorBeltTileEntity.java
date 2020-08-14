@@ -57,7 +57,6 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
                     if (handler.getStackInSlot(i).isEmpty()) {
                         handler.setStackInSlot(i, ((ItemEntity) o).getItem());
                         ((ItemEntity) o).remove();
-                        isWaiting[i] = true;
                         break a;
                     }
                 }
@@ -79,7 +78,7 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
                 handler.setStackInSlot(i, ItemStack.EMPTY);
             }
 
-            if (handler.getStackInSlot(i).isEmpty()) {
+            if (handler.getStackInSlot(i).isEmpty() && !isWaiting[i]) {
                 progress[i] = 0F;
                 isWaiting[i] = true;
             }
@@ -254,22 +253,24 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
 
     private ItemStack canCombine(IInventory inv, ItemStack comingStack, int slot) {
         ItemStack invStack = inv.getStackInSlot(slot);
+        CompoundNBT nbt = invStack.serializeNBT();
 
         if (invStack.isEmpty()) {
             inv.setInventorySlotContents(slot, comingStack);
             return ItemStack.EMPTY;
         }
 
-        if (invStack.getItem() == comingStack.getItem()) {
+        if (invStack.getItem() == comingStack.getItem() && ItemStack.areItemStackTagsEqual(invStack, comingStack)) {
             if (invStack.getCount() + comingStack.getCount() <= invStack.getMaxStackSize() && inv.isItemValidForSlot(slot, comingStack)) {
-                inv.setInventorySlotContents(slot, new ItemStack(invStack.getItem(), invStack.getCount() + comingStack.getCount()));
+                inv.setInventorySlotContents(slot, new ItemStack(invStack.getItem(), invStack.getCount() + comingStack.getCount(), nbt));
+                inv.markDirty();
                 return ItemStack.EMPTY;
             } else {
                 ItemStack residue = comingStack.copy();
                 for (int j = 1; j <= comingStack.getCount(); j++) {
                     residue.shrink(j);
                     if (invStack.getCount() + residue.getCount() <= invStack.getMaxStackSize()) {
-                        return new ItemStack(comingStack.getItem(), j);
+                        return new ItemStack(comingStack.getItem(), j, nbt);
                     }
                 }
             }
