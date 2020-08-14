@@ -54,6 +54,7 @@ public class RegistryEvents {
         event.getRegistry().register(new ConcreteStairsBlock());
         event.getRegistry().register(new OfficeCeilingLampBlock());
         event.getRegistry().register(new ConveyorBeltBlock());
+        event.getRegistry().register(new PipeBlock());
     }
 
     @SuppressWarnings("all")
@@ -78,6 +79,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.CONCRETE_STAIRS_BLOCK, properties).setRegistryName(ModBlocks.CONCRETE_STAIRS_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.OFFICE_CEILING_LAMP_BLOCK, properties).setRegistryName(ModBlocks.OFFICE_CEILING_LAMP_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CONVEYOR_BELT_BLOCK, properties).setRegistryName(ModBlocks.CONVEYOR_BELT_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.PIPE_BLOCK, properties).setRegistryName(ModBlocks.PIPE_BLOCK.getRegistryName()));
 
         //register a new item here
         event.getRegistry().register(new Cheese());

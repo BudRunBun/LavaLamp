@@ -29,6 +29,8 @@ import java.util.List;
 
 public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileEntity, IInventory {
 
+    //TODO: Smooth animation, transition fix, duplication fix, sync conveyor with item movement
+
     private final float[] progress = new float[]{0, 0, 0};
 
     private final boolean[] isWaiting = new boolean[]{true, true, true};

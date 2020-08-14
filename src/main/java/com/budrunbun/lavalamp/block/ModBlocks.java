@@ -53,4 +53,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:conveyor_belt")
     public static final ConveyorBeltBlock CONVEYOR_BELT_BLOCK = null;
+
+    @ObjectHolder("lavalamp:pipe")
+    public static final PipeBlock PIPE_BLOCK = null;
 }
