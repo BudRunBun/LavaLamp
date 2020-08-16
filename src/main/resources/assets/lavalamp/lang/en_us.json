@@ -5,7 +5,7 @@
   "block.lavalamp.pillar_block": "Pillar",
   "block.lavalamp.ramp_block": "Ramp",
   "block.lavalamp.ash_gray_concrete_block": "Ash Gray Concrete",
-  "block.lavalamp.shelf_block": "Shelf",
+  "block.lavalamp.display_stand": "Display Stand",
   "block.lavalamp.floor_block": "Ceramic Tile",
   "block.lavalamp.iron_floor_block": "Iron Floor",
   "block.lavalamp.grill_ceiling_block": "Ceiling",
@@ -17,6 +17,7 @@
   "block.lavalamp.office_ceiling_lamp": "Office Ceiling Lamp",
   "block.lavalamp.conveyor_belt": "Conveyor Belt",
   "block.lavalamp.pipe": "Pipe",
+  "block.lavalamp.structural_channel": "C-channel",
 
   "item.lavalamp.cheese": "Cheese",
   "item.lavalamp.salty_water_bucket": "Salty Water Bucket",

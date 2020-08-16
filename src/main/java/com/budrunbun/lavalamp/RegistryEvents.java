@@ -43,7 +43,7 @@ public class RegistryEvents {
         event.getRegistry().register(new PillarBlock());
         event.getRegistry().register(new RampBlock());
         event.getRegistry().register(new AshGrayConcreteBlock());
-        event.getRegistry().register(new ShelfBlock());
+        event.getRegistry().register(new DisplayStandBlock());
         event.getRegistry().register(new FloorBlock());
         event.getRegistry().register(new IronFloorBlock());
         event.getRegistry().register(new GrillCeilingBlock());
@@ -55,6 +55,7 @@ public class RegistryEvents {
         event.getRegistry().register(new OfficeCeilingLampBlock());
         event.getRegistry().register(new ConveyorBeltBlock());
         event.getRegistry().register(new PipeBlock());
+        event.getRegistry().register(new StructuralChannelBlock());
     }
 
     @SuppressWarnings("all")
@@ -68,7 +69,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.PILLAR_BLOCK, properties).setRegistryName(ModBlocks.PILLAR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.RAMP_BLOCK, properties).setRegistryName(ModBlocks.RAMP_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.ASH_GRAY_CONCRETE_BLOCK, properties).setRegistryName(ModBlocks.ASH_GRAY_CONCRETE_BLOCK.getRegistryName()));
-        event.getRegistry().register(new BlockItem(ModBlocks.SHELF_BLOCK, properties).setRegistryName(ModBlocks.SHELF_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.DISPLAY_STAND_BLOCK, properties).setRegistryName(ModBlocks.DISPLAY_STAND_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.FLOOR_BLOCK, properties).setRegistryName(ModBlocks.FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.IRON_FLOOR_BLOCK, properties).setRegistryName(ModBlocks.IRON_FLOOR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.GRILL_CEILING_BLOCK, properties).setRegistryName(ModBlocks.GRILL_CEILING_BLOCK.getRegistryName()));
@@ -80,6 +81,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.OFFICE_CEILING_LAMP_BLOCK, properties).setRegistryName(ModBlocks.OFFICE_CEILING_LAMP_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CONVEYOR_BELT_BLOCK, properties).setRegistryName(ModBlocks.CONVEYOR_BELT_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.PIPE_BLOCK, properties).setRegistryName(ModBlocks.PIPE_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.STRUCTURAL_CHANNEL_BLOCK, properties).setRegistryName(ModBlocks.STRUCTURAL_CHANNEL_BLOCK.getRegistryName()));
 
         //register a new item here
         event.getRegistry().register(new Cheese());
@@ -91,7 +93,7 @@ public class RegistryEvents {
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
         // register a new tile entity here
         event.getRegistry().register(TileEntityType.Builder.create(CheeseGeneratorTileEntity::new, ModBlocks.CHEESE_GENERATOR).build(null).setRegistryName(LavaLamp.MOD_ID, "cheese_generator"));
-        event.getRegistry().register(TileEntityType.Builder.create(ShelfTileEntity::new, ModBlocks.SHELF_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "shelf_block"));
+        event.getRegistry().register(TileEntityType.Builder.create(DisplayStandTileEntity::new, ModBlocks.DISPLAY_STAND_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "shelf_block"));
         event.getRegistry().register(TileEntityType.Builder.create(PlayerSensorTileEntity::new, ModBlocks.PLAYER_SENSOR_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "player_sensor"));
         event.getRegistry().register(TileEntityType.Builder.create(DisplayFreezerTileEntity::new, ModBlocks.DISPLAY_FREEZER_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "display_freezer"));
         event.getRegistry().register(TileEntityType.Builder.create(ConveyorBeltTileEntity::new, ModBlocks.CONVEYOR_BELT_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "conveyor_belt"));

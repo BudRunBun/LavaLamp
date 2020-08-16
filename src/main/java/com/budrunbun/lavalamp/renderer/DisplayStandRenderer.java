@@ -1,7 +1,7 @@
 package com.budrunbun.lavalamp.renderer;
 
 import com.budrunbun.lavalamp.block.HorizontalFacingBlock;
-import com.budrunbun.lavalamp.tileentity.ShelfTileEntity;
+import com.budrunbun.lavalamp.tileentity.DisplayStandTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ShelfBlockRenderer extends TileEntityRenderer<ShelfTileEntity> {
+public class DisplayStandRenderer extends TileEntityRenderer<DisplayStandTileEntity> {
     /*
     |1|3|
     |0|2|
@@ -22,7 +22,7 @@ public class ShelfBlockRenderer extends TileEntityRenderer<ShelfTileEntity> {
     private Direction FACING;
 
     @Override
-    public void render(ShelfTileEntity entity, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(DisplayStandTileEntity entity, double x, double y, double z, float partialTicks, int destroyStage) {
         FACING = entity.getBlockState().get(HorizontalFacingBlock.FACING);
 
         ItemStack slot0 = entity.getHandler().getStackInSlot(0);

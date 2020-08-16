@@ -8,7 +8,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 
-public class ShelfTileEntity extends TileEntity {
+public class DisplayStandTileEntity extends TileEntity {
     /*
         |1|3|
         |0|2|
@@ -21,7 +21,7 @@ public class ShelfTileEntity extends TileEntity {
         }
     };
 
-    public ShelfTileEntity() {
+    public DisplayStandTileEntity() {
         super(ModTileEntities.SHELF_TE);
     }
 

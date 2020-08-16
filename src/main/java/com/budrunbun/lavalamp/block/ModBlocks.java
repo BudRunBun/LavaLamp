@@ -21,8 +21,8 @@ public class ModBlocks {
     @ObjectHolder("lavalamp:ash_gray_concrete_block")
     public static final AshGrayConcreteBlock ASH_GRAY_CONCRETE_BLOCK = null;
 
-    @ObjectHolder("lavalamp:shelf_block")
-    public static final ShelfBlock SHELF_BLOCK = null;
+    @ObjectHolder("lavalamp:display_stand")
+    public static final DisplayStandBlock DISPLAY_STAND_BLOCK = null;
 
     @ObjectHolder("lavalamp:floor_block")
     public static final FloorBlock FLOOR_BLOCK = null;
@@ -56,4 +56,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:pipe")
     public static final PipeBlock PIPE_BLOCK = null;
+
+    @ObjectHolder("lavalamp:structural_channel")
+    public static final StructuralChannelBlock STRUCTURAL_CHANNEL_BLOCK = null;
 }

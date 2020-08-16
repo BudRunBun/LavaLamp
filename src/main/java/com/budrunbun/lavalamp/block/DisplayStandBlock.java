@@ -1,14 +1,13 @@
 package com.budrunbun.lavalamp.block;
 
+import com.budrunbun.lavalamp.tileentity.DisplayStandTileEntity;
 import com.budrunbun.lavalamp.tileentity.ModTileEntities;
-import com.budrunbun.lavalamp.tileentity.ShelfTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
@@ -33,7 +32,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ShelfBlock extends HorizontalFacingBlock {
+public class DisplayStandBlock extends HorizontalFacingBlock {
     /*
         |1|3|
         |0|2|
@@ -45,9 +44,9 @@ public class ShelfBlock extends HorizontalFacingBlock {
 
     //TODO: Fix right-click in creative mode
 
-    public ShelfBlock() {
+    public DisplayStandBlock() {
         super(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F));
-        setRegistryName("shelf_block");
+        setRegistryName("display_stand");
     }
 
     @Override
@@ -71,18 +70,6 @@ public class ShelfBlock extends HorizontalFacingBlock {
         }
     }
 
-    @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
-        if (player.isCreative()) {
-            if (canBreakBlockInCreative(state, world, pos, player))
-                world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote() ? 11 : 3);
-            else
-                onBlockClicked(state, world, pos, player);
-            return false;
-        }
-        return super.removedByPlayer(state, world, pos, player, false, fluid);
-    }
-
     @SuppressWarnings("deprecation")
     @Override
     public boolean onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
@@ -94,7 +81,7 @@ public class ShelfBlock extends HorizontalFacingBlock {
                     return false;
                 }
 
-                ShelfTileEntity shelf = (ShelfTileEntity) worldIn.getTileEntity(pos);
+                DisplayStandTileEntity shelf = (DisplayStandTileEntity) worldIn.getTileEntity(pos);
                 ItemStackHandler handler = shelf.getHandler();
 
                 if (handler.getStackInSlot(slot).isEmpty()) {
@@ -119,19 +106,12 @@ public class ShelfBlock extends HorizontalFacingBlock {
         return true;
     }
 
-    public boolean canBreakBlockInCreative(BlockState state, World world, BlockPos pos, PlayerEntity player) {
-        double blockReachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
-
-        BlockRayTraceResult rayResult = rayTraceEyes(world, player, blockReachDistance + 1);
-        return getSlot(rayResult, state, pos) == -1;
-    }
-
     @SuppressWarnings("deprecation")
     @Override
     public void onBlockClicked(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player) {
         BlockRayTraceResult hit = rayTraceEyes(worldIn, player, player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1);
         int slot = getSlot(hit, state, pos);
-        ShelfTileEntity shelf = (ShelfTileEntity) worldIn.getTileEntity(pos);
+        DisplayStandTileEntity shelf = (DisplayStandTileEntity) worldIn.getTileEntity(pos);
         ItemStackHandler handler = shelf.getHandler();
 
         if (slot != -1 && !handler.getStackInSlot(slot).isEmpty()) {
@@ -230,7 +210,7 @@ public class ShelfBlock extends HorizontalFacingBlock {
     @Override
     public void onReplaced(final BlockState state, @Nonnull final World world, @Nonnull final BlockPos pos, final BlockState newState, final boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            final ShelfTileEntity tileEntity = (ShelfTileEntity) world.getTileEntity(pos);
+            final DisplayStandTileEntity tileEntity = (DisplayStandTileEntity) world.getTileEntity(pos);
             if (tileEntity != null) {
                 dropItemHandlerContents(world, pos, tileEntity.getHandler());
                 world.updateComparatorOutputLevel(pos, this);

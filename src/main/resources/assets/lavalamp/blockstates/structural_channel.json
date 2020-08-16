@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "lavalamp:block/structural_channel"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/structural_channel",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lavalamp:block/structural_channel",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/structural_channel",
+      "y": 90
+    }
+  }
+}
