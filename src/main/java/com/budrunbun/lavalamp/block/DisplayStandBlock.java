@@ -4,7 +4,6 @@ import com.budrunbun.lavalamp.tileentity.DisplayStandTileEntity;
 import com.budrunbun.lavalamp.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,7 +11,6 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
@@ -86,16 +84,13 @@ public class DisplayStandBlock extends HorizontalFacingBlock {
 
                 if (handler.getStackInSlot(slot).isEmpty()) {
                     Item item = player.getHeldItemMainhand().getItem();
-                    ItemStack stack = player.getHeldItemMainhand();
-                    CompoundNBT nbt = stack.serializeNBT();
                     if (!player.isCreative()) {
-
+                        ItemStack stack = player.getHeldItemMainhand();
                         stack.shrink(1);
                         player.setHeldItem(Hand.MAIN_HAND, stack);
                     }
-                    stack.shrink(stack.getCount() - 1);
+                    handler.setStackInSlot(slot, new ItemStack(item, 1));
 
-                    handler.setStackInSlot(slot, stack);
                     shelf.setHandler(handler);
                     worldIn.notifyBlockUpdate(pos, state, state, 3);
                 }
@@ -197,7 +192,7 @@ public class DisplayStandBlock extends HorizontalFacingBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return ModTileEntities.SHELF_TE.create();
+        return ModTileEntities.DISPLAY_STAND_TE.create();
     }
 
     @Override

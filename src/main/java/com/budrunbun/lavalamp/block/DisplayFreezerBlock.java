@@ -59,10 +59,6 @@ public class DisplayFreezerBlock extends HorizontalFacingBlock {
         super.fillStateContainer(builder);
     }
 
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         worldIn.setBlockState(pos.up(), state.with(BOTTOM, false), 3);

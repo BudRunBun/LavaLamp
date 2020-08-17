@@ -10,16 +10,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CheeseGeneratorTileEntity extends TileEntity implements INamedContainerProvider, ITickableTileEntity {
+public class CheeseGeneratorTileEntity extends ContainerTileEntity implements INamedContainerProvider, ITickableTileEntity {
+    //TODO: get side slots
 
     private int milkCapacity;
     private int waterCapacity;
@@ -65,16 +64,8 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
         }
     };
 
-    private final ItemStackHandler handler = new ItemStackHandler(4) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-            markDirty();
-        }
-    };
-
     public CheeseGeneratorTileEntity() {
-        super(ModTileEntities.CHEESE_GENERATOR_TE);
+        super(ModTileEntities.CHEESE_GENERATOR_TE, 4, 64);
     }
 
     @Override
@@ -109,10 +100,6 @@ public class CheeseGeneratorTileEntity extends TileEntity implements INamedConta
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
         return new CheeseGeneratorContainer(windowId, playerInventory, handler, this.generatorData);
-    }
-
-    public ItemStackHandler getHandler() {
-        return handler;
     }
 
     @Override

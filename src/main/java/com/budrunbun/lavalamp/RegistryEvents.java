@@ -56,6 +56,7 @@ public class RegistryEvents {
         event.getRegistry().register(new ConveyorBeltBlock());
         event.getRegistry().register(new PipeBlock());
         event.getRegistry().register(new StructuralChannelBlock());
+        event.getRegistry().register(new ShelfBlock());
     }
 
     @SuppressWarnings("all")
@@ -82,6 +83,7 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.CONVEYOR_BELT_BLOCK, properties).setRegistryName(ModBlocks.CONVEYOR_BELT_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.PIPE_BLOCK, properties).setRegistryName(ModBlocks.PIPE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.STRUCTURAL_CHANNEL_BLOCK, properties).setRegistryName(ModBlocks.STRUCTURAL_CHANNEL_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.SHELF_BLOCK, properties).setRegistryName(ModBlocks.SHELF_BLOCK.getRegistryName()));
 
         //register a new item here
         event.getRegistry().register(new Cheese());
@@ -93,10 +95,11 @@ public class RegistryEvents {
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
         // register a new tile entity here
         event.getRegistry().register(TileEntityType.Builder.create(CheeseGeneratorTileEntity::new, ModBlocks.CHEESE_GENERATOR).build(null).setRegistryName(LavaLamp.MOD_ID, "cheese_generator"));
-        event.getRegistry().register(TileEntityType.Builder.create(DisplayStandTileEntity::new, ModBlocks.DISPLAY_STAND_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "shelf_block"));
+        event.getRegistry().register(TileEntityType.Builder.create(DisplayStandTileEntity::new, ModBlocks.DISPLAY_STAND_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "display_stand"));
         event.getRegistry().register(TileEntityType.Builder.create(PlayerSensorTileEntity::new, ModBlocks.PLAYER_SENSOR_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "player_sensor"));
         event.getRegistry().register(TileEntityType.Builder.create(DisplayFreezerTileEntity::new, ModBlocks.DISPLAY_FREEZER_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "display_freezer"));
         event.getRegistry().register(TileEntityType.Builder.create(ConveyorBeltTileEntity::new, ModBlocks.CONVEYOR_BELT_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "conveyor_belt"));
+        event.getRegistry().register(TileEntityType.Builder.create(ShelfTileEntity::new, ModBlocks.SHELF_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "shelf"));
     }
 
     @SuppressWarnings("unused")

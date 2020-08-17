@@ -6,14 +6,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ISidedInventoryProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -22,12 +19,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileEntity, IInventory {
+public class ConveyorBeltTileEntity extends ContainerTileEntity implements ITickableTileEntity {
 
     //TODO: Smooth animation, transition fix, duplication fix, sync conveyor with item movement
 
@@ -35,22 +31,9 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
 
     private final boolean[] isWaiting = new boolean[]{true, true, true};
 
-    private final ItemStackHandler handler = new ItemStackHandler(3) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-            markDirty();
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-    };
-
     @Override
     public void tick() {
-        List list = this.world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(this.getPos().getX(), this.getPos().getY() + 3 / 16.0, this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1));
+        List<Entity> list = this.world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(this.getPos().getX(), this.getPos().getY() + 3 / 16.0, this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1));
 
         for (Object o : list) {
             a:
@@ -156,10 +139,6 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
         world.addEntity(entity);
     }
 
-    public ItemStackHandler getHandler() {
-        return handler;
-    }
-
     public boolean[] getQueue() {
         return isWaiting;
     }
@@ -257,13 +236,17 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
         ItemStack invStack = inv.getStackInSlot(slot);
         CompoundNBT nbt = invStack.serializeNBT();
 
+        if (!inv.isItemValidForSlot(slot, comingStack)) {
+            return comingStack;
+        }
+
         if (invStack.isEmpty()) {
             inv.setInventorySlotContents(slot, comingStack);
             return ItemStack.EMPTY;
         }
 
         if (invStack.getItem() == comingStack.getItem() && ItemStack.areItemStackTagsEqual(invStack, comingStack)) {
-            if (invStack.getCount() + comingStack.getCount() <= invStack.getMaxStackSize() && inv.isItemValidForSlot(slot, comingStack)) {
+            if (invStack.getCount() + comingStack.getCount() <= invStack.getMaxStackSize()) {
                 inv.setInventorySlotContents(slot, new ItemStack(invStack.getItem(), invStack.getCount() + comingStack.getCount(), nbt));
                 inv.markDirty();
                 return ItemStack.EMPTY;
@@ -280,120 +263,11 @@ public class ConveyorBeltTileEntity extends TileEntity implements ITickableTileE
         return comingStack;
     }
 
-    @Nonnull
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
-        write(tag);
-        return tag;
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundNBT tag) {
-        read(tag);
-    }
-
-    @Nonnull
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, -1, getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT tag = pkt.getNbtCompound();
-        handleUpdateTag(tag);
-        update();
-    }
-
     public ConveyorBeltTileEntity() {
-        super(ModTileEntities.CONVEYOR_BELT_TE);
+        super(ModTileEntities.CONVEYOR_BELT_TE, 3, 1);
     }
 
     public float[] getProgress() {
         return progress;
     }
-
-    private void update() {
-        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return 3;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (int i = 0; i < 3; i++) {
-            if (!handler.getStackInSlot(i).isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        if (index >= 0 && index < 3) {
-            return handler.getStackInSlot(index);
-        }
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        if (index < 3 && index >= 0) {
-            update();
-            return handler.getStackInSlot(index).split(count);
-        } else
-            return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        if (index >= 0 && index < 3) {
-            ItemStack itemstack = handler.getStackInSlot(index);
-            handler.setStackInSlot(index, ItemStack.EMPTY);
-            update();
-            return itemstack;
-        } else {
-            return ItemStack.EMPTY;
-        }
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        if (index >= 0 && index < 3) {
-            handler.setStackInSlot(index, stack);
-            if (stack.getCount() > this.getInventoryStackLimit()) {
-                stack.setCount(this.getInventoryStackLimit());
-            }
-        }
-        update();
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index >= 0 && index < 3 && handler.getStackInSlot(index).isEmpty();
-    }
-
-    @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        if (this.world.getTileEntity(this.pos) != this) {
-            return false;
-        } else {
-            return !(player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) > 64.0D);
-        }
-    }
-
-    @Override
-    public void clear() {
-        for (int i = 0; i < 3; i++) {
-            handler.setStackInSlot(i, ItemStack.EMPTY);
-        }
-        update();
-    }
-
-
 }

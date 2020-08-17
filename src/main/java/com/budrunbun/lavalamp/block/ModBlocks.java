@@ -59,4 +59,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:structural_channel")
     public static final StructuralChannelBlock STRUCTURAL_CHANNEL_BLOCK = null;
+
+    @ObjectHolder("lavalamp:shelf")
+    public static final ShelfBlock SHELF_BLOCK = null;
 }
