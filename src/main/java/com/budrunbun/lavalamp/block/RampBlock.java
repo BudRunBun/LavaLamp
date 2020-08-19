@@ -20,6 +20,7 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nonnull;
 
 public class RampBlock extends HorizontalFacingBlock {
+    // TODO: Convex Hull
 
     public static final EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
 
@@ -58,7 +59,6 @@ public class RampBlock extends HorizontalFacingBlock {
         SHAPE_SOUTH_DOUBLE = VoxelShapes.or(SHAPE_SOUTH_UP, BOTTOM_PART);
         SHAPE_NORTH_DOUBLE = VoxelShapes.or(SHAPE_NORTH_UP, BOTTOM_PART);
     }
-    // TODO: Convex Hull
 
     public RampBlock() {
         super(Properties.create(Material.IRON));

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "lavalamp:block/logo"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/logo",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lavalamp:block/logo",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/logo",
+      "y": 90
+    }
+  }
+}

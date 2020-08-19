@@ -19,6 +19,9 @@
   "block.lavalamp.pipe": "Pipe",
   "block.lavalamp.structural_channel": "C-channel",
   "block.lavalamp.shelf": "Shelf",
+  "block.lavalamp.label": "Label",
+  "block.lavalamp.logo": "Logo",
+  "block.lavalamp.cashbox": "Cashbox",
 
   "item.lavalamp.cheese": "Cheese",
   "item.lavalamp.salty_water_bucket": "Salty Water Bucket",

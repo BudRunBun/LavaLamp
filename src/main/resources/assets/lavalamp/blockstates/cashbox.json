@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "lavalamp:block/cashbox"
+    },
+    "facing=south": {
+      "model": "lavalamp:block/cashbox",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lavalamp:block/cashbox",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "lavalamp:block/cashbox",
+      "y": 90
+    }
+  }
+}

@@ -57,6 +57,9 @@ public class RegistryEvents {
         event.getRegistry().register(new PipeBlock());
         event.getRegistry().register(new StructuralChannelBlock());
         event.getRegistry().register(new ShelfBlock());
+        event.getRegistry().register(new LabelBlock());
+        event.getRegistry().register(new LogoBlock());
+        event.getRegistry().register(new CashBoxBlock());
     }
 
     @SuppressWarnings("all")
@@ -66,7 +69,6 @@ public class RegistryEvents {
         Item.Properties properties = new Item.Properties().group(LAVALAMP);
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_BLOCK, properties).setRegistryName(ModBlocks.CHEESE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.CHEESE_GENERATOR, properties).setRegistryName(ModBlocks.CHEESE_GENERATOR.getRegistryName()));
-        event.getRegistry().register(new BlockItem(ModBlocks.SALTY_WATER_BLOCK, new Item.Properties()).setRegistryName(ModBlocks.SALTY_WATER_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.PILLAR_BLOCK, properties).setRegistryName(ModBlocks.PILLAR_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.RAMP_BLOCK, properties).setRegistryName(ModBlocks.RAMP_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.ASH_GRAY_CONCRETE_BLOCK, properties).setRegistryName(ModBlocks.ASH_GRAY_CONCRETE_BLOCK.getRegistryName()));
@@ -84,6 +86,9 @@ public class RegistryEvents {
         event.getRegistry().register(new BlockItem(ModBlocks.PIPE_BLOCK, properties).setRegistryName(ModBlocks.PIPE_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.STRUCTURAL_CHANNEL_BLOCK, properties).setRegistryName(ModBlocks.STRUCTURAL_CHANNEL_BLOCK.getRegistryName()));
         event.getRegistry().register(new BlockItem(ModBlocks.SHELF_BLOCK, properties).setRegistryName(ModBlocks.SHELF_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.LABEL_BLOCK, properties).setRegistryName(ModBlocks.LABEL_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.LOGO_BLOCK, properties).setRegistryName(ModBlocks.LOGO_BLOCK.getRegistryName()));
+        event.getRegistry().register(new BlockItem(ModBlocks.CASH_BOX_BLOCK, properties).setRegistryName(ModBlocks.CASH_BOX_BLOCK.getRegistryName()));
 
         //register a new item here
         event.getRegistry().register(new Cheese());

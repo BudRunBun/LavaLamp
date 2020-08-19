@@ -1,6 +1,5 @@
 package com.budrunbun.lavalamp.block;
 
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -18,7 +17,7 @@ public class HorizontalFacingBlock extends Block {
 
     protected HorizontalFacingBlock(Block.Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override

@@ -62,4 +62,13 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:shelf")
     public static final ShelfBlock SHELF_BLOCK = null;
+
+    @ObjectHolder("lavalamp:label")
+    public static final LabelBlock LABEL_BLOCK = null;
+
+    @ObjectHolder("lavalamp:logo")
+    public static final LogoBlock LOGO_BLOCK = null;
+
+    @ObjectHolder("lavalamp:cashbox")
+    public static final CashBoxBlock CASH_BOX_BLOCK = null;
 }

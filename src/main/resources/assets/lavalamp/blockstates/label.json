@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=north,part=1": {
+      "model": "lavalamp:block/label_1"
+    },
+    "facing=south,part=1": {
+      "model": "lavalamp:block/label_1",
+      "y": 180
+    },
+    "facing=west,part=1": {
+      "model": "lavalamp:block/label_1",
+      "y": 270
+    },
+    "facing=east,part=1": {
+      "model": "lavalamp:block/label_1",
+      "y": 90
+    },
+    "facing=north,part=2": {
+      "model": "lavalamp:block/label_2"
+    },
+    "facing=south,part=2": {
+      "model": "lavalamp:block/label_2",
+      "y": 180
+    },
+    "facing=west,part=2": {
+      "model": "lavalamp:block/label_2",
+      "y": 270
+    },
+    "facing=east,part=2": {
+      "model": "lavalamp:block/label_2",
+      "y": 90
+    },
+    "facing=north,part=3": {
+      "model": "lavalamp:block/label_3"
+    },
+    "facing=south,part=3": {
+      "model": "lavalamp:block/label_3",
+      "y": 180
+    },
+    "facing=west,part=3": {
+      "model": "lavalamp:block/label_3",
+      "y": 270
+    },
+    "facing=east,part=3": {
+      "model": "lavalamp:block/label_3",
+      "y": 90
+    }
+  }
+}

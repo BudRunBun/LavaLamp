@@ -30,11 +30,6 @@ public class ConveyorBeltBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
@@ -43,6 +38,11 @@ public class ConveyorBeltBlock extends HorizontalFacingBlock {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return ModTileEntities.CONVEYOR_BELT_TE.create();
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
     }
 
     @Override
