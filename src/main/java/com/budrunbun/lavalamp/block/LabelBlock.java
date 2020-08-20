@@ -3,22 +3,17 @@ package com.budrunbun.lavalamp.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.SlabType;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -40,8 +35,10 @@ public class LabelBlock extends HorizontalFacingBlock {
         this.setDefaultState(this.getDefaultState().with(PART, 1));
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         switch (state.get(FACING)) {
             case NORTH:
                 return SHAPE_NORTH;
@@ -68,26 +65,21 @@ public class LabelBlock extends HorizontalFacingBlock {
 
     /*@SuppressWarnings("deprecation")
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        Direction direction = Minecraft.getInstance().player.getHorizontalFacing().getOpposite();
-        switch (state.get(PART)) {
-            case 1:
-                if (!worldIn.getBlockState(pos.offset(direction.rotateY())).isAir() || worldIn.getBlockState(pos.offset(direction.rotateY(), 2)).isAir()) {
-                    return false;
-                }
-                break;
-            case 2:
-                if (!worldIn.getBlockState(pos.offset(direction.rotateY())).isAir() || worldIn.getBlockState(pos.offset(direction.rotateY(), -1)).isAir()) {
-                    return false;
-                }
-                break;
-            case 3:
-                if (!worldIn.getBlockState(pos.offset(direction.rotateY(), -1)).isAir() || worldIn.getBlockState(pos.offset(direction.rotateY(), -2)).isAir()) {
-                    return false;
-                }
-                break;
-        }
-        return true;
+    public boolean isValidPosition(@Nonnull BlockState state, @Nonnull IWorldReader worldIn, @Nonnull BlockPos pos) {
+        //if (worldIn.getBlockState(pos).getBlock() instanceof LabelBlock) {
+            switch (state.get(PART)) {
+                case 1:
+                    return worldIn.isAirBlock(pos.offset(worldIn.getBlockState(pos).get(FACING).rotateY()))
+                            && worldIn.isAirBlock(pos.offset(worldIn.getBlockState(pos).get(FACING).rotateY(), 2));
+                case 2:
+                    return worldIn.isAirBlock(pos.offset(worldIn.getBlockState(pos).get(FACING).rotateY()))
+                            && worldIn.isAirBlock(pos.offset(worldIn.getBlockState(pos).get(FACING).rotateY(), -1));
+                case 3:
+                    return worldIn.isAirBlock(pos.offset(worldIn.getBlockState(pos).get(FACING).rotateY(), -2))
+                            && worldIn.isAirBlock(pos.offset(worldIn.getBlockState(pos).get(FACING).rotateY(), -1));
+            }
+        //}
+        return false;
     }*/
 
     @Override
@@ -97,7 +89,7 @@ public class LabelBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBlockHarvested(@Nonnull World worldIn, @Nonnull BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
         switch (state.get(PART)) {
             case 1:
                 worldIn.setBlockState(pos.offset(worldIn.getBlockState(pos).get(FACING).rotateY()), Blocks.AIR.getDefaultState());
@@ -116,17 +108,24 @@ public class LabelBlock extends HorizontalFacingBlock {
     }
 
     @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        onBlockHarvested(worldIn, pos, state, null);
+    }
+
+    @Override
     public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
         return calculateFacing(context, true);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public boolean isSolid(BlockState state) {
+    public boolean isSolid(@Nonnull BlockState state) {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public float func_220080_a(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float func_220080_a(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 1.0F;
     }
 }

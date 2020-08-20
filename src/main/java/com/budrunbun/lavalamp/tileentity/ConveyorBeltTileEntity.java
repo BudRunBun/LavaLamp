@@ -33,7 +33,7 @@ public class ConveyorBeltTileEntity extends ContainerTileEntity implements ITick
 
     @Override
     public void tick() {
-        List<Entity> list = this.world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(this.getPos().getX(), this.getPos().getY() + 3 / 16.0, this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1));
+        List<Entity> list = this.world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(this.getPos().getX(), this.getPos().getY() + 3 / 16.0, this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1).shrink(0.001));
 
         for (Object o : list) {
             a:
