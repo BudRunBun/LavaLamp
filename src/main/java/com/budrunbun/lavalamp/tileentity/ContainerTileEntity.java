@@ -9,12 +9,22 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameterSets;
+import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ContainerTileEntity extends TileEntity implements ISidedInventory {
+    @Nullable
+    protected ResourceLocation lootTable;
+    protected long lootTableSeed;
     protected ItemStackHandler handler;
 
     public ContainerTileEntity(TileEntityType<?> tileEntityTypeIn, int handlerSize, int slotLimit) {
@@ -55,15 +65,37 @@ public class ContainerTileEntity extends TileEntity implements ISidedInventory {
     }
 
     @Override
+    public void read(@Nonnull CompoundNBT compound) {
+        super.read(compound);
+        if (!checkLootAndRead(compound)) {
+            this.handler.deserializeNBT(compound.getCompound("inv"));
+        }
+    }
+
+    @Nonnull
+    @Override
+    public CompoundNBT write(@Nonnull CompoundNBT compound) {
+        super.write(compound);
+        if (!checkLootAndWrite(compound)) {
+            compound.put("inv", handler.serializeNBT());
+        }
+        return compound;
+    }
+
+    @Nonnull
+    @Override
     public ItemStack getStackInSlot(int index) {
+        this.fillWithLoot();
         if (index >= 0 && index < handler.getSlots()) {
             return handler.getStackInSlot(index);
         }
         return ItemStack.EMPTY;
     }
 
+    @Nonnull
     @Override
     public ItemStack decrStackSize(int index, int count) {
+        this.fillWithLoot();
         if (index < handler.getSlots() && index >= 0) {
             update();
             return handler.getStackInSlot(index).split(count);
@@ -71,8 +103,10 @@ public class ContainerTileEntity extends TileEntity implements ISidedInventory {
             return ItemStack.EMPTY;
     }
 
+    @Nonnull
     @Override
     public ItemStack removeStackFromSlot(int index) {
+        this.fillWithLoot();
         if (index >= 0 && index < handler.getSlots()) {
             ItemStack itemstack = handler.getStackInSlot(index);
             handler.setStackInSlot(index, ItemStack.EMPTY);
@@ -84,7 +118,8 @@ public class ContainerTileEntity extends TileEntity implements ISidedInventory {
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
+        this.fillWithLoot();
         if (index >= 0 && index < handler.getSlots()) {
             handler.setStackInSlot(index, stack);
             if (stack.getCount() > this.getInventoryStackLimit()) {
@@ -95,12 +130,12 @@ public class ContainerTileEntity extends TileEntity implements ISidedInventory {
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
         return index >= 0 && index < handler.getSlots() && handler.getStackInSlot(index).isEmpty();
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
+    public boolean isUsableByPlayer(@Nonnull PlayerEntity player) {
         if (this.world.getTileEntity(this.pos) != this) {
             return false;
         } else {
@@ -117,11 +152,14 @@ public class ContainerTileEntity extends TileEntity implements ISidedInventory {
     }
 
     private void update() {
-        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+        if (this.world != null) {
+            this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+        }
     }
 
+    @Nonnull
     @Override
-    public int[] getSlotsForFace(Direction side) {
+    public int[] getSlotsForFace(@Nonnull Direction side) {
         int[] ALL = new int[handler.getSlots()];
 
         for (int i = 0; i < handler.getSlots(); i++) {
@@ -132,12 +170,12 @@ public class ContainerTileEntity extends TileEntity implements ISidedInventory {
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+    public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nullable Direction direction) {
         return isItemValidForSlot(index, itemStackIn);
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull Direction direction) {
         return true;
     }
 
@@ -173,5 +211,42 @@ public class ContainerTileEntity extends TileEntity implements ISidedInventory {
 
     public void setHandler(ItemStackHandler handlerIn) {
         handler = handlerIn;
+    }
+
+    public void setLootTable(ResourceLocation lootTableIn, long seedIn) {
+        this.lootTable = lootTableIn;
+        this.lootTableSeed = seedIn;
+    }
+
+    public void fillWithLoot() {
+        if (this.lootTable != null && this.world != null && this.world.getServer() != null) {
+            LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(this.lootTable);
+            this.lootTable = null;
+            LootContext.Builder lootContext$builder = (new LootContext.Builder((ServerWorld) this.world)).withParameter(LootParameters.POSITION, new BlockPos(this.pos)).withSeed(this.lootTableSeed);
+            loottable.fillInventory(this, lootContext$builder.build(LootParameterSets.CHEST));
+        }
+    }
+
+    protected boolean checkLootAndRead(CompoundNBT compound) {
+        if (compound.contains("LootTable", 8)) {
+            this.lootTable = new ResourceLocation(compound.getString("LootTable"));
+            this.lootTableSeed = compound.getLong("LootTableSeed");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected boolean checkLootAndWrite(CompoundNBT compound) {
+        if (this.lootTable == null) {
+            return false;
+        } else {
+            compound.putString("LootTable", this.lootTable.toString());
+            if (this.lootTableSeed != 0L) {
+                compound.putLong("LootTableSeed", this.lootTableSeed);
+            }
+
+            return true;
+        }
     }
 }

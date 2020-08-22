@@ -4,18 +4,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SixWayBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 public class PipeBlock extends SixWayBlock {
     //TODO: Does this need to stay only as a decoration?
@@ -40,74 +38,18 @@ public class PipeBlock extends SixWayBlock {
         return this.getDefaultState().with(DOWN, block == this).with(UP, block1 == this).with(NORTH, block2 == this).with(EAST, block3 == this).with(SOUTH, block4 == this).with(WEST, block5 == this);
     }
 
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        BlockPos north = pos.north();
-        if (worldIn.getBlockState(north).getBlock() == this) {
-            worldIn.setBlockState(north, worldIn.getBlockState(north).with(SOUTH, true));
-        }
-
-        BlockPos south = pos.south();
-        if (worldIn.getBlockState(south).getBlock() == this) {
-            worldIn.setBlockState(south, worldIn.getBlockState(south).with(NORTH, true));
-        }
-
-        BlockPos east = pos.east();
-        if (worldIn.getBlockState(east).getBlock() == this) {
-            worldIn.setBlockState(east, worldIn.getBlockState(east).with(WEST, true));
-        }
-
-        BlockPos west = pos.west();
-        if (worldIn.getBlockState(west).getBlock() == this) {
-            worldIn.setBlockState(west, worldIn.getBlockState(west).with(EAST, true));
-        }
-
-        BlockPos up = pos.up();
-        if (worldIn.getBlockState(up).getBlock() == this) {
-            worldIn.setBlockState(up, worldIn.getBlockState(up).with(DOWN, true));
-        }
-
-        BlockPos down = pos.down();
-        if (worldIn.getBlockState(down).getBlock() == this) {
-            worldIn.setBlockState(down, worldIn.getBlockState(down).with(UP, true));
-        }
+    public boolean canAttach(BlockState state, boolean p_220111_2_) {
+        Block block = state.getBlock();
+        boolean flag = block instanceof PipeBlock;
+        return p_220111_2_ || flag;
     }
 
-    @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        BlockPos north = pos.north();
-        if (worldIn.getBlockState(north).getBlock() == this) {
-            worldIn.setBlockState(north, worldIn.getBlockState(north).with(SOUTH, false));
-        }
-
-        BlockPos south = pos.south();
-        if (worldIn.getBlockState(south).getBlock() == this) {
-            worldIn.setBlockState(south, worldIn.getBlockState(south).with(NORTH, false));
-        }
-
-        BlockPos east = pos.east();
-        if (worldIn.getBlockState(east).getBlock() == this) {
-            worldIn.setBlockState(east, worldIn.getBlockState(east).with(WEST, false));
-        }
-
-        BlockPos west = pos.west();
-        if (worldIn.getBlockState(west).getBlock() == this) {
-            worldIn.setBlockState(west, worldIn.getBlockState(west).with(EAST, false));
-        }
-
-        BlockPos up = pos.up();
-        if (worldIn.getBlockState(up).getBlock() == this) {
-            worldIn.setBlockState(up, worldIn.getBlockState(up).with(DOWN, false));
-        }
-
-        BlockPos down = pos.down();
-        if (worldIn.getBlockState(down).getBlock() == this) {
-            worldIn.setBlockState(down, worldIn.getBlockState(down).with(UP, false));
-        }
-
-        super.onBlockHarvested(worldIn, pos, state, player);
+    @Nonnull
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        return facing.getAxis().getPlane() == Direction.Plane.HORIZONTAL ? stateIn.with(FACING_TO_PROPERTY_MAP.get(facing), this.canAttach(facingState, facingState.func_224755_d(worldIn, facingPos, facing.getOpposite()))) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
+    @Nonnull
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }

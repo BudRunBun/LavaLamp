@@ -6,6 +6,7 @@ import com.budrunbun.lavalamp.fluid.SaltyWaterFluid;
 import com.budrunbun.lavalamp.item.Cheese;
 import com.budrunbun.lavalamp.item.SaltyWaterBucket;
 import com.budrunbun.lavalamp.tileentity.*;
+import com.budrunbun.lavalamp.worldgen.ShopStructure;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -15,6 +16,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.IntArray;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -120,5 +123,12 @@ public class RegistryEvents {
         // register a new fluid here
         event.getRegistry().register(new SaltyWaterFluid.Flowing().setRegistryName("salty_water_flowing"));
         event.getRegistry().register(new SaltyWaterFluid.Source().setRegistryName("salty_water"));
+    }
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public static void onFeatureRegistry(RegistryEvent.Register<Feature<?>> event) {
+        // register a new feature here
+        event.getRegistry().register(new ShopStructure(NoFeatureConfig::deserialize).setRegistryName("shop"));
     }
 }

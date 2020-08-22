@@ -147,8 +147,6 @@ public class ConveyorBeltTileEntity extends ContainerTileEntity implements ITick
     public void read(@Nonnull CompoundNBT compound) {
         super.read(compound);
 
-        this.handler.deserializeNBT(compound.getCompound("inv"));
-
         progress[0] = compound.getFloat("progress0");
         progress[1] = compound.getFloat("progress1");
         progress[2] = compound.getFloat("progress2");
@@ -162,8 +160,6 @@ public class ConveyorBeltTileEntity extends ContainerTileEntity implements ITick
     @Override
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
-
-        compound.put("inv", handler.serializeNBT());
 
         compound.putFloat("progress0", progress[0]);
         compound.putFloat("progress1", progress[1]);

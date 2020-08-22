@@ -12,21 +12,7 @@ public class DisplayFreezerTileEntity extends ContainerTileEntity {
     }
 
     @Override
-    public void read(@Nonnull CompoundNBT compound) {
-        super.read(compound);
-        this.handler.deserializeNBT(compound.getCompound("inv"));
-    }
-
-    @Nonnull
-    @Override
-    public CompoundNBT write(@Nonnull CompoundNBT compound) {
-        super.write(compound);
-        compound.put("inv", handler.serializeNBT());
-        return compound;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
         return super.isItemValidForSlot(index, stack) && stack.getItem().isFood();
     }
 }

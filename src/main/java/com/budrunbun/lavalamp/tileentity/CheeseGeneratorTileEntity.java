@@ -71,7 +71,6 @@ public class CheeseGeneratorTileEntity extends ContainerTileEntity implements IN
     @Override
     public void read(@Nonnull CompoundNBT compound) {
         super.read(compound);
-        this.handler.deserializeNBT(compound.getCompound("inv"));
         this.milkCapacity = compound.getInt("milk");
         this.waterCapacity = compound.getInt("water");
         this.cookingTimeLeft = compound.getInt("time");
@@ -82,7 +81,6 @@ public class CheeseGeneratorTileEntity extends ContainerTileEntity implements IN
     @Nonnull
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
-        compound.put("inv", handler.serializeNBT());
         compound.putInt("milk", milkCapacity);
         compound.putInt("water", milkCapacity);
         compound.putInt("time", cookingTimeLeft);
@@ -99,6 +97,7 @@ public class CheeseGeneratorTileEntity extends ContainerTileEntity implements IN
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
+        this.fillWithLoot();
         return new CheeseGeneratorContainer(windowId, playerInventory, handler, this.generatorData);
     }
 
