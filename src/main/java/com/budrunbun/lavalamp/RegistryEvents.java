@@ -2,18 +2,19 @@ package com.budrunbun.lavalamp;
 
 import com.budrunbun.lavalamp.block.*;
 import com.budrunbun.lavalamp.container.CheeseGeneratorContainer;
+import com.budrunbun.lavalamp.entity.GuardEntity;
+import com.budrunbun.lavalamp.entity.ModEntities;
 import com.budrunbun.lavalamp.fluid.SaltyWaterFluid;
 import com.budrunbun.lavalamp.item.Cheese;
 import com.budrunbun.lavalamp.item.SaltyWaterBucket;
 import com.budrunbun.lavalamp.tileentity.*;
 import com.budrunbun.lavalamp.worldgen.ShopStructure;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.IntArray;
 import net.minecraft.world.gen.feature.Feature;
@@ -35,6 +36,13 @@ public class RegistryEvents {
             return new ItemStack(ModBlocks.CHEESE_GENERATOR);
         }
     };
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public static void onEntityRegistry(RegistryEvent.Register<EntityType<?>> event) {
+        // register a new feature here
+        event.getRegistry().register(EntityType.Builder.create(GuardEntity::new, EntityClassification.MISC).size(0.6F, 1.95F).build("guard").setRegistryName(LavaLamp.MOD_ID,"guard"));
+    }
 
     @SuppressWarnings("unused")
     @SubscribeEvent
@@ -96,6 +104,7 @@ public class RegistryEvents {
         //register a new item here
         event.getRegistry().register(new Cheese());
         event.getRegistry().register(new SaltyWaterBucket());
+        event.getRegistry().register(new SpawnEggItem(ModEntities.GUARD_ENTITY, 7551423,456785, properties).setRegistryName("guard_spawn_egg"));
     }
 
     @SuppressWarnings("all")

@@ -24,6 +24,8 @@ public class LogoBlock extends HorizontalFacingBlock {
         setRegistryName("logo");
     }
 
+    @SuppressWarnings("deprecation")
+    @Nonnull
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         switch (state.get(FACING)) {
@@ -38,6 +40,8 @@ public class LogoBlock extends HorizontalFacingBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @Nonnull
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return VoxelShapes.empty();
@@ -48,6 +52,7 @@ public class LogoBlock extends HorizontalFacingBlock {
         return calculateFacing(context, true);
     }
 
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
