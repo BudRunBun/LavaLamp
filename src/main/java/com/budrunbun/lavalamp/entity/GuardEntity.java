@@ -9,13 +9,16 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class GuardEntity extends CreatureEntity {
-    private BlockPos targetBlockPos;
-    private BlockState targetBlockState;
+    public BlockPos targetBlockPos;
+    public BlockState targetBlockState;
 
     public GuardEntity(EntityType<? extends GuardEntity> type, World worldIn) {
         super(type, worldIn);
@@ -25,9 +28,9 @@ public class GuardEntity extends CreatureEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new FixShopGoal(this));
         this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(2, new FixShopGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, true));
@@ -49,21 +52,5 @@ public class GuardEntity extends CreatureEntity {
             this.applyEnchantments(this, entityIn);
         }
         return flag;
-    }
-
-    public void setTargetBlockPos(BlockPos targetBlockPos) {
-        this.targetBlockPos = targetBlockPos;
-    }
-
-    public void setTargetBlockState(BlockState targetBlockState) {
-        this.targetBlockState = targetBlockState;
-    }
-
-    public BlockPos getTargetBlockPos() {
-        return targetBlockPos;
-    }
-
-    public BlockState getTargetBlockState() {
-        return targetBlockState;
     }
 }

@@ -5,7 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -39,8 +41,9 @@ public class GrillCeilingBlock extends HorizontalFacingBlock {
             if (!player.isCreative() && !player.isSpectator()) {
                 guard.setAttackTarget(player);
             }
-            guard.setTargetBlockPos(pos);
-            guard.setTargetBlockState(state);
+            guard.targetBlockPos = pos;
+            guard.targetBlockState = state;
+            guard.setHeldItem(Hand.MAIN_HAND, new ItemStack(state.getBlock().asItem()));
         }
         super.onBlockHarvested(world, pos, state, player);
     }

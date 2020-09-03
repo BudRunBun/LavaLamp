@@ -5,6 +5,7 @@ import com.budrunbun.lavalamp.model.GuardModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,6 +19,7 @@ public class GuardRenderer extends MobRenderer<GuardEntity , GuardModel> {
 
     public GuardRenderer() {
         super(Minecraft.getInstance().getRenderManager(), new GuardModel(), 0.5F);
+        this.addLayer(new HeldItemLayer<>(this));
     }
 
     @Nullable

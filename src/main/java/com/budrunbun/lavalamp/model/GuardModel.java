@@ -1,7 +1,12 @@
 package com.budrunbun.lavalamp.model;
 
 import com.budrunbun.lavalamp.entity.GuardEntity;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;

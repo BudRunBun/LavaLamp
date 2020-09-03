@@ -2,6 +2,8 @@ package com.budrunbun.lavalamp.entity.goal;
 
 import com.budrunbun.lavalamp.entity.GuardEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 
 import java.util.EnumSet;
 
@@ -15,29 +17,30 @@ public class FixShopGoal extends Goal {
 
     @Override
     public boolean shouldExecute() {
-        return guard.getTargetBlockPos() != null && guard.getTargetBlockState() != null;
+        return guard.targetBlockPos != null && guard.targetBlockState != null;
     }
 
     @Override
     public void startExecuting() {
-        this.guard.getNavigator().tryMoveToXYZ(guard.getTargetBlockPos().getX(), guard.getTargetBlockPos().getY(), guard.getTargetBlockPos().getZ(), 1);
+        this.guard.getNavigator().tryMoveToXYZ(guard.targetBlockPos.getX(), guard.targetBlockPos.getY(), guard.targetBlockPos.getZ(), 1);
     }
 
     @Override
     public void tick() {
-        if (guard.getTargetBlockPos() != null && guard.getTargetBlockState() != null) {
+        if (guard.targetBlockPos != null && guard.targetBlockState != null) {
             if (isNearby()) {
-                this.guard.world.setBlockState(guard.getTargetBlockPos(), guard.getTargetBlockState());
+                this.guard.world.setBlockState(guard.targetBlockPos, guard.targetBlockState);
             }
 
-            if (this.guard.world.getBlockState(guard.getTargetBlockPos()).getBlock() == guard.getTargetBlockState().getBlock()) {
-                this.guard.setTargetBlockPos(null);
-                this.guard.setTargetBlockState(null);
+            if (this.guard.world.getBlockState(guard.targetBlockPos).getBlock() == guard.targetBlockState.getBlock()) {
+                this.guard.targetBlockPos = null;
+                this.guard.targetBlockState = null;
+                this.guard.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
             }
         }
     }
 
     private boolean isNearby() {
-        return Math.abs(this.guard.getPosition().getX() - guard.getTargetBlockPos().getX()) <= 1 && Math.abs(this.guard.getPosition().getY() - guard.getTargetBlockPos().getY()) <= 1 && Math.abs(this.guard.getPosition().getZ() - guard.getTargetBlockPos().getZ()) <= 1;
+        return Math.abs(this.guard.getPosition().getX() - guard.targetBlockPos.getX()) <= 1 && Math.abs(this.guard.getPosition().getY() - guard.targetBlockPos.getY()) <= 1 && Math.abs(this.guard.getPosition().getZ() - guard.targetBlockPos.getZ()) <= 1;
     }
 }
