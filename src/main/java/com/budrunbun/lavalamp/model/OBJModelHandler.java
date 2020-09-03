@@ -1,4 +1,4 @@
-/*package com.budrunbun.lavalamp.models;
+/*package com.budrunbun.lavalamp.model;
 
 import com.budrunbun.lavalamp.LavaLamp;
 import com.google.common.collect.ImmutableMap;
@@ -57,5 +57,4 @@ public class OBJModelHandler {
                 ResourceLocation.tryCreate("lavalamp:block/gray")
         );
     }
-
 }*/

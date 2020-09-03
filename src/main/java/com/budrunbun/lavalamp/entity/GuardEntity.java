@@ -1,6 +1,7 @@
 package com.budrunbun.lavalamp.entity;
 
-import com.budrunbun.lavalamp.entity.goal.DefendShopGoal;
+import com.budrunbun.lavalamp.entity.goal.FixShopGoal;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -9,9 +10,13 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class GuardEntity extends CreatureEntity {
+    private BlockPos targetBlockPos;
+    private BlockState targetBlockState;
+
     public GuardEntity(EntityType<? extends GuardEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -25,7 +30,7 @@ public class GuardEntity extends CreatureEntity {
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, true));
-        this.targetSelector.addGoal(3, new DefendShopGoal(this));
+        this.targetSelector.addGoal(3, new FixShopGoal(this));
     }
 
     @Override
@@ -45,4 +50,19 @@ public class GuardEntity extends CreatureEntity {
         return flag;
     }
 
+    public void setTargetBlockPos(BlockPos targetBlockPos) {
+        this.targetBlockPos = targetBlockPos;
+    }
+
+    public void setTargetBlockState(BlockState targetBlockState) {
+        this.targetBlockState = targetBlockState;
+    }
+
+    public BlockPos getTargetBlockPos() {
+        return targetBlockPos;
+    }
+
+    public BlockState getTargetBlockState() {
+        return targetBlockState;
+    }
 }
