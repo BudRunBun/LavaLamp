@@ -16,7 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class GuardEntity extends CreatureEntity {
+public class GuardEntity extends CreatureEntity implements IShopEmployee{
     public BlockPos targetBlockPos;
     public BlockState targetBlockState;
 
