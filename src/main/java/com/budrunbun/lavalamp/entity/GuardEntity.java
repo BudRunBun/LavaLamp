@@ -1,13 +1,14 @@
 package com.budrunbun.lavalamp.entity;
 
 import com.budrunbun.lavalamp.entity.goal.DefendShopGoal;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public class GuardEntity extends CreatureEntity {
@@ -36,8 +37,8 @@ public class GuardEntity extends CreatureEntity {
     }
 
     public boolean attackEntityAsMob(Entity entityIn) {
-        this.world.setEntityState(this, (byte)4);
-        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)(2.5 + this.rand.nextInt(4)));
+        this.world.setEntityState(this, (byte) 4);
+        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) (2.5 + this.rand.nextInt(4)));
         if (flag) {
             this.applyEnchantments(this, entityIn);
         }

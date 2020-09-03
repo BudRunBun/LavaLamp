@@ -71,4 +71,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:cashbox")
     public static final CashBoxBlock CASH_BOX_BLOCK = null;
+
+    @ObjectHolder("lavalamp:core")
+    public static final CoreBlock CORE_BLOCK = null;
 }

@@ -21,4 +21,7 @@ public class ModTileEntities {
 
     @ObjectHolder("lavalamp:shelf")
     public static final TileEntityType<ShelfTileEntity> SHELF_TE = null;
+
+    @ObjectHolder("lavalamp:core")
+    public static final TileEntityType<CoreBlockTileEntity> CORE_TE = null;
 }
