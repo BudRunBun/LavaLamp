@@ -4,7 +4,6 @@ import com.budrunbun.lavalamp.entity.GuardEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -37,7 +36,11 @@ public class GrillCeilingBlock extends HorizontalFacingBlock {
     public void onBlockHarvested(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull PlayerEntity player) {
         List<GuardEntity> guards = world.getEntitiesWithinAABB(GuardEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).grow(10));
         for (GuardEntity guard : guards) {
-            guard.setAttackTarget(player);
+            if (!player.isCreative() && !player.isSpectator()) {
+                guard.setAttackTarget(player);
+            }
+            guard.setTargetBlockPos(pos);
+            guard.setTargetBlockState(state);
         }
         super.onBlockHarvested(world, pos, state, player);
     }

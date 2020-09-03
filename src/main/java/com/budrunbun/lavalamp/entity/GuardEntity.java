@@ -27,10 +27,10 @@ public class GuardEntity extends CreatureEntity {
         this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(2, new FixShopGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, true));
-        this.targetSelector.addGoal(3, new FixShopGoal(this));
     }
 
     @Override
@@ -41,6 +41,7 @@ public class GuardEntity extends CreatureEntity {
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10.0D);
     }
 
+    @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         this.world.setEntityState(this, (byte) 4);
         boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) (2.5 + this.rand.nextInt(4)));
