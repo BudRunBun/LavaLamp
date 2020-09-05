@@ -1,5 +1,6 @@
 package com.budrunbun.lavalamp.block;
 
+import com.budrunbun.lavalamp.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,6 +12,7 @@ import javax.annotation.Nullable;
 public class ShopControllerBlock extends HorizontalFacingBlock{
     public ShopControllerBlock() {
         super(Block.Properties.from(Blocks.IRON_BLOCK));
+        setRegistryName("shop_controller");
     }
 
     @Override
@@ -21,7 +23,7 @@ public class ShopControllerBlock extends HorizontalFacingBlock{
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return null;
+        return ModTileEntities.SHOP_CONTROLLER_TE.create();
     }
 
 }

@@ -25,7 +25,7 @@ public class PlayerSensorTileEntity extends TileEntity implements ITickableTileE
         }
 
         for (Entity entity : entities) {
-            boolean flag = (entity instanceof PlayerEntity || entity instanceof IShopEmployee) && entity.getPosition().getY() <= this.pos.getY();
+            boolean flag = (entity instanceof IShopEmployee  || entity instanceof PlayerEntity) && entity.getPosition().getY() <= this.pos.getY();
             if (flag) {
                 world.setBlockState(getPos(), world.getBlockState(pos).with(PlayerSensorBlock.POWERED, true), 3);
                 ((PlayerSensorBlock) world.getBlockState(pos).getBlock()).updateNeighbors(this.world, pos);

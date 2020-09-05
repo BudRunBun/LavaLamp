@@ -24,4 +24,7 @@ public class ModTileEntities {
 
     @ObjectHolder("lavalamp:core")
     public static final TileEntityType<CoreBlockTileEntity> CORE_TE = null;
+
+    @ObjectHolder("lavalamp:shop_controller")
+    public static final TileEntityType<ShopControllerTileEntity> SHOP_CONTROLLER_TE = null;
 }

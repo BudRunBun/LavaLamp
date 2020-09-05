@@ -74,4 +74,7 @@ public class ModBlocks {
 
     @ObjectHolder("lavalamp:core")
     public static final CoreBlock CORE_BLOCK = null;
+
+    @ObjectHolder("lavalamp:shop_controller")
+    public static final ShopControllerBlock SHOP_CONTROLLER_BLOCK = null;
 }

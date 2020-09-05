@@ -72,6 +72,7 @@ public class RegistryEvents {
         event.getRegistry().register(new LogoBlock());
         event.getRegistry().register(new CashBoxBlock());
         event.getRegistry().register(new CoreBlock());
+        event.getRegistry().register(new ShopControllerBlock());
     }
 
     @SuppressWarnings("all")
@@ -119,6 +120,7 @@ public class RegistryEvents {
         event.getRegistry().register(TileEntityType.Builder.create(ConveyorBeltTileEntity::new, ModBlocks.CONVEYOR_BELT_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "conveyor_belt"));
         event.getRegistry().register(TileEntityType.Builder.create(ShelfTileEntity::new, ModBlocks.SHELF_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "shelf"));
         event.getRegistry().register(TileEntityType.Builder.create(CoreBlockTileEntity::new, ModBlocks.CORE_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "core"));
+        event.getRegistry().register(TileEntityType.Builder.create(ShopControllerTileEntity::new, ModBlocks.SHOP_CONTROLLER_BLOCK).build(null).setRegistryName(LavaLamp.MOD_ID, "shop_controller"));
     }
 
     @SuppressWarnings("unused")
