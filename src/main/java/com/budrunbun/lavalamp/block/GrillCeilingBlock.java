@@ -4,19 +4,19 @@ import com.budrunbun.lavalamp.entity.GuardEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class GrillCeilingBlock extends HorizontalFacingBlock {
+public class GrillCeilingBlock extends HorizontalFacingBlock implements IUnderShopProtection {
 
     public GrillCeilingBlock() {
         super(Block.Properties.create(Material.IRON));
@@ -38,13 +38,13 @@ public class GrillCeilingBlock extends HorizontalFacingBlock {
     public void onBlockHarvested(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull PlayerEntity player) {
         List<GuardEntity> guards = world.getEntitiesWithinAABB(GuardEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).grow(10));
         for (GuardEntity guard : guards) {
-            if (!player.isCreative() && !player.isSpectator()) {
-                guard.setAttackTarget(player);
-            }
-            guard.targetBlockPos = pos;
-            guard.targetBlockState = state;
-            guard.setHeldItem(Hand.MAIN_HAND, new ItemStack(state.getBlock().asItem()));
+            guard.setAttackTarget(player);
         }
         super.onBlockHarvested(world, pos, state, player);
+    }
+
+    @Override
+    public void onDestruction(BlockPos pos, IWorld world) {
+
     }
 }

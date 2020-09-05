@@ -27,5 +27,7 @@
   "item.lavalamp.salty_water_bucket": "Salty Water Bucket",
   "item.lavalamp.guard_spawn_egg": "Spawn Guard",
 
+  "entity.lavalamp.guard": "Guard",
+
   "itemGroup.lavalamp": "Lava Lamp"
 }

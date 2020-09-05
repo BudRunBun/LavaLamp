@@ -7,6 +7,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -31,5 +32,12 @@ public class CashBoxBlock extends HorizontalFacingBlock {
     @Override
     public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
         return calculateFacing(context, true);
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+
+
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 }

@@ -1,19 +1,26 @@
 package com.budrunbun.lavalamp.tileentity;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ObjectIntIdentityMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
-import net.minecraft.world.gen.feature.template.JigsawReplacementStructureProcessor;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.gen.feature.template.*;
 import net.minecraft.world.server.ServerWorld;
+import org.apache.logging.log4j.core.Core;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 public class CoreBlockTileEntity extends TileEntity implements ITickableTileEntity {
@@ -33,12 +40,12 @@ public class CoreBlockTileEntity extends TileEntity implements ITickableTileEnti
 
         try {
             check(this.pos, placementsettings);
-        } catch (Exception e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
-    public boolean check(BlockPos pos, PlacementSettings placementIn) {
+    public boolean check(BlockPos pos, PlacementSettings placementIn) throws NoSuchFieldException, IllegalAccessException {
         Template template = new Template();
         if (!this.world.isRemote) {
             template = ((ServerWorld) this.world).getStructureTemplateManager().getTemplate(new ResourceLocation("lavalamp:shop/shop_base"));
@@ -46,7 +53,9 @@ public class CoreBlockTileEntity extends TileEntity implements ITickableTileEnti
         Field field = null;
         try {
             field = template.getClass().getDeclaredField("blocks");
-        } catch (NoSuchFieldException | SecurityException e) {
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
             e.printStackTrace();
         }
         field.setAccessible(true);
@@ -60,12 +69,12 @@ public class CoreBlockTileEntity extends TileEntity implements ITickableTileEnti
 
         if (!blocks.isEmpty()) {
             List<Template.BlockInfo> list = placementIn.func_204764_a(blocks, pos);
-            for (Template.BlockInfo template$blockInfo : Template.processBlockInfos(template, this.world, pos, placementIn, list)) {
+            for (Template.BlockInfo template$blockInfo : template.processBlockInfos(template, this.world, pos, placementIn, list)) {
                 BlockPos blockpos = template$blockInfo.pos;
                 BlockState state = template$blockInfo.state;
 
                 if (this.world.getBlockState(blockpos).getBlock() != state.getBlock()) {
-                    System.out.println("Invalid block at: X: " + blockpos.getX() + " Y: " + blockpos.getY() + " Z: " + blockpos.getZ() + ". Required: " + state.getBlock().getRegistryName() + " Provided: " + this.world.getBlockState(blockpos).getBlock().getRegistryName());
+                    System.out.println("Invalid block at: X: " + blockpos.getX() + " Y: " + blockpos.getY() + " Z: " + blockpos.getZ() + ". Required: " + state.getBlock().getRegistryName().toString() + " Provided: " + this.world.getBlockState(blockpos).getBlock().getRegistryName());
                     return false;
                 }
 
