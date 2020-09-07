@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class ShopControllerBlock extends HorizontalFacingBlock{
     public ShopControllerBlock() {
-        super(Block.Properties.from(Blocks.IRON_BLOCK));
+        super(Block.Properties.from(Blocks.IRON_BLOCK).hardnessAndResistance(-1,3600000.0F).noDrops());
         setRegistryName("shop_controller");
     }
 
