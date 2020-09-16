@@ -50,10 +50,12 @@ public class ShopControllerTileEntity extends TileEntity implements ITickableTil
     @SuppressWarnings("all")
     @Override
     public void tick() {
-        if (guardCount < 3) {
+        if (guardCount < 1) {
             GuardEntity guard = (GuardEntity) ModEntities.GUARD_ENTITY.spawn(this.world, null, null, this.pos.offset(Direction.NORTH), SpawnReason.MOB_SUMMONED, false, false);
             guard.setControllerPosition(this.pos);
-            guard.setShopBounds(this.pos.add(-3, 0, -3), this.pos.add(3, 0, 3));
+            AxisAlignedBB aabb = (new AxisAlignedBB(getPos(), getPos().add(1, 1, 1))).grow(10);
+            guard.setShopBounds(new BlockPos(aabb.minX, aabb.minY, aabb.minZ), new BlockPos(aabb.maxX, aabb.maxY, aabb.maxZ));
+            guard.setPostPosition(this.pos.add(0, 0, 2));
             guardCount++;
         }
     }

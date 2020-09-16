@@ -29,9 +29,8 @@ public class GuardModel extends BipedModel<GuardEntity> {
         this.bipedLeftArm.rotateAngleZ = 0.0F;
         this.bipedRightArm.rotateAngleY = -(0.1F - f * 0.6F);
         this.bipedLeftArm.rotateAngleY = 0.1F - f * 0.6F;
-        float f2 = flag ? -(float) Math.PI / 2.25F : 0F;
-        this.bipedRightArm.rotateAngleX = f2;
-        this.bipedLeftArm.rotateAngleX = f2;
+        this.bipedRightArm.rotateAngleX = flag ? -(float) Math.PI / 2.25F : 0F;
+        this.bipedLeftArm.rotateAngleX = flag ? -(float) Math.PI / 4 : 0F;
         this.bipedRightArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
         this.bipedLeftArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
         this.bipedRightArm.rotateAngleZ += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
