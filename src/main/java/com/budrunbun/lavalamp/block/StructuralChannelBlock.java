@@ -13,7 +13,6 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nonnull;
 
 public class StructuralChannelBlock extends HorizontalFacingBlock {
-
     private static final VoxelShape SHAPE_1 = Block.makeCuboidShape(9, 0, 16, 7, 1.5, 0);
     private static final VoxelShape SHAPE_2 = Block.makeCuboidShape(16, 1.5, 7, 0, 0, 9);
 

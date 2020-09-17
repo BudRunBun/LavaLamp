@@ -2,7 +2,6 @@ package com.budrunbun.lavalamp.tileentity;
 
 import com.budrunbun.lavalamp.container.CheeseGeneratorContainer;
 import com.budrunbun.lavalamp.item.ModItems;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -12,24 +11,11 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.IIntArray;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
-import net.minecraft.world.gen.feature.template.JigsawReplacementStructureProcessor;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.util.List;
 
 public class CheeseGeneratorTileEntity extends ContainerTileEntity implements INamedContainerProvider, ITickableTileEntity {
     //TODO: get side slots
