@@ -33,11 +33,4 @@ public class CashBoxBlock extends HorizontalFacingBlock {
     public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
         return calculateFacing(context, true);
     }
-
-    @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-
-
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
-    }
 }

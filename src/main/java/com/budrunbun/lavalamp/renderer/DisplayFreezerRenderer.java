@@ -42,8 +42,6 @@ public class DisplayFreezerRenderer extends TileEntityRenderer<DisplayFreezerTil
         ItemStack Slot10 = entity.getHandler().getStackInSlot(10);
         ItemStack Slot11 = entity.getHandler().getStackInSlot(11);
 
-        //if (entity.getBlockState().get(DisplayFreezerBlock.OPEN)) {
-
         scale = itemRenderer.shouldRenderItemIn3D(Slot0) ? 0.5F : 0.35F;
         offset = itemRenderer.shouldRenderItemIn3D(Slot0) ? 0 : 2/32.0F;
         renderBottomLeftItem(x, y, z, Slot0, scale, 0, offset);
@@ -91,7 +89,6 @@ public class DisplayFreezerRenderer extends TileEntityRenderer<DisplayFreezerTil
         scale = itemRenderer.shouldRenderItemIn3D(Slot11) ? 0.5F : 0.35F;
         offset = itemRenderer.shouldRenderItemIn3D(Slot11) ? 0 : 2/32.0F;
         renderBottomRightItem(x, y, z, Slot11, scale, -0.5F, offset);
-        //}
     }
 
     private void renderBottomLeftItem(double x, double y, double z, ItemStack stack, float scale, float offset1, float offset2) {
