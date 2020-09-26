@@ -35,13 +35,13 @@ public class GlassDoorBlock extends DoorBlock {
         setRegistryName("glass_door");
     }
 
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public boolean isNormalCube(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return false;
     }
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         Direction direction = state.get(FACING);
         if (!state.get(POWERED)) {
             if (direction == Direction.NORTH || direction == Direction.SOUTH)
@@ -77,6 +77,7 @@ public class GlassDoorBlock extends DoorBlock {
 
     }
 
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.TRANSLUCENT;

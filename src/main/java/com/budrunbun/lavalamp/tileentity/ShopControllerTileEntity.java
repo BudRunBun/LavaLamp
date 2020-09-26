@@ -16,6 +16,7 @@ import java.util.List;
 
 public class ShopControllerTileEntity extends TileEntity implements ITickableTileEntity {
     private int guardCount;
+    private static final int MAX_GUARD_COUNT = 1;
 
     public ShopControllerTileEntity() {
         super(ModTileEntities.SHOP_CONTROLLER_TE);
@@ -50,7 +51,7 @@ public class ShopControllerTileEntity extends TileEntity implements ITickableTil
     @SuppressWarnings("all")
     @Override
     public void tick() {
-        if (guardCount < 1) {
+        if (guardCount < MAX_GUARD_COUNT) {
             GuardEntity guard = (GuardEntity) ModEntities.GUARD_ENTITY.spawn(this.world, null, null, this.pos.offset(Direction.NORTH), SpawnReason.MOB_SUMMONED, false, false);
             guard.setControllerPosition(this.pos);
             AxisAlignedBB aabb = (new AxisAlignedBB(getPos(), getPos().add(1, 1, 1))).grow(10);

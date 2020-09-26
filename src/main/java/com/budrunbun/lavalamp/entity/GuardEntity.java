@@ -1,18 +1,11 @@
 package com.budrunbun.lavalamp.entity;
 
+import com.budrunbun.lavalamp.entity.goal.ProtectWithShieldGoal;
 import com.budrunbun.lavalamp.entity.goal.ReturnToShopGoal;
-import com.budrunbun.lavalamp.entity.goal.FixShopGoal;
 import com.budrunbun.lavalamp.tileentity.ShopControllerTileEntity;
-import net.minecraft.block.Block;
-
-import java.util.Optional;
-
+import com.sun.javafx.geom.transform.BaseTransform;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,13 +18,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class GuardEntity extends CreatureEntity implements IShopEmployee {
@@ -41,7 +32,9 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     private static final DataParameter<BlockPos> SHOP_BOUND_1 = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
     private static final DataParameter<BlockPos> SHOP_BOUND_2 = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
     private static final DataParameter<BlockPos> POST_POSITION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
-    private final Predicate<LivingEntity> isInShop = (entity) -> new AxisAlignedBB(this.dataManager.get(SHOP_BOUND_1), this.dataManager.get(SHOP_BOUND_2)).contains(entity.getPositionVec());
+    private static final DataParameter<Integer> DEGREES = EntityDataManager.createKey(GuardEntity.class, DataSerializers.VARINT);
+
+    private final Predicate<LivingEntity> isInShop = (entity) -> this.getShopBounds().contains(entity.getPositionVec());
 
     @Override
     protected void registerData() {
@@ -49,6 +42,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.dataManager.register(POST_POSITION, new BlockPos(1, 0, 0));
         this.dataManager.register(SHOP_BOUND_1, new BlockPos(0, 1, 0));
         this.dataManager.register(SHOP_BOUND_2, new BlockPos(0, 0, 1));
+        this.dataManager.register(DEGREES, 0);
 
         super.registerData();
     }
@@ -61,11 +55,13 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(3, new ProtectWithShieldGoal(this));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new ReturnToShopGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 100, true, false, isInShop));
+        //this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 100, true, false, isInShop));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, false));
     }
 
     @Override
@@ -78,8 +74,12 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
             this.setHeldItem(Hand.OFF_HAND, ItemStack.EMPTY);
         }
 
+        System.out.println(getDegrees());
+
         super.baseTick();
     }
+
+
 
     @Override
     protected void registerAttributes() {
@@ -113,6 +113,14 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     public BlockPos getPostPosition() {
         return this.dataManager.get(POST_POSITION);
+    }
+
+    public void setDegrees(int degrees) {
+        this.dataManager.set(DEGREES, degrees);
+    }
+
+    public int getDegrees() {
+        return this.dataManager.get(DEGREES);
     }
 
     public void setShopBounds(BlockPos firstBound, BlockPos secondBound) {

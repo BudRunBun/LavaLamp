@@ -5,10 +5,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.util.HandSide;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,32 +28,37 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
         if (guard.isAggressive()) {
             ItemStack shield = guard.getHeldItemOffhand();
             ItemStack sword = guard.getHeldItemMainhand();
-            int angle = guard.getRevengeTarget() != null ? (guard.getRevengeTarget().getDistance(guard) < 2 ? 90 : 0) : 0;
-            renderHeldItem(guard, shield, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT, angle);
-            renderHeldItem(guard, sword, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT, 0);
+
+            renderHeldItem(guard, shield, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT);
+            renderHeldItem(guard, sword, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT);
         }
     }
 
-    private void renderHeldItem(LivingEntity guard, ItemStack stack, ItemCameraTransforms.TransformType transformType, HandSide handSide, int degrees) {
+    private void renderHeldItem(GuardEntity guard, ItemStack stack, ItemCameraTransforms.TransformType transformType, HandSide handSide) {
         if (!stack.isEmpty()) {
             GlStateManager.pushMatrix();
-            if (guard.shouldRenderSneaking()) {
-                GlStateManager.translatef(0.0F, 0.2F, 0.0F);
-            }
-            System.out.println("Rotate for " + degrees + " degrees");
+
             translateToHand(handSide);
+
             GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
             GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotatef(degrees, 0, 1, 0);
+            //GlStateManager.rotatef(guard.degrees, 0, 1, 0);
+            if (stack.getItem() instanceof ShieldItem) {
+                GlStateManager.rotatef(guard.getDegrees(), 0, 1, 0);
+            }
+
+            System.out.println(guard.getDegrees());
+
             boolean flag = handSide == HandSide.LEFT;
             GlStateManager.translatef((float) (flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
             Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(guard, stack, transformType, flag);
+
             GlStateManager.popMatrix();
         }
     }
 
-    protected void translateToHand(HandSide side) {
-        ((IHasArm) this.getEntityModel()).postRenderArm(0.0625F, side);
+    private void translateToHand(HandSide side) {
+        this.getEntityModel().postRenderArm(0.0625F, side);
     }
 
     @Override

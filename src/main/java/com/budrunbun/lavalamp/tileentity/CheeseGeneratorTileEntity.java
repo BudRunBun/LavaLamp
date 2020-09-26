@@ -97,7 +97,6 @@ public class CheeseGeneratorTileEntity extends ContainerTileEntity implements IN
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity playerEntity) {
-        this.fillWithLoot();
         return new CheeseGeneratorContainer(windowId, playerInventory, handler, this.generatorData);
     }
 
