@@ -29,5 +29,10 @@
 
   "entity.lavalamp.guard": "Guard",
 
+  "controller_block.gui.done": "Done",
+  "controller_block.rotation.x": "X Rotation",
+  "controller_block.rotation.y": "Y Rotation",
+  "controller_block.rotation.z": "Z Rotation",
+
   "itemGroup.lavalamp": "Lava Lamp"
 }
