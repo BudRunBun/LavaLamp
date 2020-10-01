@@ -267,4 +267,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
         super.readAdditional(compound);
     }
+
+
+
 }

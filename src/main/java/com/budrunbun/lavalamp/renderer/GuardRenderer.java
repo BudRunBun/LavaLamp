@@ -26,4 +26,9 @@ public class GuardRenderer extends MobRenderer<GuardEntity, GuardModel> {
     protected ResourceLocation getEntityTexture(@Nonnull GuardEntity entity) {
         return GUARD_TEXTURES;
     }
+
+    @Override
+    public float handleRotationFloat(@Nonnull GuardEntity livingBase, float partialTicks) {
+        return super.handleRotationFloat(livingBase, partialTicks);
+    }
 }

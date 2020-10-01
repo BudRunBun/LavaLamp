@@ -1,6 +1,7 @@
 package com.budrunbun.lavalamp.model;
 
 import com.budrunbun.lavalamp.entity.GuardEntity;
+import com.budrunbun.lavalamp.renderer.GuardRenderer;
 import com.budrunbun.lavalamp.tileentity.ShopControllerTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
@@ -10,17 +11,21 @@ import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
+import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 
 @SuppressWarnings("deprecation")
 public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
+    private final GuardRenderer renderer;
 
-    public GuardHeldItemLayer(IEntityRenderer<GuardEntity, GuardModel> entityRendererIn) {
+    public GuardHeldItemLayer(GuardRenderer entityRendererIn) {
         super(entityRendererIn);
+        renderer = entityRendererIn;
     }
 
-    public void render(GuardEntity guard) {
+    private void render(GuardEntity guard) {
         if (true/*guard.isAggressive()*/) {
             renderHeldItem(guard, guard.getShield(), ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT);
             renderHeldItem(guard, guard.getSword(), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT);
@@ -35,7 +40,6 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
 
 
             if (/*!guard.isShieldEquipped() || */!flag) {
-                //System.out.println("Right side");
                 this.translateToHand(handSide);
 
                 GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
@@ -53,12 +57,22 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
     }
 
     private void fixShieldRotation(RendererModel model, GuardEntity guard) {
-        //GlStateManager.rotatef(-45, 0, 1, 0);
         ShopControllerTileEntity controller = (ShopControllerTileEntity) guard.world.getTileEntity(guard.getControllerPosition());
 
         GlStateManager.translatef((model.rotationPointX + controller.getRotationX()) * 0.0625F, (model.rotationPointY + controller.getRotationY()) * 0.0625F, (model.rotationPointZ + controller.getRotationZ()) * 0.0625F);
         GlStateManager.rotatef(-90, 0, 1, 0);
         GlStateManager.scalef(0.75F, 0.75F, 0.75F);
+
+        Minecraft minecraft = Minecraft.getInstance();
+        Field renderPartialTicksPaused;
+
+        try {
+            renderPartialTicksPaused = Minecraft.class.getDeclaredField("renderPartialTicksPaused");
+        } catch (Throwable t) {
+            return;
+        }
+
+        GlStateManager.rotatef(MathHelper.cos(renderer.handleRotationFloat(guard, Minecraft.getInstance().isGamePaused() ? renderPartialTicksPaused.get(minecraft) : minecraft.getRenderPartialTicks()) * 0.09F) * 0.05F + 0.05F, 1, 0, 0);
     }
 
     private void translateToHand(HandSide side) {
