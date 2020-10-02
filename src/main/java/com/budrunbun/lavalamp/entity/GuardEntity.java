@@ -24,8 +24,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.extensions.IForgeItem;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
@@ -62,7 +60,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     @Override
     protected void registerGoals() {
-        /*this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1, true));
         this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(3, new ProtectWithShieldGoal(this));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
@@ -71,23 +69,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         //this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 228, false, false, isInShop));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, false));
-    */
     }
-
-/*
-    @Override
-    public void baseTick() {
-        if (this.isAggressive()) {
-            this.setHeldItem(Hand.OFF_HAND, new ItemStack(Items.SHIELD));
-            this.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
-        } else {
-            this.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
-            this.setHeldItem(Hand.OFF_HAND, ItemStack.EMPTY);
-        }
-
-        super.baseTick();
-    }
-*/
 
     @Override
     public void baseTick() {
@@ -110,10 +92,9 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5000);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23F);
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1.0D);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0);
+        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10.0);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35);
     }
 
     @Override
@@ -141,9 +122,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     protected void damageShield(float damage) {
         if (damage >= 3.0F && this.isAggressive()) {
             int i = 1 + MathHelper.floor(damage);
-            getShield().damageItem(i, this, entity -> entity.sendBreakAnimation(Hand.OFF_HAND));
+            this.getShield().damageItem(i, this, entity -> entity.sendBreakAnimation(Hand.OFF_HAND));
 
             if (getShield().isEmpty()) {
+                this.dataManager.set(SHIELD, ItemStack.EMPTY);
                 this.setItemStackToSlot(EquipmentSlotType.OFFHAND, ItemStack.EMPTY);
                 this.activeItemStack = ItemStack.EMPTY;
                 this.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + this.world.rand.nextFloat() * 0.4F);
@@ -267,7 +249,6 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
         super.readAdditional(compound);
     }
-
 
 
 }
