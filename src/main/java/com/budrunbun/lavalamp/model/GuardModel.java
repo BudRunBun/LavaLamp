@@ -31,9 +31,11 @@ public class GuardModel extends BipedModel<GuardEntity> {
         //this.bipedRightArm.rotateAngleY = -(0.1F - f * 0.6F);
         //this.bipedLeftArm.rotateAngleY = 0.1F - f * 0.6F;
         //this.bipedRightArm.rotateAngleX = (float) -Math.PI / 2 * (limbSwingAmount);
-        if (flag1) {
-            this.bipedRightArm.rotateAngleX = (float) Math.PI * (1 - entityIn.getSwingProgress(Minecraft.getInstance().getRenderPartialTicks()) / 2);
+        if (flag1 && entityIn.isAnimationGoing()) {
+            this.bipedRightArm.rotateAngleX = (float) Math.PI * (100 - (float) entityIn.getAnimationProgress() / 2);
         }
+
+
         //this.bipedRightArm.rotateAngleX = flag1 ? -(float) Math.PI / 2.25F : 0F;
         this.bipedLeftArm.rotateAngleX = flag2 ? -(float) Math.PI / 4 : 0F;
         this.bipedRightArm.rotateAngleX += f * 1.2F - f1 * 0.4F;

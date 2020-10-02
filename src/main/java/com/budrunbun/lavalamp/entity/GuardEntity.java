@@ -1,8 +1,10 @@
 package com.budrunbun.lavalamp.entity;
 
+import com.budrunbun.lavalamp.entity.goal.GuardMeleeAttackGoal;
 import com.budrunbun.lavalamp.entity.goal.ProtectWithShieldGoal;
 import com.budrunbun.lavalamp.entity.goal.ReturnToShopGoal;
 import com.budrunbun.lavalamp.tileentity.ShopControllerTileEntity;
+import jdk.internal.dynalink.linker.GuardingDynamicLinker;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -29,6 +31,8 @@ import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public class GuardEntity extends CreatureEntity implements IShopEmployee {
+    private static final int TIMER = 400;
+
     public BlockPos targetBlockPos;
     public BlockState targetBlockState;
     private static final DataParameter<BlockPos> CONTROLLER_POSITION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
@@ -38,6 +42,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     private static final DataParameter<Boolean> SHIELD_EQUIPPED = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<ItemStack> SHIELD = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
     private static final DataParameter<ItemStack> SWORD = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
+    private static final DataParameter<Integer> ANIMATION_PROGRESS = EntityDataManager.createKey(GuardEntity.class, DataSerializers.VARINT);
 
     private final Predicate<LivingEntity> isInShop = entity -> this.getShopBounds().contains(entity.getPositionVec());
 
@@ -50,6 +55,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.dataManager.register(SHIELD_EQUIPPED, false);
         this.dataManager.register(SHIELD, new ItemStack(Items.SHIELD));
         this.dataManager.register(SWORD, new ItemStack(Items.IRON_SWORD));
+        this.dataManager.register(ANIMATION_PROGRESS, 0);
 
         super.registerData();
     }
@@ -60,7 +66,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1, true));
+        this.goalSelector.addGoal(1, new GuardMeleeAttackGoal(this, 1, true));
         this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(3, new ProtectWithShieldGoal(this));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
@@ -69,14 +75,6 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         //this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 228, false, false, isInShop));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, false));
-    }
-
-    @Override
-    public void baseTick() {
-        //System.out.printf("Shield Durability: %.2f", (float) getShield().getDamage() / getShield().getMaxDamage() * 100);
-        //System.out.println(isShieldEquipped());
-
-        super.baseTick();
     }
 
     public ItemStack getSword() {
@@ -183,6 +181,30 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         return this.dataManager.get(SHIELD_EQUIPPED);
     }
 
+    public int getAnimationProgress() {
+        return this.dataManager.get(ANIMATION_PROGRESS);
+    }
+
+    public void doSwordAttackAnimation() {
+        for (int i = TIMER; i > 0; i--) {
+            this.dataManager.set(ANIMATION_PROGRESS, i);
+        }
+    }
+
+    public boolean isAnimationGoing() {
+        return this.getAnimationProgress() > 0;
+    }
+
+    public void addToAnimationProgress() {
+        if (this.getAnimationProgress() > 0) {
+            this.dataManager.set(ANIMATION_PROGRESS, this.dataManager.get(ANIMATION_PROGRESS) - 1);
+        }
+
+        if (this.getAnimationProgress() < 0) {
+            this.dataManager.set(ANIMATION_PROGRESS, 0);
+        }
+    }
+
     public void setShopBounds(BlockPos firstBound, BlockPos secondBound) {
         this.dataManager.set(SHOP_BOUND_1, firstBound);
         this.dataManager.set(SHOP_BOUND_2, secondBound);
@@ -196,7 +218,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     public void onDeath(@Nonnull DamageSource cause) {
         TileEntity tile = this.world.getTileEntity(getControllerPosition());
 
-        if (tile != null && tile instanceof ShopControllerTileEntity) {
+        if (tile instanceof ShopControllerTileEntity) {
             ((ShopControllerTileEntity) tile).decreaseGuardAmount();
         }
 
@@ -226,6 +248,8 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         compound.put("shield", this.dataManager.get(SHIELD).write(new CompoundNBT()));
         compound.put("sword", this.dataManager.get(SWORD).write(new CompoundNBT()));
 
+        compound.putInt("anim_prog", this.dataManager.get(ANIMATION_PROGRESS));
+
         super.writeAdditional(compound);
     }
 
@@ -246,6 +270,8 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         if (!shield.isEmpty()) {
             this.dataManager.set(SHIELD, ItemStack.read(shield));
         }
+
+        this.dataManager.set(ANIMATION_PROGRESS, compound.getInt("anim_prog"));
 
         super.readAdditional(compound);
     }

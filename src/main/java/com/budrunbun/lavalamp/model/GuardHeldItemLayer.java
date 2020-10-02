@@ -16,11 +16,9 @@ import javax.annotation.Nonnull;
 
 @SuppressWarnings("deprecation")
 public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
-    private final GuardRenderer renderer;
 
     public GuardHeldItemLayer(GuardRenderer entityRendererIn) {
         super(entityRendererIn);
-        renderer = entityRendererIn;
     }
 
     private void render(GuardEntity guard) {

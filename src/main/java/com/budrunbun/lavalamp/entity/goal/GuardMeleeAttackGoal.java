@@ -11,11 +11,19 @@ public class GuardMeleeAttackGoal extends MeleeAttackGoal {
 
     public GuardMeleeAttackGoal(GuardEntity guard, double speedIn, boolean useLongMemory) {
         super(guard, speedIn, useLongMemory);
+        this.guard = guard;
+    }
 
+    @Override
+    public boolean shouldExecute() {
+        return super.shouldExecute()/* && !guard.isAnimationGoing()*/;
     }
 
     @Override
     protected void checkAndPerformAttack(@Nonnull LivingEntity enemy, double distToEnemySqr) {
-        super.checkAndPerformAttack(enemy, distToEnemySqr);
+        //if (!guard.isAnimationGoing()) {
+            guard.doSwordAttackAnimation();
+            super.checkAndPerformAttack(enemy, distToEnemySqr);
+        //}
     }
 }
