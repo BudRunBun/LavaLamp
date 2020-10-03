@@ -3,6 +3,7 @@ package com.budrunbun.lavalamp.model;
 import com.budrunbun.lavalamp.entity.GuardEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,21 +24,20 @@ public class GuardModel extends BipedModel<GuardEntity> {
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
 
         boolean flag1 = entityIn.isAggressive();
-        boolean flag2 = entityIn.isShieldEquipped();
+        boolean flag2 = entityIn.getShield() != ItemStack.EMPTY;
         float f = MathHelper.sin(this.swingProgress * (float) Math.PI);
         float f1 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float) Math.PI);
-        this.bipedLeftArm.rotateAngleZ = flag2 ? (float) Math.PI / 4 : 0;
+        this.bipedLeftArm.rotateAngleZ = flag1 && flag2 ? (float) Math.PI / 4 : 0;
         this.bipedRightArm.rotateAngleZ = 0;
         //this.bipedRightArm.rotateAngleY = -(0.1F - f * 0.6F);
         //this.bipedLeftArm.rotateAngleY = 0.1F - f * 0.6F;
         //this.bipedRightArm.rotateAngleX = (float) -Math.PI / 2 * (limbSwingAmount);
-        if (flag1 && entityIn.isAnimationGoing()) {
-            this.bipedRightArm.rotateAngleX = (float) Math.PI * (100 - (float) entityIn.getAnimationProgress() / 2);
+        if (flag1) {
+            this.bipedRightArm.rotateAngleX = (float) -Math.PI * (1 - entityIn.animationProgress / 2);
         }
 
-
         //this.bipedRightArm.rotateAngleX = flag1 ? -(float) Math.PI / 2.25F : 0F;
-        this.bipedLeftArm.rotateAngleX = flag2 ? -(float) Math.PI / 4 : 0F;
+        this.bipedLeftArm.rotateAngleX = flag1 && flag2 ? -(float) Math.PI / 4 : 0F;
         this.bipedRightArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
         this.bipedLeftArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
     }

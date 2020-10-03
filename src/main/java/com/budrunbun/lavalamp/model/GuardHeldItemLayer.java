@@ -35,7 +35,7 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
             GlStateManager.pushMatrix();
 
 
-            if (!guard.isShieldEquipped() || !flag) {
+            if (!guard.isShieldEquipped || !flag) {
                 this.translateToHand(handSide);
 
                 GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);

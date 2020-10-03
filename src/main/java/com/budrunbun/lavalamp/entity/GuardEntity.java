@@ -4,11 +4,13 @@ import com.budrunbun.lavalamp.entity.goal.GuardMeleeAttackGoal;
 import com.budrunbun.lavalamp.entity.goal.ProtectWithShieldGoal;
 import com.budrunbun.lavalamp.entity.goal.ReturnToShopGoal;
 import com.budrunbun.lavalamp.tileentity.ShopControllerTileEntity;
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -31,7 +33,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public class GuardEntity extends CreatureEntity implements IShopEmployee {
-    private static final int TIMER = 400;
+    public static final float CHOP_DURATION = 4;
 
     public BlockPos targetBlockPos;
     public BlockState targetBlockState;
@@ -39,10 +41,12 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     private static final DataParameter<BlockPos> SHOP_BOUND_1 = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
     private static final DataParameter<BlockPos> SHOP_BOUND_2 = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
     private static final DataParameter<BlockPos> POST_POSITION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
-    private static final DataParameter<Boolean> SHIELD_EQUIPPED = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<ItemStack> SHIELD = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
     private static final DataParameter<ItemStack> SWORD = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
-    private static final DataParameter<Integer> ANIMATION_PROGRESS = EntityDataManager.createKey(GuardEntity.class, DataSerializers.VARINT);
+
+    public float animationProgress = 0;
+    public boolean isInReverseAnimation = false;
+    public boolean isShieldEquipped = false;
 
     private final Predicate<LivingEntity> isInShop = entity -> this.getShopBounds().contains(entity.getPositionVec());
 
@@ -52,10 +56,8 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.dataManager.register(POST_POSITION, new BlockPos(1, 0, 0));
         this.dataManager.register(SHOP_BOUND_1, new BlockPos(0, 1, 0));
         this.dataManager.register(SHOP_BOUND_2, new BlockPos(0, 0, 1));
-        this.dataManager.register(SHIELD_EQUIPPED, false);
         this.dataManager.register(SHIELD, new ItemStack(Items.SHIELD));
         this.dataManager.register(SWORD, new ItemStack(Items.IRON_SWORD));
-        this.dataManager.register(ANIMATION_PROGRESS, 0);
 
         super.registerData();
     }
@@ -81,9 +83,15 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         return this.dataManager.get(SWORD);
     }
 
-
     public ItemStack getShield() {
         return this.dataManager.get(SHIELD);
+    }
+
+
+    @Override
+    public void baseTick() {
+        System.out.println(this.animationProgress);
+        super.baseTick();
     }
 
     @Override
@@ -107,7 +115,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     @Override
     public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
-        if (source.getTrueSource() instanceof LivingEntity && !isShieldEquipped() || !(source.getTrueSource() instanceof LivingEntity)) {
+        if (source.getTrueSource() instanceof LivingEntity && !this.isShieldEquipped || !(source.getTrueSource() instanceof LivingEntity)) {
             return super.attackEntityFrom(source, amount);
         }
 
@@ -170,38 +178,41 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     }
 
     public void equipShield() {
-        this.dataManager.set(SHIELD_EQUIPPED, true);
+        this.isShieldEquipped = true;
     }
 
     public void unequipShield() {
-        this.dataManager.set(SHIELD_EQUIPPED, false);
+        this.isShieldEquipped = false;
     }
 
-    public boolean isShieldEquipped() {
-        return this.dataManager.get(SHIELD_EQUIPPED);
-    }
-
-    public int getAnimationProgress() {
-        return this.dataManager.get(ANIMATION_PROGRESS);
-    }
-
-    public void doSwordAttackAnimation() {
-        for (int i = TIMER; i > 0; i--) {
-            this.dataManager.set(ANIMATION_PROGRESS, i);
+    public void startChoppingAnimation() {
+        if (this.animationProgress == 0) {
+            this.animationProgress = 1E-6F;
         }
     }
 
-    public boolean isAnimationGoing() {
-        return this.getAnimationProgress() > 0;
+    public boolean canChop() {
+        return this.animationProgress == 1;
     }
 
-    public void addToAnimationProgress() {
-        if (this.getAnimationProgress() > 0) {
-            this.dataManager.set(ANIMATION_PROGRESS, this.dataManager.get(ANIMATION_PROGRESS) - 1);
-        }
+    public boolean isChoppingAnimationGoing() {
+        return this.animationProgress > 0;
+    }
 
-        if (this.getAnimationProgress() < 0) {
-            this.dataManager.set(ANIMATION_PROGRESS, 0);
+    public void chop() {
+        this.animationProgress += 1 / CHOP_DURATION;
+
+        if (this.animationProgress > 1) {
+            this.animationProgress = 1F;
+        }
+    }
+
+    public void raiseArm() {
+        this.animationProgress -= 1 / (2 * CHOP_DURATION);
+
+        if (this.animationProgress < 0) {
+            this.animationProgress = 0F;
+            this.isInReverseAnimation = false;
         }
     }
 
@@ -243,12 +254,14 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         compound.putInt("y_3", this.dataManager.get(POST_POSITION).getY());
         compound.putInt("z_3", this.dataManager.get(POST_POSITION).getZ());
 
-        compound.putBoolean("equip", this.dataManager.get(SHIELD_EQUIPPED));
+        compound.putBoolean("equip", this.isShieldEquipped);
 
         compound.put("shield", this.dataManager.get(SHIELD).write(new CompoundNBT()));
         compound.put("sword", this.dataManager.get(SWORD).write(new CompoundNBT()));
 
-        compound.putInt("anim_prog", this.dataManager.get(ANIMATION_PROGRESS));
+        compound.putFloat("animation_progress", this.animationProgress);
+
+        compound.putBoolean("reverse", this.isInReverseAnimation);
 
         super.writeAdditional(compound);
     }
@@ -259,7 +272,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.dataManager.set(SHOP_BOUND_1, new BlockPos(compound.getInt("x_1"), compound.getInt("y_1"), compound.getInt("z_1")));
         this.dataManager.set(SHOP_BOUND_2, new BlockPos(compound.getInt("x_2"), compound.getInt("y_2"), compound.getInt("z_2")));
         this.dataManager.set(POST_POSITION, new BlockPos(compound.getInt("x_3"), compound.getInt("y_3"), compound.getInt("z_3")));
-        this.dataManager.set(SHIELD_EQUIPPED, compound.getBoolean("equip"));
+        this.isShieldEquipped = compound.getBoolean("equip");
 
         CompoundNBT sword = compound.getCompound("sword");
         if (!sword.isEmpty()) {
@@ -271,10 +284,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
             this.dataManager.set(SHIELD, ItemStack.read(shield));
         }
 
-        this.dataManager.set(ANIMATION_PROGRESS, compound.getInt("anim_prog"));
+        this.animationProgress = compound.getFloat("animation_progress");
+
+        this.isInReverseAnimation = compound.getBoolean("reverse");
 
         super.readAdditional(compound);
     }
-
-
 }
