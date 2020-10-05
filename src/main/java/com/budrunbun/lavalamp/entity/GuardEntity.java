@@ -23,6 +23,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +31,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class GuardEntity extends CreatureEntity implements IShopEmployee {
@@ -42,11 +44,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     private static final DataParameter<BlockPos> SHOP_BOUND_2 = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
     private static final DataParameter<BlockPos> POST_POSITION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
     private static final DataParameter<ItemStack> SHIELD = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
-    private static final DataParameter<ItemStack> SWORD = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
-
-    public float animationProgress = 0;
-    public boolean isInReverseAnimation = false;
-    public boolean isShieldEquipped = false;
+    private static final DataParameter<ItemStack> MELEE_WEAPON = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
+    private static final DataParameter<Boolean> SHIELD_EQUIPPED = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> ANIMATION_PROGRESS = EntityDataManager.createKey(GuardEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> REVERSE_ANIMATION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
 
     private final Predicate<LivingEntity> isInShop = entity -> this.getShopBounds().contains(entity.getPositionVec());
 
@@ -57,7 +58,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.dataManager.register(SHOP_BOUND_1, new BlockPos(0, 1, 0));
         this.dataManager.register(SHOP_BOUND_2, new BlockPos(0, 0, 1));
         this.dataManager.register(SHIELD, new ItemStack(Items.SHIELD));
-        this.dataManager.register(SWORD, new ItemStack(Items.IRON_SWORD));
+        this.dataManager.register(MELEE_WEAPON, new ItemStack(Items.DIAMOND_AXE));
+        this.dataManager.register(SHIELD_EQUIPPED, false);
+        this.dataManager.register(ANIMATION_PROGRESS, 0F);
+        this.dataManager.register(REVERSE_ANIMATION, false);
 
         super.registerData();
     }
@@ -79,24 +83,18 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, false));
     }
 
-    public ItemStack getSword() {
-        return this.dataManager.get(SWORD);
+    public ItemStack getMeleeWeapon() {
+        return this.dataManager.get(MELEE_WEAPON);
     }
 
     public ItemStack getShield() {
         return this.dataManager.get(SHIELD);
     }
 
-
-    @Override
-    public void baseTick() {
-        System.out.println(this.animationProgress);
-        super.baseTick();
-    }
-
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
+
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5000);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10.0);
@@ -106,7 +104,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         this.world.setEntityState(this, (byte) 4);
-        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) (2.5 + this.rand.nextInt(4)));
+        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 9F + this.rand.nextInt(4));
         if (flag) {
             this.applyEnchantments(this, entityIn);
         }
@@ -115,11 +113,19 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     @Override
     public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
-        if (source.getTrueSource() instanceof LivingEntity && !this.isShieldEquipped || !(source.getTrueSource() instanceof LivingEntity)) {
+        Entity attacker = source.getTrueSource();
+
+        if (attacker instanceof LivingEntity) {
+            if (!this.isShieldEquipped()) {
+                return super.attackEntityFrom(source, amount);
+            } else if (attacker.getHorizontalFacing() != this.getHorizontalFacing().getOpposite()) {
+                return super.attackEntityFrom(source, amount);
+            }
+        } else {
             return super.attackEntityFrom(source, amount);
         }
 
-        damageShield(amount);
+        this.damageShield(amount);
 
         return false;
     }
@@ -128,9 +134,12 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     protected void damageShield(float damage) {
         if (damage >= 3.0F && this.isAggressive()) {
             int i = 1 + MathHelper.floor(damage);
-            this.getShield().damageItem(i, this, entity -> entity.sendBreakAnimation(Hand.OFF_HAND));
 
-            if (getShield().isEmpty()) {
+            ItemStack shield = this.getShield();
+            shield.damageItem(i, this, entity -> entity.sendBreakAnimation(Hand.OFF_HAND));
+            this.dataManager.set(SHIELD, shield);
+
+            if (!this.hasShield()) {
                 this.dataManager.set(SHIELD, ItemStack.EMPTY);
                 this.setItemStackToSlot(EquipmentSlotType.OFFHAND, ItemStack.EMPTY);
                 this.activeItemStack = ItemStack.EMPTY;
@@ -143,7 +152,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     protected void blockUsingShield(@Nonnull LivingEntity entity) {
         super.blockUsingShield(entity);
 
-        if (entity.getHeldItemMainhand().canDisableShield(this.dataManager.get(SHIELD), this, entity)) {
+        if (entity.getHeldItemMainhand().canDisableShield(this.getShield(), this, entity)) {
             this.disableShield(true);
         }
     }
@@ -177,43 +186,67 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         return this.dataManager.get(POST_POSITION);
     }
 
+    public boolean isAnimationReversed() {
+        return this.dataManager.get(REVERSE_ANIMATION);
+    }
+
+    public void reverseAnimation() {
+        this.dataManager.set(REVERSE_ANIMATION, true);
+    }
+
+    public void undoAnimationReverse() {
+        this.dataManager.set(REVERSE_ANIMATION, false);
+    }
+
     public void equipShield() {
-        this.isShieldEquipped = true;
+        this.dataManager.set(SHIELD_EQUIPPED, true);
     }
 
     public void unequipShield() {
-        this.isShieldEquipped = false;
+        this.dataManager.set(SHIELD_EQUIPPED, false);
+    }
+
+    public boolean isShieldEquipped() {
+        return this.dataManager.get(SHIELD_EQUIPPED) && this.hasShield();
+    }
+
+    public float getAnimationProgress() {
+        return this.dataManager.get(ANIMATION_PROGRESS);
     }
 
     public void startChoppingAnimation() {
-        if (this.animationProgress == 0) {
-            this.animationProgress = 1E-6F;
+        if (this.getAnimationProgress() == 0) {
+            this.dataManager.set(ANIMATION_PROGRESS, 1E-6F);
         }
     }
 
     public boolean canChop() {
-        return this.animationProgress == 1;
+        return this.getAnimationProgress() == 1;
     }
 
     public boolean isChoppingAnimationGoing() {
-        return this.animationProgress > 0;
+        return this.getAnimationProgress() > 0;
     }
 
     public void chop() {
-        this.animationProgress += 1 / CHOP_DURATION;
+        this.dataManager.set(ANIMATION_PROGRESS, this.getAnimationProgress() + 1 / CHOP_DURATION);
 
-        if (this.animationProgress > 1) {
-            this.animationProgress = 1F;
+        if (this.getAnimationProgress() > 1) {
+            this.dataManager.set(ANIMATION_PROGRESS, 1F);
         }
     }
 
     public void raiseArm() {
-        this.animationProgress -= 1 / (2 * CHOP_DURATION);
+        this.dataManager.set(ANIMATION_PROGRESS, this.getAnimationProgress() - 1 / (2 * CHOP_DURATION));
 
-        if (this.animationProgress < 0) {
-            this.animationProgress = 0F;
-            this.isInReverseAnimation = false;
+        if (this.getAnimationProgress() < 0) {
+            this.dataManager.set(ANIMATION_PROGRESS, 0F);
+            this.undoAnimationReverse();
         }
+    }
+
+    public boolean hasShield() {
+        return !this.getShield().isEmpty();
     }
 
     public void setShopBounds(BlockPos firstBound, BlockPos secondBound) {
@@ -236,6 +269,12 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         super.onDeath(cause);
     }
 
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.MUSIC_MENU;
+    }
+
     @Override
     public void writeAdditional(@Nonnull CompoundNBT compound) {
         compound.putInt("x_c", this.dataManager.get(CONTROLLER_POSITION).getX());
@@ -254,14 +293,14 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         compound.putInt("y_3", this.dataManager.get(POST_POSITION).getY());
         compound.putInt("z_3", this.dataManager.get(POST_POSITION).getZ());
 
-        compound.putBoolean("equip", this.isShieldEquipped);
+        compound.putBoolean("equip", this.isShieldEquipped());
 
         compound.put("shield", this.dataManager.get(SHIELD).write(new CompoundNBT()));
-        compound.put("sword", this.dataManager.get(SWORD).write(new CompoundNBT()));
+        compound.put("melee", this.dataManager.get(MELEE_WEAPON).write(new CompoundNBT()));
 
-        compound.putFloat("animation_progress", this.animationProgress);
+        compound.putFloat("animation_progress", this.getAnimationProgress());
 
-        compound.putBoolean("reverse", this.isInReverseAnimation);
+        compound.putBoolean("reverse", this.isAnimationReversed());
 
         super.writeAdditional(compound);
     }
@@ -272,11 +311,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.dataManager.set(SHOP_BOUND_1, new BlockPos(compound.getInt("x_1"), compound.getInt("y_1"), compound.getInt("z_1")));
         this.dataManager.set(SHOP_BOUND_2, new BlockPos(compound.getInt("x_2"), compound.getInt("y_2"), compound.getInt("z_2")));
         this.dataManager.set(POST_POSITION, new BlockPos(compound.getInt("x_3"), compound.getInt("y_3"), compound.getInt("z_3")));
-        this.isShieldEquipped = compound.getBoolean("equip");
 
-        CompoundNBT sword = compound.getCompound("sword");
-        if (!sword.isEmpty()) {
-            this.dataManager.set(SWORD, ItemStack.read(sword));
+        CompoundNBT melee = compound.getCompound("melee");
+        if (!melee.isEmpty()) {
+            this.dataManager.set(MELEE_WEAPON, ItemStack.read(melee));
         }
 
         CompoundNBT shield = compound.getCompound("shield");
@@ -284,9 +322,11 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
             this.dataManager.set(SHIELD, ItemStack.read(shield));
         }
 
-        this.animationProgress = compound.getFloat("animation_progress");
+        this.dataManager.set(SHIELD_EQUIPPED, compound.getBoolean("equip"));
 
-        this.isInReverseAnimation = compound.getBoolean("reverse");
+        this.dataManager.set(ANIMATION_PROGRESS, compound.getFloat("animation_progress"));
+
+        this.dataManager.set(REVERSE_ANIMATION, compound.getBoolean("reverse"));
 
         super.readAdditional(compound);
     }

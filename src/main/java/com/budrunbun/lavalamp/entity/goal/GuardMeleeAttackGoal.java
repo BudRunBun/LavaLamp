@@ -18,7 +18,7 @@ public class GuardMeleeAttackGoal extends MeleeAttackGoal {
     @Override
     public void tick() {
         if (this.guard.isChoppingAnimationGoing()) {
-            if (!this.guard.isInReverseAnimation) {
+            if (!this.guard.isAnimationReversed()) {
                 this.guard.chop();
             } else {
                 this.guard.raiseArm();
@@ -41,7 +41,7 @@ public class GuardMeleeAttackGoal extends MeleeAttackGoal {
             this.attacker.swingArm(Hand.MAIN_HAND);
             this.attacker.attackEntityAsMob(enemy);
 
-            this.guard.isInReverseAnimation = true;
+            this.guard.reverseAnimation();
         }
     }
 }

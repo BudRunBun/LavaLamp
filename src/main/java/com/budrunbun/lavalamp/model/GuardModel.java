@@ -1,7 +1,6 @@
 package com.budrunbun.lavalamp.model;
 
 import com.budrunbun.lavalamp.entity.GuardEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -20,11 +19,11 @@ public class GuardModel extends BipedModel<GuardEntity> {
         super(modelSize, 0.0F, 64, p_i1168_2_ ? 32 : 64);
     }
 
-    public void setRotationAngles(@Nonnull GuardEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+    public void setRotationAngles(@Nonnull GuardEntity guard, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
+        super.setRotationAngles(guard, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
 
-        boolean flag1 = entityIn.isAggressive();
-        boolean flag2 = entityIn.getShield() != ItemStack.EMPTY;
+        boolean flag1 = guard.isAggressive();
+        boolean flag2 = guard.isShieldEquipped() && guard.hasShield();
         float f = MathHelper.sin(this.swingProgress * (float) Math.PI);
         float f1 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float) Math.PI);
         this.bipedLeftArm.rotateAngleZ = flag1 && flag2 ? (float) Math.PI / 4 : 0;
@@ -33,7 +32,7 @@ public class GuardModel extends BipedModel<GuardEntity> {
         //this.bipedLeftArm.rotateAngleY = 0.1F - f * 0.6F;
         //this.bipedRightArm.rotateAngleX = (float) -Math.PI / 2 * (limbSwingAmount);
         if (flag1) {
-            this.bipedRightArm.rotateAngleX = (float) -Math.PI * (1 - entityIn.animationProgress / 2);
+            this.bipedRightArm.rotateAngleX = (float) -Math.PI * (1 - guard.getAnimationProgress() / 2);
         }
 
         //this.bipedRightArm.rotateAngleX = flag1 ? -(float) Math.PI / 2.25F : 0F;

@@ -15,7 +15,7 @@ public class ProtectWithShieldGoal extends Goal {
     @Override
     public boolean shouldExecute() {
         LivingEntity livingentity = this.guard.getAttackTarget();
-        return livingentity != null && this.guard.getDistanceSq(livingentity) < 3.5D && !this.guard.isShieldEquipped;
+        return livingentity != null && this.guard.getDistanceSq(livingentity) < 3.5D && !this.guard.isShieldEquipped() && this.guard.hasShield();
     }
 
     @Override
@@ -35,6 +35,8 @@ public class ProtectWithShieldGoal extends Goal {
         if (this.attackTarget == null)
             this.guard.unequipShield();
         else if (this.guard.getDistanceSq(this.attackTarget) > 3.5D)
+            this.guard.unequipShield();
+        else if (!this.guard.hasShield())
             this.guard.unequipShield();
         else
             this.guard.equipShield();

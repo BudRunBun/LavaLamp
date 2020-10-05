@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +23,7 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
     private void render(GuardEntity guard) {
         if (guard.isAggressive()) {
             renderHeldItem(guard, guard.getShield(), ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT);
-            renderHeldItem(guard, guard.getSword(), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT);
+            renderHeldItem(guard, guard.getMeleeWeapon(), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT);
         }
     }
 
@@ -35,7 +34,7 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
             GlStateManager.pushMatrix();
 
 
-            if (!guard.isShieldEquipped || !flag) {
+            if (!guard.isShieldEquipped() || !flag) {
                 this.translateToHand(handSide);
 
                 GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
