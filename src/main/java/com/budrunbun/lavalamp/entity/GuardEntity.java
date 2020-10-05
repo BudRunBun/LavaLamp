@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class GuardEntity extends CreatureEntity implements IShopEmployee {
-    public static final float CHOP_DURATION = 4;
+    public float CHOP_DURATION = this.hasShield() ? 20F : 10F;
 
     public BlockPos targetBlockPos;
     public BlockState targetBlockState;
@@ -46,8 +46,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     private static final DataParameter<ItemStack> SHIELD = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
     private static final DataParameter<ItemStack> MELEE_WEAPON = EntityDataManager.createKey(GuardEntity.class, DataSerializers.ITEMSTACK);
     private static final DataParameter<Boolean> SHIELD_EQUIPPED = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Float> ANIMATION_PROGRESS = EntityDataManager.createKey(GuardEntity.class, DataSerializers.FLOAT);
-    private static final DataParameter<Boolean> REVERSE_ANIMATION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> RIGHT_ARM_ANIMATION_PROGRESS = EntityDataManager.createKey(GuardEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> LEFT_ARM_ANIMATION_PROGRESS = EntityDataManager.createKey(GuardEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> RIGHT_HAND_REVERSE_ANIMATION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> LEFT_HAND_REVERSE_ANIMATION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BOOLEAN);
 
     private final Predicate<LivingEntity> isInShop = entity -> this.getShopBounds().contains(entity.getPositionVec());
 
@@ -57,11 +59,13 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         this.dataManager.register(POST_POSITION, new BlockPos(1, 0, 0));
         this.dataManager.register(SHOP_BOUND_1, new BlockPos(0, 1, 0));
         this.dataManager.register(SHOP_BOUND_2, new BlockPos(0, 0, 1));
-        this.dataManager.register(SHIELD, new ItemStack(Items.SHIELD));
+        this.dataManager.register(SHIELD, /*new ItemStack(Items.SHIELD)*/ ItemStack.EMPTY);
         this.dataManager.register(MELEE_WEAPON, new ItemStack(Items.DIAMOND_AXE));
         this.dataManager.register(SHIELD_EQUIPPED, false);
-        this.dataManager.register(ANIMATION_PROGRESS, 0F);
-        this.dataManager.register(REVERSE_ANIMATION, false);
+        this.dataManager.register(RIGHT_ARM_ANIMATION_PROGRESS, 0F);
+        this.dataManager.register(LEFT_ARM_ANIMATION_PROGRESS, 0F);
+        this.dataManager.register(RIGHT_HAND_REVERSE_ANIMATION, false);
+        this.dataManager.register(LEFT_HAND_REVERSE_ANIMATION, false);
 
         super.registerData();
     }
@@ -186,16 +190,28 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         return this.dataManager.get(POST_POSITION);
     }
 
-    public boolean isAnimationReversed() {
-        return this.dataManager.get(REVERSE_ANIMATION);
+    public boolean isAnimationReversed(Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            return this.dataManager.get(RIGHT_HAND_REVERSE_ANIMATION);
+        }
+
+        return this.dataManager.get(LEFT_HAND_REVERSE_ANIMATION);
     }
 
-    public void reverseAnimation() {
-        this.dataManager.set(REVERSE_ANIMATION, true);
+    public void reverseAnimation(Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            this.dataManager.set(RIGHT_HAND_REVERSE_ANIMATION, true);
+        } else {
+            this.dataManager.set(LEFT_HAND_REVERSE_ANIMATION, true);
+        }
     }
 
-    public void undoAnimationReverse() {
-        this.dataManager.set(REVERSE_ANIMATION, false);
+    public void undoAnimationReverse(Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            this.dataManager.set(RIGHT_HAND_REVERSE_ANIMATION, false);
+        } else {
+            this.dataManager.set(LEFT_HAND_REVERSE_ANIMATION, false);
+        }
     }
 
     public void equipShield() {
@@ -210,38 +226,65 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         return this.dataManager.get(SHIELD_EQUIPPED) && this.hasShield();
     }
 
-    public float getAnimationProgress() {
-        return this.dataManager.get(ANIMATION_PROGRESS);
+    public float getAnimationProgress(Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            return this.dataManager.get(RIGHT_ARM_ANIMATION_PROGRESS);
+        }
+        return this.dataManager.get(LEFT_ARM_ANIMATION_PROGRESS);
     }
 
-    public void startChoppingAnimation() {
-        if (this.getAnimationProgress() == 0) {
-            this.dataManager.set(ANIMATION_PROGRESS, 1E-6F);
+    public void startChoppingAnimation(Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            if (this.getAnimationProgress(hand) == 0) {
+                this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, 1E-6F);
+            }
+        } else {
+            if (!this.hasShield() && this.getAnimationProgress(hand) == 0) {
+                this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, 1E-6F);
+            }
         }
     }
 
-    public boolean canChop() {
-        return this.getAnimationProgress() == 1;
+    public boolean canChop(Hand hand) {
+        return this.getAnimationProgress(hand) == 1;
     }
 
-    public boolean isChoppingAnimationGoing() {
-        return this.getAnimationProgress() > 0;
+    public boolean isChoppingAnimationGoing(Hand hand) {
+        return this.getAnimationProgress(hand) > 0;
     }
 
-    public void chop() {
-        this.dataManager.set(ANIMATION_PROGRESS, this.getAnimationProgress() + 1 / CHOP_DURATION);
+    public void chop(Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) + 1 / CHOP_DURATION);
 
-        if (this.getAnimationProgress() > 1) {
-            this.dataManager.set(ANIMATION_PROGRESS, 1F);
+            if (this.getAnimationProgress(hand) > 1) {
+                this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, 1F);
+            }
+        } else {
+            this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) + 1 / CHOP_DURATION);
+
+            if (this.getAnimationProgress(hand) > 1) {
+                this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, 1F);
+            }
+
         }
     }
 
-    public void raiseArm() {
-        this.dataManager.set(ANIMATION_PROGRESS, this.getAnimationProgress() - 1 / (2 * CHOP_DURATION));
+    public void raiseArm(Hand hand) {
+        if (hand == Hand.MAIN_HAND) {
+            this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) - 1 / (2 * CHOP_DURATION));
 
-        if (this.getAnimationProgress() < 0) {
-            this.dataManager.set(ANIMATION_PROGRESS, 0F);
-            this.undoAnimationReverse();
+            if (this.getAnimationProgress(hand) < 0) {
+                this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, 0F);
+                this.undoAnimationReverse(hand);
+            }
+        } else {
+            this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) - 1 / (2 * CHOP_DURATION));
+
+            if (this.getAnimationProgress(hand) < 0) {
+                this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, 0F);
+                this.undoAnimationReverse(hand);
+            }
         }
     }
 
@@ -298,9 +341,11 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
         compound.put("shield", this.dataManager.get(SHIELD).write(new CompoundNBT()));
         compound.put("melee", this.dataManager.get(MELEE_WEAPON).write(new CompoundNBT()));
 
-        compound.putFloat("animation_progress", this.getAnimationProgress());
+        compound.putFloat("animation_progress_right", this.getAnimationProgress(Hand.MAIN_HAND));
+        compound.putFloat("animation_progress_left", this.getAnimationProgress(Hand.OFF_HAND));
 
-        compound.putBoolean("reverse", this.isAnimationReversed());
+        compound.putBoolean("reverse_right", this.isAnimationReversed(Hand.MAIN_HAND));
+        compound.putBoolean("reverse_left", this.isAnimationReversed(Hand.OFF_HAND));
 
         super.writeAdditional(compound);
     }
@@ -324,9 +369,11 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
         this.dataManager.set(SHIELD_EQUIPPED, compound.getBoolean("equip"));
 
-        this.dataManager.set(ANIMATION_PROGRESS, compound.getFloat("animation_progress"));
+        this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, compound.getFloat("animation_progress_right"));
+        this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, compound.getFloat("animation_progress_left"));
 
-        this.dataManager.set(REVERSE_ANIMATION, compound.getBoolean("reverse"));
+        this.dataManager.set(RIGHT_HAND_REVERSE_ANIMATION, compound.getBoolean("reverse_right"));
+        this.dataManager.set(LEFT_HAND_REVERSE_ANIMATION, compound.getBoolean("reverse_left"));
 
         super.readAdditional(compound);
     }

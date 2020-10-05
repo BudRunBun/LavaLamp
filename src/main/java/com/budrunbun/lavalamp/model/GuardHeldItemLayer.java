@@ -22,7 +22,9 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
 
     private void render(GuardEntity guard) {
         if (guard.isAggressive()) {
-            renderHeldItem(guard, guard.getShield(), ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT);
+            ItemStack left_hand = guard.hasShield() ? guard.getShield() : guard.getMeleeWeapon();
+
+            renderHeldItem(guard, left_hand, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT);
             renderHeldItem(guard, guard.getMeleeWeapon(), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT);
         }
     }
@@ -41,7 +43,10 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
                 GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
 
             } else {
-                this.fixShieldRotation(this.getEntityModel().bipedLeftArm, guard);
+                RendererModel model = this.getEntityModel().bipedLeftArm;
+
+                GlStateManager.translatef((model.rotationPointX - 8) * 0.0625F, (model.rotationPointY + 7) * 0.0625F, (model.rotationPointZ - 6) * 0.0625F);
+                GlStateManager.rotatef(-90, 0, 1, 0);
             }
 
             GlStateManager.translatef((float) (flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
@@ -49,15 +54,6 @@ public class GuardHeldItemLayer extends LayerRenderer<GuardEntity, GuardModel> {
 
             GlStateManager.popMatrix();
         }
-    }
-
-    private void fixShieldRotation(RendererModel model, GuardEntity guard) {
-        ShopControllerTileEntity controller = (ShopControllerTileEntity) guard.world.getTileEntity(guard.getControllerPosition());
-        if (controller == null) {
-            return;
-        }
-        GlStateManager.translatef((model.rotationPointX - 8) * 0.0625F, (model.rotationPointY + 7) * 0.0625F, (model.rotationPointZ - 6) * 0.0625F);
-        GlStateManager.rotatef(-90, 0, 1, 0);
     }
 
     private void translateToHand(HandSide side) {

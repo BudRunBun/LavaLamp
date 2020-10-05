@@ -17,31 +17,51 @@ public class GuardMeleeAttackGoal extends MeleeAttackGoal {
 
     @Override
     public void tick() {
-        if (this.guard.isChoppingAnimationGoing()) {
-            if (!this.guard.isAnimationReversed()) {
-                this.guard.chop();
+        if (this.guard.isChoppingAnimationGoing(Hand.MAIN_HAND)) {
+            if (!this.guard.isAnimationReversed(Hand.MAIN_HAND)) {
+                this.guard.chop(Hand.MAIN_HAND);
             } else {
-                this.guard.raiseArm();
+                this.guard.raiseArm(Hand.MAIN_HAND);
             }
         }
 
-        //System.out.println(this.guard.getAnimationProgress());
+
+        if (this.guard.isChoppingAnimationGoing(Hand.OFF_HAND)) {
+            if (!this.guard.isAnimationReversed(Hand.OFF_HAND)) {
+                this.guard.chop(Hand.OFF_HAND);
+            } else {
+                this.guard.raiseArm(Hand.OFF_HAND);
+            }
+        }
+
+        System.out.println(this.guard.getAnimationProgress(Hand.OFF_HAND));
 
         super.tick();
     }
 
     @Override
     protected void checkAndPerformAttack(@Nonnull LivingEntity enemy, double distToEnemySqr) {
-        if (!this.guard.isChoppingAnimationGoing() && distToEnemySqr <= this.getAttackReachSqr(enemy) && this.attackTick <= 0) {
-            this.guard.startChoppingAnimation();
+        if (!this.guard.isChoppingAnimationGoing(Hand.MAIN_HAND) && distToEnemySqr <= this.getAttackReachSqr(enemy) && this.attackTick <= 0) {
+            this.guard.startChoppingAnimation(Hand.MAIN_HAND);
         }
 
-        if (this.guard.canChop()) {
-            this.attackTick = (int) GuardEntity.CHOP_DURATION;
+        if (this.guard.canChop(Hand.MAIN_HAND)) {
+            this.attackTick = (int) this.guard.CHOP_DURATION;
             this.attacker.swingArm(Hand.MAIN_HAND);
             this.attacker.attackEntityAsMob(enemy);
 
-            this.guard.reverseAnimation();
+            this.guard.reverseAnimation(Hand.MAIN_HAND);
+
+            if (!this.guard.hasShield()) {
+                this.guard.startChoppingAnimation(Hand.OFF_HAND);
+            }
+        }
+
+        if (this.guard.canChop(Hand.OFF_HAND) && !this.guard.hasShield()) {
+            this.attacker.swingArm(Hand.OFF_HAND);
+            this.attacker.attackEntityAsMob(enemy);
+
+            this.guard.reverseAnimation(Hand.OFF_HAND);
         }
     }
 }
