@@ -35,8 +35,6 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class GuardEntity extends CreatureEntity implements IShopEmployee {
-    public float CHOP_DURATION = this.hasShield() ? 20F : 10F;
-
     public BlockPos targetBlockPos;
     public BlockState targetBlockState;
     private static final DataParameter<BlockPos> CONTROLLER_POSITION = EntityDataManager.createKey(GuardEntity.class, DataSerializers.BLOCK_POS);
@@ -76,10 +74,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new GuardMeleeAttackGoal(this, 1, true));
+        this.goalSelector.addGoal(2, new GuardMeleeAttackGoal(this, 1, true));
         this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(3, new ProtectWithShieldGoal(this));
-        this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(4, new ProtectWithShieldGoal(this));
+        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new ReturnToShopGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -108,7 +106,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         this.world.setEntityState(this, (byte) 4);
-        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 9F + this.rand.nextInt(4));
+        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 2F + this.rand.nextInt(4));
         if (flag) {
             this.applyEnchantments(this, entityIn);
         }
@@ -223,7 +221,7 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
     }
 
     public boolean isShieldEquipped() {
-        return this.dataManager.get(SHIELD_EQUIPPED) && this.hasShield();
+        return this.dataManager.get(SHIELD_EQUIPPED);
     }
 
     public float getAnimationProgress(Hand hand) {
@@ -255,13 +253,13 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     public void chop(Hand hand) {
         if (hand == Hand.MAIN_HAND) {
-            this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) + 1 / CHOP_DURATION);
+            this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) + 1 / this.getChopDuration());
 
             if (this.getAnimationProgress(hand) > 1) {
                 this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, 1F);
             }
         } else {
-            this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) + 1 / CHOP_DURATION);
+            this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) + 1 / this.getChopDuration());
 
             if (this.getAnimationProgress(hand) > 1) {
                 this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, 1F);
@@ -272,14 +270,14 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     public void raiseArm(Hand hand) {
         if (hand == Hand.MAIN_HAND) {
-            this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) - 1 / (2 * CHOP_DURATION));
+            this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) - 1 / (2 * this.getChopDuration()));
 
             if (this.getAnimationProgress(hand) < 0) {
                 this.dataManager.set(RIGHT_ARM_ANIMATION_PROGRESS, 0F);
                 this.undoAnimationReverse(hand);
             }
         } else {
-            this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) - 1 / (2 * CHOP_DURATION));
+            this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, this.getAnimationProgress(hand) - 1 / (2 * this.getChopDuration()));
 
             if (this.getAnimationProgress(hand) < 0) {
                 this.dataManager.set(LEFT_ARM_ANIMATION_PROGRESS, 0F);
@@ -299,6 +297,10 @@ public class GuardEntity extends CreatureEntity implements IShopEmployee {
 
     public AxisAlignedBB getShopBounds() {
         return new AxisAlignedBB(this.dataManager.get(SHOP_BOUND_1), this.dataManager.get(SHOP_BOUND_2));
+    }
+
+    public float getChopDuration() {
+        return this.hasShield() ? 4F : 2F;
     }
 
     @Override

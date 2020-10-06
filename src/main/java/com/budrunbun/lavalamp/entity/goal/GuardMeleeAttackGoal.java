@@ -34,8 +34,6 @@ public class GuardMeleeAttackGoal extends MeleeAttackGoal {
             }
         }
 
-        System.out.println(this.guard.getAnimationProgress(Hand.OFF_HAND));
-
         super.tick();
     }
 
@@ -45,23 +43,26 @@ public class GuardMeleeAttackGoal extends MeleeAttackGoal {
             this.guard.startChoppingAnimation(Hand.MAIN_HAND);
         }
 
-        if (this.guard.canChop(Hand.MAIN_HAND)) {
-            this.attackTick = (int) this.guard.CHOP_DURATION;
-            this.attacker.swingArm(Hand.MAIN_HAND);
-            this.attacker.attackEntityAsMob(enemy);
+        if (guard.getRNG().nextInt() % 2 == 0) {
+            if (this.guard.canChop(Hand.MAIN_HAND)) {
+                this.attackTick = (int) this.guard.getChopDuration();
+                this.attacker.swingArm(Hand.MAIN_HAND);
+                this.attacker.attackEntityAsMob(enemy);
 
-            this.guard.reverseAnimation(Hand.MAIN_HAND);
+                this.guard.reverseAnimation(Hand.MAIN_HAND);
 
-            if (!this.guard.hasShield()) {
-                this.guard.startChoppingAnimation(Hand.OFF_HAND);
+                if (!this.guard.hasShield()) {
+                    this.guard.startChoppingAnimation(Hand.OFF_HAND);
+                }
             }
-        }
+        } else {
+            if (this.guard.canChop(Hand.OFF_HAND) && !this.guard.hasShield() && distToEnemySqr <= this.getAttackReachSqr(enemy)) {
+                this.attackTick = (int) this.guard.getChopDuration();
+                this.attacker.swingArm(Hand.OFF_HAND);
+                this.attacker.attackEntityAsMob(enemy);
 
-        if (this.guard.canChop(Hand.OFF_HAND) && !this.guard.hasShield()) {
-            this.attacker.swingArm(Hand.OFF_HAND);
-            this.attacker.attackEntityAsMob(enemy);
-
-            this.guard.reverseAnimation(Hand.OFF_HAND);
+                this.guard.reverseAnimation(Hand.OFF_HAND);
+            }
         }
     }
 }

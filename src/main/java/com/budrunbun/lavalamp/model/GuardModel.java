@@ -23,8 +23,8 @@ public class GuardModel extends BipedModel<GuardEntity> {
         super.setRotationAngles(guard, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
 
         boolean flag1 = guard.isAggressive();
-        boolean flag2 = guard.isShieldEquipped() && guard.hasShield();
-        boolean flag3 = !guard.hasShield();
+        boolean flag2 = guard.isShieldEquipped();
+        boolean flag3 = guard.hasShield();
 
         float f = MathHelper.sin(this.swingProgress * (float) Math.PI);
         float f1 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float) Math.PI);
@@ -35,13 +35,13 @@ public class GuardModel extends BipedModel<GuardEntity> {
         //this.bipedRightArm.rotateAngleX = (float) -Math.PI / 2 * (limbSwingAmount);
         if (flag1) {
             this.bipedRightArm.rotateAngleX = (float) -Math.PI * (1 - guard.getAnimationProgress(Hand.MAIN_HAND) / 2);
+
+            if (flag3) {
+                this.bipedLeftArm.rotateAngleX = flag2 ? -(float) Math.PI / 4 : 0;
+            } else {
+                this.bipedLeftArm.rotateAngleX = (float) -Math.PI * (1 - guard.getAnimationProgress(Hand.OFF_HAND) / 2);
+            }
         }
-
-        //if (flag3 && flag1) {
-            this.bipedLeftArm.rotateAngleX = (float) -Math.PI * (1 - guard.getAnimationProgress(Hand.OFF_HAND) / 2);
-        //}
-
-        this.bipedLeftArm.rotateAngleX = flag1 && flag2 ? -(float) Math.PI / 4 : 0F;
         this.bipedRightArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
         this.bipedLeftArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
     }
